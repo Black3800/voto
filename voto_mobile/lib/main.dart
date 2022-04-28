@@ -15,18 +15,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Vo-To',
       theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: VotoColors.primary,
-        fontFamily: GoogleFonts.inter().fontFamily,
-        textTheme: const TextTheme(
-          headline1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: VotoColors.white),
-          headline2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-          headline3: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
-          bodyText1: TextStyle(fontSize: 14.0),
-          caption: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w300),
-          button: TextStyle(fontSize: 12.0)
-        )
-      ),
+          brightness: Brightness.light,
+          primarySwatch: VotoColors.primary,
+          fontFamily: GoogleFonts.inter().fontFamily,
+          textTheme: const TextTheme(
+              headline1: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: VotoColors.white),
+              headline2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+              headline3: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
+              bodyText1: TextStyle(fontSize: 14.0),
+              caption: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w300),
+              button: TextStyle(fontSize: 12.0))),
       initialRoute: '/login_page',
       routes: {
         '/login_page': (context) => const LoginPage(),
