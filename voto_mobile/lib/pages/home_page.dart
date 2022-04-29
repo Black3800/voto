@@ -24,40 +24,52 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return BottomDialog(
             title: "Create team",
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Team name",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline3
-                        ?.merge(const TextStyle(color: VotoColors.black))),
-                const SizedBox(height: 15.0),
-                const SimpleTextInput(
-                    icon: Icons.people, accentColor: VotoColors.indigo),
-                const SizedBox(height: 15.0),
-                Text("Team picture",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline3
-                        ?.merge(const TextStyle(color: VotoColors.black))),
-                const SizedBox(height: 15.0),
-                const Center(
-                    child: ImageInput(
-                  initial: 'T',
-                  radius: 150.0,
-                )),
-                const SizedBox(height: 30.0),
-                WideButton(
-                    text: 'Create',
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
-              ],
-            ));
+            child: ListView(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Team name",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline3
+                          ?.merge(const TextStyle(color: VotoColors.black))),
+                  const SizedBox(height: 15.0),
+                  const SimpleTextInput(
+                      icon: Icons.people, accentColor: VotoColors.indigo),
+                  const SizedBox(height: 15.0),
+                  Text("Team picture",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline3
+                          ?.merge(const TextStyle(color: VotoColors.black))),
+                  const SizedBox(height: 15.0),
+                  const Center(
+                      child: ImageInput(
+                    initial: 'T',
+                    radius: 150.0,
+                  )),
+                  const SizedBox(height: 30.0),
+                  WideButton(
+                      text: 'Create',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                ],
+              ),
+            );
       },
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
+    );
+  }
+
+  showJoinTeamDialog() {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
+      context: context,
+      builder: (_) {
+        return const JoinTeam();
+      },
     );
   }
 
@@ -85,17 +97,7 @@ class _HomePageState extends State<HomePage> {
                     text: 'Join team',
                     icon: Icons.people,
                     accentColor: VotoColors.magenta,
-                    onPressed: () {
-                      showModalBottomSheet(
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20.0))),
-                        context: context,
-                        builder: (_) {
-                          return JoinTeam();
-                        },
-                      );
-                    })
+                    onPressed: showJoinTeamDialog)
               ],
             ),
           ),
