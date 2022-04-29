@@ -34,7 +34,9 @@ class _JoinTeamState extends State<JoinTeam> {
             children: [
               IconButton(
                 icon: const Icon(Icons.clear, color: VotoColors.primary),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               Padding(
                 padding: const EdgeInsets.only(
