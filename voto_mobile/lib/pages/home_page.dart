@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return VotoScaffold(
+      useMenu: true,
       title: 'My Team',
       body: Column(
         children: [
