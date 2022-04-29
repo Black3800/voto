@@ -21,10 +21,10 @@ class MyApp extends StatelessWidget {
           textTheme: const TextTheme(
               headline1: TextStyle(
                   fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
                   color: VotoColors.white),
-              headline2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-              headline3: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
+              headline2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+              headline3: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600),
               bodyText1: TextStyle(fontSize: 14.0),
               caption: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w300),
               button: TextStyle(fontSize: 12.0))),

@@ -78,6 +78,32 @@ class VotoColors {
     800: Color.fromRGBO(252, 252, 252, .9),
     900: Color.fromRGBO(252, 252, 252, 1),
   });
+  
+  static const MaterialColor foreground = MaterialColor(0xff000000, {
+    50: Color.fromRGBO(0, 0, 0, .1),
+    100: Color.fromRGBO(0, 0, 0, .2),
+    200: Color.fromRGBO(0, 0, 0, .3),
+    300: Color.fromRGBO(0, 0, 0, .4),
+    400: Color.fromRGBO(0, 0, 0, .5),
+    500: Color.fromRGBO(0, 0, 0, .6),
+    600: Color.fromRGBO(0, 0, 0, .7),
+    700: Color.fromRGBO(0, 0, 0, .8),
+    800: Color.fromRGBO(0, 0, 0, .9),
+    900: Color.fromRGBO(0, 0, 0, 1),
+  });
+
+  static const MaterialColor gray = MaterialColor(0xfff2f4f8, {
+    50: Color.fromRGBO(242, 244, 248, .1),
+    100: Color.fromRGBO(242, 244, 248, .2),
+    200: Color.fromRGBO(242, 244, 248, .3),
+    300: Color.fromRGBO(242, 244, 248, .4),
+    400: Color.fromRGBO(242, 244, 248, .5),
+    500: Color.fromRGBO(242, 244, 248, .6),
+    600: Color.fromRGBO(242, 244, 248, .7),
+    700: Color.fromRGBO(242, 244, 248, .8),
+    800: Color.fromRGBO(242, 244, 248, .9),
+    900: Color.fromRGBO(242, 244, 248, 1),
+  });
 
   static const MaterialColor indigo = primary;
   static const MaterialColor magenta = secondary;
@@ -85,4 +111,5 @@ class VotoColors {
   static const MaterialColor silk = highlight2;
   static const MaterialColor cyan = highlight3;
   static const MaterialColor white = background;
+  static const MaterialColor black = foreground;
 }
