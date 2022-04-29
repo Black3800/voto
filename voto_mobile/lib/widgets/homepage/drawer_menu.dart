@@ -11,13 +11,16 @@ class DrawerMenu extends StatelessWidget {
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.all(10.0),
         children: [
           SizedBox(
-              height: 150,
-              child: DrawerHeader(
+            height: 80.0,
+            child: DrawerHeader(
                 child: headerDrawerMenu(context),
-              )),
+                margin: const EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(0.0),
+              ),
+          ),
           ProfileCard(
               imagePath: 'assets/user_profile_test.jpg',
               title: 'Tanny Panitnun',
@@ -32,23 +35,20 @@ class DrawerMenu extends StatelessWidget {
 
   Widget headerDrawerMenu(context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.close,
+              size: 32.0,
+            ),
+            iconSize: 32.0,
+            color: VotoColors.indigo,
+            ),
         Expanded(
-          flex: 1,
-          child: IconButton(
-              onPressed: () {
-                // Navigator.pushNamed(context, "/home_page");
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.close,
-                size: 32.0,
-              ),
-              color: VotoColors.indigo),
-        ),
-        Expanded(
-            flex: 4,
             child: Container(
               padding: const EdgeInsets.only(left: 20),
               child: const Text(

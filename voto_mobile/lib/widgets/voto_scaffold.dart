@@ -23,10 +23,12 @@ class VotoScaffold extends StatefulWidget {
 }
 
 class _VotoScaffoldState extends State<VotoScaffold> {
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: widget.key,
+      key: _key,
       drawer: const DrawerMenu(),
       appBar: AppBar(
         title: Column(
@@ -47,20 +49,22 @@ class _VotoScaffoldState extends State<VotoScaffold> {
         ),
         titleSpacing: 10.0,
         toolbarHeight: 87.0,
-        // leading: widget.useMenu
-        //     ? IconButton(
-        //         icon: const Icon(Icons.menu),
-        //         iconSize: 32.0,
-        //         onPressed: () {},
-        //       )
-        //     : IconButton(
-        //         icon: const Icon(Icons.chevron_left),
-        //         iconSize: 32.0,
-        //         onPressed: () {
-        //           Navigator.pop(context);
-        //         },
-        //       ),
-        // leadingWidth: widget.useMenu ? 90.0 : 50.0,
+        leading: widget.useMenu
+            ? IconButton(
+                icon: const Icon(Icons.menu),
+                iconSize: 32.0,
+                onPressed: () {
+                  _key.currentState!.openDrawer();
+                },
+              )
+            : IconButton(
+                icon: const Icon(Icons.chevron_left),
+                iconSize: 32.0,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+        leadingWidth: widget.useMenu ? 90.0 : 50.0,
         actions: widget.useSetting
             ? <Widget>[
                 Padding(
