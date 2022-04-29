@@ -139,7 +139,7 @@ class _JoinTeamState extends State<JoinTeam> {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/home_page');
+              Navigator.pushNamed(context, '/join_team');
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(0),
