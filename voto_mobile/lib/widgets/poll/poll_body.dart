@@ -25,7 +25,7 @@ class _PollBodyState extends State<PollBody> {
         const PollItem(name: 'Salad', isVoted: true),
         const PollItem(name: 'Pizza', isVoted: true),
         const PollItem(name: 'Pizza', isVoted: false),
-        const PollItem(name: 'yofuke no kousu de nemuri ni tsuku koro ka no ten rai no take kouri no ya o ni sutekai onna da ta ko sasaya', isVoted: false),
+        const PollItem(name: 'Super loooooooooonoooooooooooooooooooooooooooooooooooooooooog hotdog', isVoted: false),
         const PollItem(name: 'Pizza', isVoted: false),
         const PollItem(name: 'Pizza', isVoted: true),
         const PollItem(name: 'Pizza', isVoted: false),

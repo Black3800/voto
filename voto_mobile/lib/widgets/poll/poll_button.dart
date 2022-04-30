@@ -12,6 +12,7 @@ class PollButton extends StatelessWidget {
     }
 
     return ConfirmButton(
+      confirmText: 'Vote',
       onConfirm: submitVote,
       onCancel: submitVote
     );
