@@ -74,7 +74,13 @@ class PollCard extends StatelessWidget {
               style: GoogleFonts.inter(fontSize: 12.0, color: VotoColors.white),
             ),
           const SizedBox(height: 20.0),
-          CardActionButton(text: 'Vote now', onPressed: () {}, isPrimary: false,)
+          CardActionButton(
+            text: 'Vote now',
+            isPrimary: false,
+            onPressed: () {
+              Navigator.pushNamed(context, '/poll_page');
+            },
+          )
         ],
       )
     );

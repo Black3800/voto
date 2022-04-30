@@ -14,20 +14,22 @@ class PollPage extends StatelessWidget {
       title: 'Vote',
       titleContext: 'Integrated project II',
       body: Column(children: [
-        Container(
-          height: 131,
-          padding: const EdgeInsets.only(left: 42.5, right: 42.5),
-          child: const PollHeader(),
-        ),
         Expanded(
-          flex: 5,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(left: 42.5, right: 42.5, top: 0),
-            child: const PollBody(),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 20.0,
+              left: 42.5,
+              right: 42.5
+            ),
+            child: ListView(
+              children: const [
+                PollHeader(),
+                SizedBox(height: 20.0),
+                PollBody(),
+              ]),
           ),
         ),
-        const Expanded(flex: 1, child: PollButton()),
+        const PollButton(),
       ]),
     );
   }

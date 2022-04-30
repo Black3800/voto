@@ -7,13 +7,8 @@ class PollHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(
-          height: 20,
-        ),
         pollTitle(),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         pollDetail(),
       ],
     );

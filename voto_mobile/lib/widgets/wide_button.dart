@@ -5,21 +5,22 @@ class WideButton extends StatelessWidget {
   final String text;
   final MaterialColor foregroundColor;
   final MaterialColor backgroundColor;
+  final bool isElevated;
   final Function()? onPressed;
-  const WideButton({ Key? key, required this.text, this.foregroundColor = VotoColors.white, this.backgroundColor = VotoColors.indigo, required this.onPressed }) : super(key: key);
+  const WideButton({ Key? key, required this.text, this.foregroundColor = VotoColors.white, this.backgroundColor = VotoColors.indigo, this.isElevated = true, required this.onPressed }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        boxShadow: <BoxShadow>[
+      decoration: BoxDecoration(
+        boxShadow: isElevated ? const <BoxShadow>[
           BoxShadow(
             color: Color.fromRGBO(0, 0, 0, 0.1),
             blurRadius: 4.0,
             offset: Offset(2.0, 1.0)
           )
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(20.0))
+        ] : null,
+        borderRadius: const BorderRadius.all(Radius.circular(20.0))
       ),
       child: ElevatedButton(
         onPressed: onPressed,

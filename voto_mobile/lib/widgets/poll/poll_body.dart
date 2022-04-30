@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/poll/poll_model.dart';
 
@@ -13,6 +14,7 @@ class _PollBodyState extends State<PollBody> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -20,47 +22,54 @@ class _PollBodyState extends State<PollBody> {
             editOptionButton(),
           ],
         ),
-        Column(
-          children: [
-            PollItem(name: 'Salad', voted: true),
-            PollItem(name: 'Pizza', voted: true),
-            PollItem(name: 'Bonchon', voted: false)
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            addOptionButton(),
-          ],
+        const PollItem(name: 'Salad', isVoted: true),
+        const PollItem(name: 'Pizza', isVoted: true),
+        const PollItem(name: 'Pizza', isVoted: false),
+        const PollItem(name: 'yofuke no kousu de nemuri ni tsuku koro ka no ten rai no take kouri no ya o ni sutekai onna da ta ko sasaya', isVoted: false),
+        const PollItem(name: 'Pizza', isVoted: false),
+        const PollItem(name: 'Pizza', isVoted: true),
+        const PollItem(name: 'Pizza', isVoted: false),
+        const PollItem(name: 'Pizza', isVoted: true),
+        const PollItem(name: 'Pizza', isVoted: false),
+        const PollItem(name: 'Pizza', isVoted: true),
+        const PollItem(name: 'Bonchon', isVoted: false),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 20.0
+          ),
+          child: addOptionButton(),
         )
-      ],
-    );
+      ]);
   }
 
   Widget addOptionButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.zero,
         primary: VotoColors.magenta,
-        fixedSize: const Size(120, 36),
+        fixedSize: const Size(140, 36),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
       ),
       onPressed: () {},
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: const [
-          Icon(
-            Icons.add_circle,
-            color: VotoColors.white,
+          Padding(
+            padding: EdgeInsets.only(left: 8.0),
+            child: Icon(
+              Icons.add_circle,
+              color: VotoColors.white,
+            ),
           ),
-          Text(
-            'Add option',
-            style: TextStyle(
-                color: VotoColors.white, fontWeight: FontWeight.normal),
+          Expanded(
+            child: Text(
+              'Add option',
+              style: TextStyle(
+                  color: VotoColors.white, fontWeight: FontWeight.normal),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
@@ -70,9 +79,9 @@ class _PollBodyState extends State<PollBody> {
   Widget editOptionButton() {
     return TextButton(
       onPressed: () {},
-      child: const Text(
+      child: Text(
         'Edit',
-        style: TextStyle(
+        style: GoogleFonts.inter(
           color: VotoColors.indigo,
           fontSize: 12,
           fontWeight: FontWeight.w500,
