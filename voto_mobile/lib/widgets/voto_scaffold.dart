@@ -72,7 +72,9 @@ class _VotoScaffoldState extends State<VotoScaffold> {
                     child: IconButton(
                       icon: const Icon(Icons.settings),
                       iconSize: 32.0,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/manage_team_page');
+                      },
                     ))
               ]
             : <Widget>[],

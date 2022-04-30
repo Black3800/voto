@@ -6,11 +6,13 @@ class RichButton extends StatelessWidget {
   final IconData icon;
   final MaterialColor accentColor;
   final Function()? onPressed;
-  const RichButton({ Key? key, required this.text, required this.icon, required this.accentColor, required this.onPressed }) : super(key: key);
+  final double? width;
+  const RichButton({ Key? key, required this.text, required this.icon, required this.accentColor, required this.onPressed, this.width }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
       decoration: const BoxDecoration(
         boxShadow: <BoxShadow>[
           BoxShadow(
@@ -41,14 +43,16 @@ class RichButton extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(4.0),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 0.0,
-                  bottom: 0.0,
-                  left: 20.0,
-                  right: 10.0
-                ),
-                child: Text(text))],
+              width != null ? Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 0.0, bottom: 0.0, left: 20.0, right: 10.0),
+                    child: Text(text, textAlign: TextAlign.center,)),
+              ) : Padding(
+                      padding: const EdgeInsets.only(
+                          top: 0.0, bottom: 0.0, left: 20.0, right: 10.0),
+                      child: Text(text, textAlign: TextAlign.center,))
+            ],
           ),
         ),
         style: ButtonStyle(
