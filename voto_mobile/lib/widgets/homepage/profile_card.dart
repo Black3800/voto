@@ -15,11 +15,8 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          EdgeInsets.zero,
-      margin: const EdgeInsets.symmetric(
-        vertical: 10.0
-      ),
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: VotoColors.indigo.shade400),

@@ -7,8 +7,7 @@ class LogoutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          EdgeInsets.zero,
+      padding: const EdgeInsets.only(right: 10, left: 10),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: VotoColors.indigo.shade400),

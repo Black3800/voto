@@ -11,15 +11,14 @@ class DrawerMenu extends StatelessWidget {
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
-        padding: const EdgeInsets.all(10.0),
         children: [
           SizedBox(
             height: 80.0,
             child: DrawerHeader(
-                child: headerDrawerMenu(context),
-                margin: const EdgeInsets.all(0.0),
-                padding: const EdgeInsets.all(0.0),
-              ),
+              child: headerDrawerMenu(context),
+              margin: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(0.0),
+            ),
           ),
           ProfileCard(
               imagePath: 'assets/user_profile_test.jpg',
@@ -38,27 +37,27 @@ class DrawerMenu extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.close,
-              size: 32.0,
-            ),
-            iconSize: 32.0,
-            color: VotoColors.indigo,
-            ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.close,
+            size: 32.0,
+          ),
+          iconSize: 32.0,
+          color: VotoColors.indigo,
+        ),
         Expanded(
             child: Container(
-              padding: const EdgeInsets.only(left: 20),
-              child: const Text(
-                'Menu',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: VotoColors.indigo),
-              ),
-            )),
+          padding: const EdgeInsets.only(left: 20),
+          child: const Text(
+            'Menu',
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: VotoColors.indigo),
+          ),
+        )),
       ],
     );
   }
