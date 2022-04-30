@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/widgets/bottom_dialog.dart';
+import 'package:voto_mobile/widgets/image_input.dart';
+import 'package:voto_mobile/widgets/jointeam/pin_code.dart';
+import 'package:voto_mobile/widgets/manageteam/passcode.dart';
+import 'package:voto_mobile/widgets/wide_button.dart';
 
 class JoinTeam extends StatefulWidget {
   const JoinTeam({Key? key}) : super(key: key);
@@ -141,7 +146,52 @@ class _JoinTeamState extends State<JoinTeam> {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/join_team');
+              // Navigator.pushNamed(context, '/join_team');
+              Navigator.pop(context);
+              showModalBottomSheet<void>(
+                isScrollControlled: true,
+                context: context,
+                builder: (BuildContext context) {
+                  return BottomDialog(
+                    title: "Enter passcode",
+                    height: 0.65,
+                    child: ListView(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("The following team requires passcode to join",
+                            style: Theme.of(context).textTheme.bodyText1?.merge(
+                                const TextStyle(color: VotoColors.black))),
+                        const SizedBox(height: 15.0),
+                        const Center(
+                            child: CircleAvatar(
+                                backgroundImage: AssetImage('dummy/misc2.jpg'),
+                                radius: 50.0)),
+                        const SizedBox(height: 15.0),
+                        Center(
+                          child: Text("Integrated Project II",
+                              style: Theme.of(context).textTheme.headline2?.merge(
+                                  const TextStyle(color: VotoColors.black))),
+                        ),
+                        const SizedBox(height: 15.0),
+                        Text("Passcode",
+                            style: Theme.of(context).textTheme.headline3?.merge(
+                                const TextStyle(color: VotoColors.black))),
+                        const SizedBox(height: 15.0),
+                        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [Pass()],),
+                        const SizedBox(height: 30.0),
+                        WideButton(
+                            text: 'Join',
+                            onPressed: () {
+                              Navigator.pop(context);
+                            }),
+                      ],
+                    ),
+                  );
+                },
+                shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20.0))),
+              );
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(0),
