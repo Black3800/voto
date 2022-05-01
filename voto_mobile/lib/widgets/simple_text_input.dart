@@ -32,7 +32,7 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
         controller: _controller,
         initialValue: widget.initialValue,
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: FontWeight.normal,
           color: widget.accentColor,
         ),
@@ -40,6 +40,8 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
           setState(() {});
         },
         decoration: InputDecoration(
+          isDense: true,
+          contentPadding: EdgeInsets.all(15.0),
           prefixIcon: widget.icon != null ? Icon(
             widget.icon,
             color: widget.accentColor,
