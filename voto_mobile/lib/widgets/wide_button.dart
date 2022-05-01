@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class WideButton extends StatelessWidget {
   final String text;
   final MaterialColor foregroundColor;
   final MaterialColor backgroundColor;
+  final bool disabled;
   final bool isElevated;
+  final bool isBold;
   final Function()? onPressed;
-  const WideButton({ Key? key, required this.text, this.foregroundColor = VotoColors.white, this.backgroundColor = VotoColors.indigo, this.isElevated = true, required this.onPressed }) : super(key: key);
+  const WideButton({
+    Key? key,
+    required this.text,
+    this.foregroundColor = VotoColors.white,
+    this.backgroundColor = VotoColors.indigo,
+    this.disabled = false,
+    this.isElevated = true,
+    this.isBold = true,
+    required this.onPressed
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +35,7 @@ class WideButton extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(20.0))
       ),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: !disabled ? onPressed : null,
         child: Padding(
           padding: const EdgeInsets.only(
             top: 10.0,
@@ -31,21 +43,30 @@ class WideButton extends StatelessWidget {
             left: 0.0,
             right: 0.0
           ),
-          child: Text(text, style: Theme.of(context).textTheme.button?.merge(TextStyle(color: foregroundColor)))),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith((states) {
-              if(states.contains(MaterialState.pressed)) {
-                return backgroundColor[600];
-              }
-              return backgroundColor;
-            }),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-            )),
-            elevation: MaterialStateProperty.all<double>(0.0),
-            minimumSize: MaterialStateProperty.all<Size>(const Size.fromHeight(35.0))
-          ),
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.button?.merge(GoogleFonts.inter(
+              color: foregroundColor,
+              fontWeight: isBold ? null : FontWeight.normal
+            ))
+          )
+        ),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if(states.contains(MaterialState.pressed)) {
+              return backgroundColor[600];
+            } else if(states.contains(MaterialState.disabled)) {
+              return backgroundColor[300];
+            }
+            return backgroundColor;
+          }),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+          )),
+          elevation: MaterialStateProperty.all<double>(0.0),
+          minimumSize: MaterialStateProperty.all<Size>(const Size.fromHeight(35.0))
+        ),
       ),
     );
   }

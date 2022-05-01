@@ -9,7 +9,17 @@ class ConfirmButton extends StatelessWidget {
   final Function()? onCancel;
   final double height;
   final double horizontalPadding;
-  const ConfirmButton({ Key? key, required this.confirmText, this.cancelText = 'Cancel', required this.onConfirm, required this.onCancel, this.height = 100, this.horizontalPadding = 50 }) : super(key: key);
+  final bool disabled;
+  const ConfirmButton({
+    Key? key,
+    required this.confirmText,
+    this.cancelText = 'Cancel',
+    required this.onConfirm,
+    required this.onCancel,
+    this.height = 100,
+    this.horizontalPadding = 50,
+    this.disabled = false
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +36,16 @@ class ConfirmButton extends StatelessWidget {
               foregroundColor: VotoColors.indigo,
               backgroundColor: VotoColors.gray,
               isElevated: false,
+              isBold: false,
             )),
           const SizedBox(width: 20.0),
-          Expanded(child: WideButton(text: confirmText, onPressed: onConfirm)),
+          Expanded(
+            child: WideButton(
+              text: confirmText,
+              onPressed: onConfirm,
+              disabled: disabled,
+            )
+          ),
         ],
       ),
     );

@@ -18,16 +18,13 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           primarySwatch: VotoColors.primary,
           fontFamily: GoogleFonts.inter().fontFamily,
-          textTheme: const TextTheme(
-              headline1: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w800,
-                  color: VotoColors.white),
-              headline2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-              headline3: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600),
-              bodyText1: TextStyle(fontSize: 14.0),
-              caption: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w300),
-              button: TextStyle(fontSize: 12.0))),
+          textTheme: TextTheme(
+              headline1: GoogleFonts.inter(fontSize: 24.0, fontWeight: FontWeight.w700, color: VotoColors.white),
+              headline2: GoogleFonts.inter(fontSize: 18.0, fontWeight: FontWeight.w500),
+              headline3: GoogleFonts.inter(fontSize: 14.0, fontWeight: FontWeight.w500),
+              bodyText1: GoogleFonts.inter(fontSize: 14.0),
+              caption: GoogleFonts.inter(fontSize: 12.0, fontWeight: FontWeight.w300),
+              button: GoogleFonts.inter(fontSize: 12.0, fontWeight: FontWeight.w700))),
       initialRoute: '/login_page',
       routes: {
         '/login_page': (context) => const LoginPage(),
@@ -37,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/team_page': (context) => const TeamPage(),
         '/manage_team_page': (context) => const ManageTeamPage(),
         '/create_item_page': (context) => const CreateItemPage(),
+        '/add_option_page': (context) => const AddOptionPage(),
         '/poll_page': (context) => const PollPage(),
         '/random_page': (context) => const RandomPage(),
         '/poll_result_page': (context) => const PollResultPage(),

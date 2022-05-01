@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class SimpleTextInput extends StatefulWidget {
@@ -7,7 +8,32 @@ class SimpleTextInput extends StatefulWidget {
   final IconData? icon;
   final String hintText;
   final bool multiline;
-  const SimpleTextInput({Key? key, this.initialValue, this.accentColor = VotoColors.black, this.icon, this.hintText = 'Aa', this.multiline = false }) : super(key: key);
+  final bool clearable;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
+  final void Function()? onTap;
+  final void Function()? onEditingComplete;
+  final void Function(String)? onFieldSubmitted;
+  final void Function(String?)? onSaved;
+  const SimpleTextInput({
+    Key? key,
+    this.initialValue,
+    this.accentColor = VotoColors.black,
+    this.icon,
+    this.hintText = 'Aa',
+    this.multiline = false,
+    this.clearable = true,
+    this.keyboardType,
+    this.inputFormatters,
+    this.controller,
+    this.onChanged,
+    this.onTap,
+    this.onEditingComplete,
+    this.onFieldSubmitted,
+    this.onSaved,
+  }) : super(key: key);
 
   @override
   State<SimpleTextInput> createState() => _SimpleTextInputState();
@@ -24,14 +50,18 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
   @override
   void dispose() {
     _controller.dispose();
+    /** WARNING: Assume supplied controller self-dispose */
+    // widget.controller!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-        controller: _controller,
+        controller: widget.controller ?? _controller,
         initialValue: widget.initialValue,
+        keyboardType: widget.keyboardType,
+        inputFormatters: widget.inputFormatters,
         minLines: widget.multiline ? 4 : 1,
         maxLines: widget.multiline ? null : 1,
         style: TextStyle(
@@ -40,8 +70,13 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
           color: widget.accentColor,
         ),
         onChanged: (value) {
+          widget.onChanged?.call(value);
           setState(() {});
         },
+        onTap: widget.onTap,
+        onEditingComplete: widget.onEditingComplete,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        onSaved: widget.onSaved,
         decoration: InputDecoration(
           isDense: true,
           contentPadding: const EdgeInsets.all(16.0),
@@ -59,13 +94,13 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
           hintStyle: const TextStyle(color: Color(0xffc4c4c4)),
           fillColor: VotoColors.gray,
           filled: true,
-          suffixIcon: _controller.text.isNotEmpty ? InkWell(
+          suffixIcon: widget.clearable && (widget.controller ?? _controller).text.isNotEmpty ? InkWell(
             child: Icon(
               Icons.close,
               color: widget.accentColor,
             ),
             onTap: () {
-              _controller.clear();
+              (widget.controller ?? _controller).clear();
               setState(() {});
             },
           ) : null, 

@@ -29,7 +29,9 @@ class _TeamPageState extends State<TeamPage> {
               text: 'Create new poll/random',
               icon: Icons.add,
               accentColor: VotoColors.indigo,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/create_item_page');
+              },
               width: 250
             )
           ),

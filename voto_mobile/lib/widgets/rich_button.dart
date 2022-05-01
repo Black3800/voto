@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class RichButton extends StatelessWidget {
@@ -11,6 +12,11 @@ class RichButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle _textStyle = Theme.of(context).textTheme.button!.merge(GoogleFonts.inter(
+      color: accentColor,
+      fontWeight: FontWeight.normal
+    ));
+
     return Container(
       width: width,
       decoration: const BoxDecoration(
@@ -47,11 +53,11 @@ class RichButton extends StatelessWidget {
                 child: Padding(
                     padding: const EdgeInsets.only(
                         top: 0.0, bottom: 0.0, left: 20.0, right: 10.0),
-                    child: Text(text, textAlign: TextAlign.center,)),
+                    child: Text(text, textAlign: TextAlign.center, style: _textStyle)),
               ) : Padding(
                       padding: const EdgeInsets.only(
                           top: 0.0, bottom: 0.0, left: 20.0, right: 10.0),
-                      child: Text(text, textAlign: TextAlign.center,))
+                      child: Text(text, textAlign: TextAlign.center, style: _textStyle))
             ],
           ),
         ),
@@ -62,7 +68,6 @@ class RichButton extends StatelessWidget {
             }
             return VotoColors.white;
           }),
-          foregroundColor: MaterialStateProperty.all<Color>(accentColor),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
