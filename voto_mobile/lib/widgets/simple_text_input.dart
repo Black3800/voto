@@ -6,7 +6,8 @@ class SimpleTextInput extends StatefulWidget {
   final MaterialColor accentColor;
   final IconData? icon;
   final String hintText;
-  const SimpleTextInput({Key? key, this.initialValue, this.accentColor = VotoColors.black, this.icon, this.hintText = 'Aa' }) : super(key: key);
+  final bool multiline;
+  const SimpleTextInput({Key? key, this.initialValue, this.accentColor = VotoColors.black, this.icon, this.hintText = 'Aa', this.multiline = false }) : super(key: key);
 
   @override
   State<SimpleTextInput> createState() => _SimpleTextInputState();
@@ -31,6 +32,8 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
     return TextFormField(
         controller: _controller,
         initialValue: widget.initialValue,
+        minLines: widget.multiline ? 4 : 1,
+        maxLines: widget.multiline ? null : 1,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.normal,
@@ -41,7 +44,7 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
         },
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: EdgeInsets.all(15.0),
+          contentPadding: const EdgeInsets.all(16.0),
           prefixIcon: widget.icon != null ? Icon(
             widget.icon,
             color: widget.accentColor,
