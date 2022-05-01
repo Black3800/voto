@@ -6,16 +6,12 @@ class PollButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     void submitVote() {
-      Navigator.pop(context);
+      Navigator.pushNamed(context, '/poll_result_page');
     }
 
     return ConfirmButton(
-      confirmText: 'Vote',
-      onConfirm: submitVote,
-      onCancel: submitVote
-    );
+        confirmText: 'Vote', onConfirm: submitVote, onCancel: submitVote);
   }
 
   // Widget pollVoteButton(context) {
