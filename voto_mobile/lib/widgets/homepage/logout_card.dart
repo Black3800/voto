@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 
@@ -26,7 +27,8 @@ class LogoutCard extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(20.0)),
             splashColor: VotoColors.indigo.shade100,
             onTap: () {
-              Navigator.pushNamed(context, "/login_page");
+              FirebaseAuth.instance.signOut();
+              Navigator.popUntil(context, ModalRoute.withName('/login_page'));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),

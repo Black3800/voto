@@ -63,7 +63,9 @@ class RandomCard extends StatelessWidget {
           const SizedBox(height: 20.0),
           CardActionButton(text: 'Add option', onPressed: () {}, isPrimary: false,),
           showStartRandom ? const SizedBox(height: 10.0) : Container(),
-          showStartRandom ? CardActionButton(text: 'Start random', onPressed: () {},) : Container(),
+          showStartRandom ? CardActionButton(text: 'Start random', onPressed: () {
+            Navigator.pushNamed(context, '/random_page');
+          },) : Container(),
         ],
       )
     );

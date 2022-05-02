@@ -43,12 +43,14 @@ class ProfileCard extends StatelessWidget {
                   radius: 30.0,
                 ),
                 const SizedBox(width: 15.0),
-                Text(
-                  title,
-                  style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w700,
-                      color: VotoColors.white),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w700,
+                        color: VotoColors.white),
+                  ),
                 ),
                 const Icon(
                   Icons.chevron_right,

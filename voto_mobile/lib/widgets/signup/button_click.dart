@@ -17,7 +17,7 @@ class ButtonClick extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/home_page');
+              Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(0),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class SignUpClick extends StatelessWidget {
@@ -7,37 +7,30 @@ class SignUpClick extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 25,
-        right: 25,
-        left: 25,
-      ),
-      child: Row(
+    return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RichText(
-            text: TextSpan(
+            text: const TextSpan(
               text: "Don't have account? ",
               style: TextStyle(
                 color: Colors.white,
               ),
             ),
           ),
-          ElevatedButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, '/signup_page');
             },
-            child: const Text(
+            child: Text(
               'Sign up',
-              style: TextStyle(
-                color: VotoColors.secondary,
+              style: GoogleFonts.inter(
+                color: VotoColors.magenta,
                 fontWeight: FontWeight.bold,
               ),
             ),
           )
         ],
-      ),
-    );
+      );
   }
 }

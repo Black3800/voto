@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/homepage/logout_card.dart';
@@ -22,7 +23,8 @@ class DrawerMenu extends StatelessWidget {
           ),
           ProfileCard(
               imagePath: 'assets/user_profile_test.jpg',
-              title: 'Tanny Panitnun',
+              title: FirebaseAuth.instance.currentUser?.displayName ?? 'Anonymous',
+              // title: 'Anakin',
               onTap: () {
                 Navigator.pushNamed(context, "/profile_page");
               }),

@@ -41,10 +41,10 @@ class _TeamPageState extends State<TeamPage> {
                 RandomCard(
                     title: 'Random food',
                     description: 'Let\'s random food for dinner'),
-                RandomCard(
-                    title: 'Random food',
-                    description: 'Let\'s random food for dinner',
-                    showStartRandom: false,),
+                // RandomCard(
+                //     title: 'Random food',
+                //     description: 'Let\'s random food for dinner',
+                //     showStartRandom: false,),
                 PollCard(
                   title: 'Vote for theme app',
                   closeDate: '22 April 2022',

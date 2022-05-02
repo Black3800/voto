@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProfileCustomEmailTextField extends StatefulWidget {
-  const ProfileCustomEmailTextField({Key? key}) : super(key: key);
+  final String initialValue;
+  const ProfileCustomEmailTextField({Key? key, this.initialValue = ''}) : super(key: key);
 
   @override
   State<ProfileCustomEmailTextField> createState() =>
@@ -17,7 +18,7 @@ class _ProfileCustomEmailTextFieldState
         bottom: 10,
       ),
       child: TextFormField(
-        initialValue: 'Tanny_panit@gmail.com',
+        initialValue: widget.initialValue,
         style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w400,

@@ -73,7 +73,9 @@ class ResultCard extends StatelessWidget {
               style: GoogleFonts.inter(fontSize: 12.0, color: VotoColors.indigo),
             ),
           const SizedBox(height: 20.0),
-          CardActionButton(text: 'Vote now', onPressed: () {},)
+          CardActionButton(text: 'View full result', onPressed: () {
+            Navigator.pushNamed(context, '/poll_result_page');
+          },)
         ],
       )
     );

@@ -123,7 +123,6 @@ class _SignUpTextFormState extends State<SignUpTextForm> {
                       ),
               ),
               autofocus: false,
-              obscureText: true,
               // style: const TextStyle(color: Color(0xFF141D3B)
               style: GoogleFonts.inter(
                 fontSize: 14,
