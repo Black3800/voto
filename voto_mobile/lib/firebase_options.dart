@@ -43,6 +43,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '613355766380',
     projectId: 'cs21-voto',
     authDomain: 'cs21-voto.firebaseapp.com',
+    databaseURL: 'https://cs21-voto-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'cs21-voto.appspot.com',
     measurementId: 'G-R6ECE1R240',
   );
@@ -52,6 +53,7 @@ class DefaultFirebaseOptions {
     appId: '1:613355766380:android:9767591cda75462a4cce49',
     messagingSenderId: '613355766380',
     projectId: 'cs21-voto',
+    databaseURL: 'https://cs21-voto-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'cs21-voto.appspot.com',
   );
 
@@ -60,6 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:613355766380:ios:40fc06defeaadbd24cce49',
     messagingSenderId: '613355766380',
     projectId: 'cs21-voto',
+    databaseURL: 'https://cs21-voto-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'cs21-voto.appspot.com',
     iosClientId: '613355766380-cnpmtntkqr0t3ov8dmr8qvs3l77nfbqg.apps.googleusercontent.com',
     iosBundleId: 'com.cs21.voto',
