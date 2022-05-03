@@ -38,7 +38,7 @@ class ManageTeamOwnerPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Filed(title: "au8fcd", width: 70),
-                          Purple_button("Copy link to team", 132)
+                          Purple_button()
                         ],
                       ),
                       Topic("Passcode"),

@@ -35,8 +35,10 @@ class _JoinTeamState extends State<JoinTeam> {
             // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("The following team requires passcode to join",
-                  style: Theme.of(context).textTheme.bodyText1?.merge(
-                      const TextStyle(color: VotoColors.black))),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.merge(const TextStyle(color: VotoColors.black))),
               const SizedBox(height: 15.0),
               const Center(
                   child: CircleAvatar(
@@ -45,15 +47,22 @@ class _JoinTeamState extends State<JoinTeam> {
               const SizedBox(height: 15.0),
               Center(
                 child: Text("Integrated Project II",
-                    style: Theme.of(context).textTheme.headline2?.merge(
-                        const TextStyle(color: VotoColors.black))),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline2
+                        ?.merge(const TextStyle(color: VotoColors.black))),
               ),
               const SizedBox(height: 15.0),
               Text("Passcode",
-                  style: Theme.of(context).textTheme.headline3?.merge(
-                      const TextStyle(color: VotoColors.black))),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline3
+                      ?.merge(const TextStyle(color: VotoColors.black))),
               const SizedBox(height: 15.0),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: const [Pass()],),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [Pass()],
+              ),
               const SizedBox(height: 30.0),
               WideButton(
                   text: 'Join',
@@ -65,8 +74,7 @@ class _JoinTeamState extends State<JoinTeam> {
         );
       },
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))
-      ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
     );
   }
 
@@ -88,12 +96,12 @@ class _JoinTeamState extends State<JoinTeam> {
                   .headline3
                   ?.merge(const TextStyle(color: VotoColors.black))),
           const SizedBox(height: 15.0),
-          const SimpleTextInput(accentColor: VotoColors.indigo),
+          const SimpleTextInput(
+            accentColor: VotoColors.indigo,
+            max: 6,
+          ),
           const SizedBox(height: 30.0),
-          WideButton(
-              text: 'Join',
-              onPressed: showEnterPasscodeDialog
-          )
+          WideButton(text: 'Join', onPressed: showEnterPasscodeDialog)
         ],
       ),
     );

@@ -17,23 +17,25 @@ class SimpleTextInput extends StatefulWidget {
   final void Function()? onEditingComplete;
   final void Function(String)? onFieldSubmitted;
   final void Function(String?)? onSaved;
-  const SimpleTextInput({
-    Key? key,
-    this.initialValue,
-    this.accentColor = VotoColors.black,
-    this.icon,
-    this.hintText = 'Aa',
-    this.multiline = false,
-    this.clearable = true,
-    this.keyboardType,
-    this.inputFormatters,
-    this.controller,
-    this.onChanged,
-    this.onTap,
-    this.onEditingComplete,
-    this.onFieldSubmitted,
-    this.onSaved,
-  }) : super(key: key);
+  final max;
+  const SimpleTextInput(
+      {Key? key,
+      this.initialValue,
+      this.accentColor = VotoColors.black,
+      this.icon,
+      this.hintText = 'Aa',
+      this.multiline = false,
+      this.clearable = true,
+      this.keyboardType,
+      this.inputFormatters,
+      this.controller,
+      this.onChanged,
+      this.onTap,
+      this.onEditingComplete,
+      this.onFieldSubmitted,
+      this.onSaved,
+      this.max})
+      : super(key: key);
 
   @override
   State<SimpleTextInput> createState() => _SimpleTextInputState();
@@ -58,53 +60,59 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-        controller: widget.controller ?? _controller,
-        initialValue: widget.initialValue,
-        keyboardType: widget.keyboardType,
-        inputFormatters: widget.inputFormatters,
-        minLines: widget.multiline ? 4 : 1,
-        maxLines: widget.multiline ? null : 1,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: widget.accentColor,
-        ),
-        onChanged: (value) {
-          widget.onChanged?.call(value);
-          setState(() {});
-        },
-        onTap: widget.onTap,
-        onEditingComplete: widget.onEditingComplete,
-        onFieldSubmitted: widget.onFieldSubmitted,
-        onSaved: widget.onSaved,
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: const EdgeInsets.all(16.0),
-          prefixIcon: widget.icon != null ? Icon(
-            widget.icon,
-            color: widget.accentColor,
-          ) : null,
-          border: const OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.all(
-              Radius.circular(12),
-            ),
+      maxLength: widget.max,
+      controller: widget.controller ?? _controller,
+      initialValue: widget.initialValue,
+      keyboardType: widget.keyboardType,
+      inputFormatters: widget.inputFormatters,
+      minLines: widget.multiline ? 4 : 1,
+      maxLines: widget.multiline ? null : 1,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+        color: widget.accentColor,
+      ),
+      onChanged: (value) {
+        widget.onChanged?.call(value);
+        setState(() {});
+      },
+      onTap: widget.onTap,
+      onEditingComplete: widget.onEditingComplete,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      onSaved: widget.onSaved,
+      decoration: InputDecoration(
+        isDense: true,
+        contentPadding: const EdgeInsets.all(16.0),
+        prefixIcon: widget.icon != null
+            ? Icon(
+                widget.icon,
+                color: widget.accentColor,
+              )
+            : null,
+        border: const OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.all(
+            Radius.circular(12),
           ),
-          hintText: widget.hintText,
-          hintStyle: const TextStyle(color: Color(0xffc4c4c4)),
-          fillColor: VotoColors.gray,
-          filled: true,
-          suffixIcon: widget.clearable && (widget.controller ?? _controller).text.isNotEmpty ? InkWell(
-            child: Icon(
-              Icons.close,
-              color: widget.accentColor,
-            ),
-            onTap: () {
-              (widget.controller ?? _controller).clear();
-              setState(() {});
-            },
-          ) : null, 
         ),
-      );
+        hintText: widget.hintText,
+        hintStyle: const TextStyle(color: Color(0xffc4c4c4)),
+        fillColor: VotoColors.gray,
+        filled: true,
+        suffixIcon: widget.clearable &&
+                (widget.controller ?? _controller).text.isNotEmpty
+            ? InkWell(
+                child: Icon(
+                  Icons.close,
+                  color: widget.accentColor,
+                ),
+                onTap: () {
+                  (widget.controller ?? _controller).clear();
+                  setState(() {});
+                },
+              )
+            : null,
+      ),
+    );
   }
 }
