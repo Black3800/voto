@@ -4,6 +4,7 @@ import 'package:voto_mobile/widgets/random/random_detail.dart';
 import 'package:voto_mobile/widgets/random/random_task.dart';
 import 'package:voto_mobile/widgets/random/start_button.dart';
 import 'package:voto_mobile/widgets/randomresult/random_result_button.dart';
+import 'package:voto_mobile/widgets/share_button.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
 
 class RandomResultPage extends StatelessWidget {
@@ -18,14 +19,15 @@ class RandomResultPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            children: const [
-              RandomDetail(),
-              RandomTask(),
-              RandomResultButton(),
-            ],
-          ),
-        ],
+          Expanded(
+            child: ListView(
+              children: const [
+                RandomDetail(),
+                RandomTask(),
+              ],
+            )),
+          ShareButton(shareText: 'Share', onShare: () {}, onSave: () {}),
+        ]
       ),
     );
   }
