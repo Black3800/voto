@@ -9,10 +9,9 @@ class Topic extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.only(bottom: 10),
       child: Text(
         topic,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),

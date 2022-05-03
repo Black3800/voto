@@ -15,9 +15,7 @@ class Filed extends StatefulWidget {
 class _FiledState extends State<Filed> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      child: Container(
+    return SizedBox(
         height: 35,
         width: widget.width,
         child: TextField(
@@ -32,7 +30,6 @@ class _FiledState extends State<Filed> {
                   borderSide: BorderSide.none)),
           readOnly: true,
         ),
-      ),
-    );
+      );
   }
 }

@@ -22,37 +22,37 @@ class ManageTeamPage extends StatelessWidget {
         padding: const EdgeInsets.only(left: 42.5, right: 42.5, top: 20),
         child: Column(
           children: [
+            Topic("Team name"),
+            const SizedBox(height: 15.0),
+            const Filed(title: "Integrated Project II", width: 305),
+            const SizedBox(height: 15.0),
+            Topic("Join Code"),
+            const SizedBox(height: 15.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Filed(title: "au8fcd", width: 70),
+                Purple_button()
+              ],
+            ),
+            const SizedBox(height: 15.0),
+            Topic("Passcode"),
+            const SizedBox(height: 15.0),
+            const Pass(),
+            const SizedBox(height: 15.0),
+            Topic("Member"),
+            const SizedBox(height: 15.0),
             Expanded(
-              child: ListView(children: [
-                Container(
-                  child: Column(
-                    children: [
-                      Topic("Team name"),
-                      Filed(title: "Integrated Project II", width: 305),
-                      Topic("Join Code"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Filed(title: "au8fcd", width: 70),
-                          Purple_button()
-                        ],
-                      ),
-                      Topic("Passcode"),
-                      Pass(),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(children: [
-                    Topic("Member"),
-                    Ownercard("Tanny Paninun"),
-                    Membercard("Arny Anakin"),
-                    Membercard("Earth Chutirat"),
-                    Membercard("Aim Thanyapat"),
-                    Membercard("Ninny Chutikarn")
-                  ]),
-                ),
-              ]),
+              child: ListView.separated(
+                  itemBuilder: (context, index) => [
+                          const Membercard(name: "Tanny Paninun", isOwner: true),
+                          const Membercard(name: "Arny Anakin"),
+                          const Membercard(name: "Earth Chutirat"),
+                          const Membercard(name: "Aim Thanypat"),
+                          const Membercard(name: "Ninny Chutikarn"),
+                        ][index],
+                  separatorBuilder: (context, index) => const SizedBox(height: 15.0),
+                  itemCount: 5),
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 20),
