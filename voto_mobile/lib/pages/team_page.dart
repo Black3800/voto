@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voto_mobile/model/team.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/rich_button.dart';
 import 'package:voto_mobile/widgets/team/poll_card.dart';
@@ -17,10 +18,12 @@ class _TeamPageState extends State<TeamPage> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Team;
+
     return VotoScaffold(
       useMenu: false,
       useSetting: true,
-      title: 'Integrated Project II',
+      title: args.name,
       body: Column(
         children: [
           Padding(

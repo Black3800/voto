@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:voto_mobile/model/team.dart';
+import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/bottom_dialog.dart';
 import 'package:voto_mobile/widgets/image_input.dart';
@@ -17,6 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Team> teamsList = [];
+
   void showCreateTeamDialog() {
     showModalBottomSheet<void>(
       isScrollControlled: true,
@@ -73,6 +79,38 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// Start app -> Home page -> initState() -> Fetch DB -> Put into list
+  
+  Future<void> _getAllTeams() async {
+    // Firebase is asynchronous
+    FirebaseAuth.instance.authStateChanges().listen((event) {
+      String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+      DatabaseReference ref = FirebaseDatabase.instance.ref('users/' + uid);
+      ref.onValue.listen((DatabaseEvent event) async {
+        final json = event.snapshot.value as Map<dynamic, dynamic>;
+        final data = Users.fromJson(json);
+        final teams = data.joined_teams.keys;
+        for(String team_id in teams) {
+          DatabaseReference ref = FirebaseDatabase.instance.ref('teams/' + team_id);
+          final snapshot = await ref.get();
+          if(snapshot.exists) {
+            final team = Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
+            teamsList.add(team);
+          }
+        }
+        setState(() {
+          teamsList = List.from(teamsList);
+        });
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    _getAllTeams();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return VotoScaffold(
@@ -102,33 +140,19 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: [
-                TeamCard(
-                    imagePath: "dummy/misc2.jpg",
-                    title: "Integrated Project II",
-                    onTap: () {
-                      Navigator.pushNamed(context, "/team_page");
-                    }),
-                TeamCard(
-                    imagePath: "dummy/misc4.jpg",
-                    title: "GEN351",
-                    onTap: () {
-                      Navigator.pushNamed(context, "/team_page");
-                    }),
-                TeamCard(
-                    imagePath: "dummy/misc1.jpg",
-                    title: "ไข่ปิ้งมั้ยคะ",
-                    onTap: () {
-                      Navigator.pushNamed(context, "/team_page");
-                    }),
-                TeamCard(
-                    imagePath: "dummy/misc3.jpg",
-                    title: "CS#21",
-                    onTap: () {
-                      Navigator.pushNamed(context, "/team_page");
-                    }),
-              ],
+            child: ListView.builder(
+              itemBuilder: (context, index) => TeamCard(
+                imagePath: teamsList[index].img,
+                title: teamsList[index].name,
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/team_page',
+                    arguments: teamsList[index]
+                  );
+                }
+              ),
+              itemCount: teamsList.length
             ),
           )
         ],
