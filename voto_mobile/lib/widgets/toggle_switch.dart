@@ -19,13 +19,13 @@ class ToggleSwitch extends StatelessWidget {
       : super(key: key);
 
   Widget activeButton(text) => WideButton(
-      text: text(GoogleFonts.inter),
+      text: text,
       backgroundColor: color,
       isElevated: true,
       onPressed: () {});
 
   Widget inactiveButton(text) => WideButton(
-      text: text(GoogleFonts.inter),
+      text: text,
       foregroundColor: color,
       backgroundColor: VotoColors.gray,
       isElevated: false,
