@@ -13,7 +13,7 @@ class DeleteTeamButton extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      child: Outline_button("Delete team", 47, 305, 16),
+      child: Outline_button(text: "Delete team"),
     );
   }
 }

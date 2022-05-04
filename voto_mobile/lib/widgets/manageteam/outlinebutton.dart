@@ -15,18 +15,20 @@ class Outline_button extends StatelessWidget {
     return OutlinedButton(
       onPressed: () {},
       style: OutlinedButton.styleFrom(
-          fixedSize: Size(width, high),
-          primary: VotoColors.secondary,
+          padding: EdgeInsets.all(padding),
+          fixedSize: width != null ? Size(width ?? 0.0, height ?? 50.0) : null,
+          minimumSize: width == null ? Size.fromHeight(height ?? 50.0) : null,
+          primary: VotoColors.danger,
           backgroundColor: VotoColors.white,
-          side: BorderSide(width: 1, color: VotoColors.secondary),
+          side: const BorderSide(width: 1, color: VotoColors.danger),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)))),
       child: Text(
-        title,
+        text,
         style: GoogleFonts.inter(
-            color: VotoColors.secondary,
+            color: VotoColors.danger,
             fontWeight: FontWeight.w600,
-            fontSize: size),
+            fontSize: fontSize),
       ),
     );
   }
