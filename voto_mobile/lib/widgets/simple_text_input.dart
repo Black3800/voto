@@ -62,6 +62,7 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller ?? _controller,
+      maxLength: widget.max,
       initialValue: widget.initialValue,
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,
