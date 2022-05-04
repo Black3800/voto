@@ -3,29 +3,41 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Outline_button extends StatelessWidget {
-  String title;
-  double width;
-  double high;
-  double size;
-  Outline_button(this.title, this.high, this.width, this.size);
+  final String text;
+  final double? width;
+  final double? height;
+  final double fontSize;
+  final double padding;
+  final Function()? onPressed;
+  const Outline_button(
+      {Key? key,
+      required this.text,
+      this.width,
+      this.height,
+      this.fontSize = 16.0,
+      this.padding = 8.0,
+      this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () => {},
+      onPressed: onPressed ?? () {},
       style: OutlinedButton.styleFrom(
-          fixedSize: Size(width, high),
-          primary: VotoColors.secondary,
+          padding: EdgeInsets.all(padding),
+          fixedSize: width != null ? Size(width ?? 0.0, height ?? 50.0) : null,
+          minimumSize: width == null ? Size.fromHeight(height ?? 50.0) : null,
+          primary: VotoColors.danger,
           backgroundColor: VotoColors.white,
-          side: BorderSide(width: 1, color: VotoColors.secondary),
+          side: const BorderSide(width: 1, color: VotoColors.danger),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)))),
       child: Text(
-        title,
+        text,
         style: GoogleFonts.inter(
-            color: VotoColors.secondary,
+            color: VotoColors.danger,
             fontWeight: FontWeight.w600,
-            fontSize: size),
+            fontSize: fontSize),
       ),
     );
   }

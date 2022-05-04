@@ -3,7 +3,6 @@ import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/manageteam/filed.dart';
 import 'package:voto_mobile/widgets/manageteam/membercard.dart';
 import 'package:voto_mobile/widgets/manageteam/outlinebutton.dart';
-import 'package:voto_mobile/widgets/manageteam/ownercard.dart';
 import 'package:voto_mobile/widgets/manageteam/passcode.dart';
 import 'package:voto_mobile/widgets/manageteam/topic.dart';
 import 'package:voto_mobile/widgets/purple_button.dart';
@@ -24,14 +23,18 @@ class ManageTeamPage extends StatelessWidget {
           children: [
             Topic("Team name"),
             const SizedBox(height: 15.0),
-            const Filed(title: "Integrated Project II", width: 305),
+            Row(
+              children: const [
+                Filed(text: "Integrated Project II"),
+              ],
+            ),
             const SizedBox(height: 15.0),
             Topic("Join Code"),
             const SizedBox(height: 15.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Filed(title: "au8fcd", width: 70),
+                const SizedBox(width: 70.0, child: Filed(text: "au8fcd")),
                 Purple_button()
               ],
             ),
@@ -45,18 +48,22 @@ class ManageTeamPage extends StatelessWidget {
             Expanded(
               child: ListView.separated(
                   itemBuilder: (context, index) => [
-                          const Membercard(name: "Tanny Paninun", isOwner: true),
-                          const Membercard(name: "Arny Anakin"),
-                          const Membercard(name: "Earth Chutirat"),
-                          const Membercard(name: "Aim Thanypat"),
-                          const Membercard(name: "Ninny Chutikarn"),
-                        ][index],
-                  separatorBuilder: (context, index) => const SizedBox(height: 15.0),
+                        const Membercard(name: "Tanny Paninun", isOwner: true),
+                        const Membercard(name: "Arny Anakin"),
+                        const Membercard(name: "Earth Chutirat"),
+                        const Membercard(name: "Aim Thanypat"),
+                        const Membercard(name: "Ninny Chutikarn"),
+                      ][index],
+                  separatorBuilder: (context, index) => const Divider(
+                        height: 15.0,
+                        color: VotoColors.gray,
+                        thickness: 1.0,
+                      ),
                   itemCount: 5),
             ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              child: Outline_button("Leave", 47, 305, 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24.0),
+              child: Outline_button(text: "Leave", padding: 16.0),
             )
           ],
         ),
