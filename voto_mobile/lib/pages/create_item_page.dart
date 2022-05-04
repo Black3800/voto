@@ -9,7 +9,7 @@ import 'package:voto_mobile/widgets/voto_scaffold.dart';
 import 'package:intl/intl.dart';
 
 class CreateItemPage extends StatefulWidget {
-  const CreateItemPage({ Key? key }) : super(key: key);
+  const CreateItemPage({Key? key}) : super(key: key);
 
   @override
   State<CreateItemPage> createState() => _CreateItemPageState();
@@ -35,7 +35,8 @@ class _CreateItemPageState extends State<CreateItemPage> {
   @override
   void initState() {
     super.initState();
-    _multipleWinnerController = TextEditingController(text: numberOfWinners.toString());
+    _multipleWinnerController =
+        TextEditingController(text: numberOfWinners.toString());
   }
 
   @override
@@ -70,41 +71,48 @@ class _CreateItemPageState extends State<CreateItemPage> {
         });
       }
     }
-    
-    Widget heading(text) => Text(
-      text,
-      style: Theme.of(context).textTheme.headline3!.merge(const TextStyle(color: VotoColors.black))
-    );
 
-    Widget datePickerButton() =>  OutlinedButton(
-                                    onPressed: () => _selectDate(context),
-                                    child: Row(children: [
-                                      const Icon(Icons.event, size: 24.0,),
-                                      const SizedBox(width: 10.0),
-                                      Text(DateFormat('yMMMMd').format(selectedDate))
-                                    ]),
-                                    style: OutlinedButton.styleFrom(
-                                      primary: VotoColors.magenta,
-                                      padding: const EdgeInsets.all(15.0),
-                                      textStyle: Theme.of(context).textTheme.bodyText1,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
-                                    ),
-                                  );
+    Widget heading(text) => Text(text,
+        style: Theme.of(context)
+            .textTheme
+            .headline3!
+            .merge(const TextStyle(color: VotoColors.black)));
 
-    Widget timePickerButton() =>  OutlinedButton(
-                                    onPressed: () => _selectTime(context),
-                                    child: Row(children: [
-                                      const Icon(Icons.access_time, size: 24.0,),
-                                      const SizedBox(width: 10.0),
-                                      Text(selectedTime.toString().replaceAll(RegExp(r'[^\d:]'), ''))
-                                    ]),
-                                    style: OutlinedButton.styleFrom(
-                                      primary: VotoColors.magenta,
-                                      padding: const EdgeInsets.all(15.0),
-                                      textStyle: Theme.of(context).textTheme.bodyText1,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
-                                    ),
-                                  );
+    Widget datePickerButton() => OutlinedButton(
+          onPressed: () => _selectDate(context),
+          child: Row(children: [
+            const Icon(
+              Icons.event,
+              size: 24.0,
+            ),
+            const SizedBox(width: 10.0),
+            Text(DateFormat('yMMMMd').format(selectedDate))
+          ]),
+          style: OutlinedButton.styleFrom(
+              primary: VotoColors.magenta,
+              padding: const EdgeInsets.all(15.0),
+              textStyle: Theme.of(context).textTheme.bodyText1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0))),
+        );
+
+    Widget timePickerButton() => OutlinedButton(
+          onPressed: () => _selectTime(context),
+          child: Row(children: [
+            const Icon(
+              Icons.access_time,
+              size: 24.0,
+            ),
+            const SizedBox(width: 10.0),
+            Text(selectedTime.toString().replaceAll(RegExp(r'[^\d:]'), ''))
+          ]),
+          style: OutlinedButton.styleFrom(
+              primary: VotoColors.magenta,
+              padding: const EdgeInsets.all(15.0),
+              textStyle: Theme.of(context).textTheme.bodyText1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0))),
+        );
 
     List<Widget> _pollSettingsWidgets = <Widget>[
       heading('Closing date'),
@@ -119,8 +127,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
         isChecked: pollSettings.multipleVote,
         onChanged: () {
           setState(() {
-            pollSettings.multipleVote =
-                !pollSettings.multipleVote;
+            pollSettings.multipleVote = !pollSettings.multipleVote;
           });
         },
       ),
@@ -144,41 +151,39 @@ class _CreateItemPageState extends State<CreateItemPage> {
           });
         },
       ),
-      Row(
-        children: [
-          Expanded(
-            child: SimpleCheckbox(
-              text: 'Multiple winner',
-              color: VotoColors.magenta,
-              isChecked: pollSettings.multipleWinner,
-              onChanged: () {
-                setState(() {
-                  pollSettings.multipleWinner = !pollSettings.multipleWinner;
-                });
-              },
-            ),
+      Row(children: [
+        Expanded(
+          child: SimpleCheckbox(
+            text: 'Multiple winner',
+            color: VotoColors.magenta,
+            isChecked: pollSettings.multipleWinner,
+            onChanged: () {
+              setState(() {
+                pollSettings.multipleWinner = !pollSettings.multipleWinner;
+              });
+            },
           ),
-          pollSettings.multipleWinner
+        ),
+        pollSettings.multipleWinner
             ? Expanded(
                 child: SimpleTextInput(
-                  controller: _multipleWinnerController,
-                  hintText: 'Count',
-                  clearable: false,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  onFieldSubmitted: (value) {
-                    if(value.isEmpty || int.parse(value) < 2) {
-                      _multipleWinnerController.text = numberOfWinners.toString();
-                    } else {
-                      numberOfWinners = int.parse(value);
-                    }
-                  },
+                controller: _multipleWinnerController,
+                hintText: 'Count',
+                clearable: false,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                onFieldSubmitted: (value) {
+                  if (value.isEmpty || int.parse(value) < 2) {
+                    _multipleWinnerController.text = numberOfWinners.toString();
+                  } else {
+                    numberOfWinners = int.parse(value);
+                  }
+                },
               ))
             : Container()
-        ]
-      ),
+      ]),
       SimpleCheckbox(
         text: 'Allow members to add new option',
         color: VotoColors.magenta,
@@ -196,7 +201,8 @@ class _CreateItemPageState extends State<CreateItemPage> {
               isChecked: pollSettings.allowVoteOwnOption,
               onChanged: () {
                 setState(() {
-                  pollSettings.allowVoteOwnOption = !pollSettings.allowVoteOwnOption;
+                  pollSettings.allowVoteOwnOption =
+                      !pollSettings.allowVoteOwnOption;
                 });
               },
             )
@@ -232,19 +238,23 @@ class _CreateItemPageState extends State<CreateItemPage> {
               },
             ),
             const SizedBox(height: 10.0),
-            Row(children: [
-              const Icon(Icons.info, color: Color(0xffaaaaaa)),
-              const SizedBox(width: 10.0),
-              Expanded(
-                child: Text(
-                  isLuckyDrawer
+            Row(
+              children: [
+                const Icon(Icons.info, color: Color(0xffaaaaaa)),
+                const SizedBox(width: 10.0),
+                Expanded(
+                  child: Text(
+                      isLuckyDrawer
                           ? 'Lucky drawer randomly picks one out of the options'
                           : 'Pair generator randomly pairs team members with the options',
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodyText1?.apply(color: const Color(0xffaaaaaa))
-                ),
-              )
-            ],)
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.apply(color: const Color(0xffaaaaaa))),
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -253,6 +263,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
     List<Widget> _list = <Widget>[
       heading('Title'),
       SimpleTextInput(
+        max: 30,
         controller: _titleController,
         onChanged: (value) {
           setState(() {});
@@ -260,12 +271,12 @@ class _CreateItemPageState extends State<CreateItemPage> {
       ),
       heading('Description'),
       SimpleTextInput(
-        controller: _descriptionController,
-        onChanged: (value) {
-          setState(() {});
-        },
-        multiline: true
-      ),
+          max: 300,
+          controller: _descriptionController,
+          onChanged: (value) {
+            setState(() {});
+          },
+          multiline: true),
       heading('Type'),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -276,46 +287,37 @@ class _CreateItemPageState extends State<CreateItemPage> {
           onChanged: toggleType,
         ),
       ),
-      if(isPoll)
-        ..._pollSettingsWidgets
-      else
-        ..._randomSettingsWidgets,
+      if (isPoll) ..._pollSettingsWidgets else ..._randomSettingsWidgets,
       const SizedBox(height: 30.0),
     ];
 
     return VotoScaffold(
         useMenu: false,
-        title: 'Create new item', 
+        title: 'Create new item',
         titleContext: 'Integrated Project II',
-        body: Column(
-          children: [
-            Expanded(
+        body: Column(children: [
+          Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 20.0,
-                  left: 42.5,
-                  right: 42.5
-                ),
-                child: ListView.separated(
-                  itemBuilder: (context, index) => _list[index],
-                  separatorBuilder: (context, index) => const SizedBox(height: 10.0),
-                  itemCount: _list.length),
-              )
-            ),
-            ConfirmButton(
-              confirmText: 'Next',
-              disabled: _titleController.text.isEmpty || _descriptionController.text.isEmpty,
-              onConfirm: () {
-                Navigator.pushNamed(context, '/add_option_page');
-              },
-              onCancel: () {
-                Navigator.pop(context);
-              },
-              height: 75.0,
-            )
-          ]
-        )
-    );
+            padding: const EdgeInsets.only(top: 20.0, left: 42.5, right: 42.5),
+            child: ListView.separated(
+                itemBuilder: (context, index) => _list[index],
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10.0),
+                itemCount: _list.length),
+          )),
+          ConfirmButton(
+            confirmText: 'Next',
+            disabled: _titleController.text.isEmpty ||
+                _descriptionController.text.isEmpty,
+            onConfirm: () {
+              Navigator.pushNamed(context, '/add_option_page');
+            },
+            onCancel: () {
+              Navigator.pop(context);
+            },
+            height: 75.0,
+          )
+        ]));
   }
 }
 
@@ -328,13 +330,12 @@ class PollSettings {
   bool allowVoteOwnOption;
   bool showOptionOwner;
 
-  PollSettings({
-    this.multipleVote = false,
-    this.anonymousVote = false,
-    this.tiebreaker = false,
-    this.multipleWinner = false,
-    this.allowAdd = false,
-    this.allowVoteOwnOption = false,
-    this.showOptionOwner = false
-  });
+  PollSettings(
+      {this.multipleVote = false,
+      this.anonymousVote = false,
+      this.tiebreaker = false,
+      this.multipleWinner = false,
+      this.allowAdd = false,
+      this.allowVoteOwnOption = false,
+      this.showOptionOwner = false});
 }

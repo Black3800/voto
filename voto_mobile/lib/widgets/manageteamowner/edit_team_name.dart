@@ -14,6 +14,7 @@ class EditTeamName extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       height: _deviceHeight * 0.05,
       child: TextFormField(
+        maxLength: 30,
         // name,
 
         style: GoogleFonts.inter(

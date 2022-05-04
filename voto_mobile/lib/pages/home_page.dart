@@ -29,39 +29,42 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return BottomDialog(
-            title: "Create team",
-            child: ListView(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Team name",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline3
-                          ?.merge(const TextStyle(color: VotoColors.black))),
-                  const SizedBox(height: 15.0),
-                  const SimpleTextInput(
-                      icon: Icons.people, accentColor: VotoColors.indigo),
-                  const SizedBox(height: 15.0),
-                  Text("Team picture",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline3
-                          ?.merge(const TextStyle(color: VotoColors.black))),
-                  const SizedBox(height: 15.0),
-                  const Center(
-                      child: ImageInput(
-                    initial: 'T',
-                    radius: 150.0,
-                  )),
-                  const SizedBox(height: 30.0),
-                  WideButton(
-                      text: 'Create',
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }),
-                ],
+          title: "Create team",
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Team name",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline3
+                      ?.merge(const TextStyle(color: VotoColors.black))),
+              const SizedBox(height: 15.0),
+              const SimpleTextInput(
+                icon: Icons.people,
+                accentColor: VotoColors.indigo,
+                max: 30,
               ),
-            );
+              const SizedBox(height: 15.0),
+              Text("Team picture",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline3
+                      ?.merge(const TextStyle(color: VotoColors.black))),
+              const SizedBox(height: 15.0),
+              const Center(
+                  child: ImageInput(
+                initial: 'T',
+                radius: 150.0,
+              )),
+              const SizedBox(height: 30.0),
+              WideButton(
+                  text: 'Create',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+            ],
+          ),
+        );
       },
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
@@ -80,28 +83,35 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Start app -> Home page -> initState() -> Fetch DB -> Put into list
-  
+
   Future<void> _getAllTeams() async {
     // Firebase is asynchronous
-    FirebaseAuth.instance.authStateChanges().listen((event) {
-      String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-      DatabaseReference ref = FirebaseDatabase.instance.ref('users/' + uid);
-      ref.onValue.listen((DatabaseEvent event) async {
-        final json = event.snapshot.value as Map<dynamic, dynamic>;
-        final data = Users.fromJson(json);
-        final teams = data.joined_teams.keys;
-        for(String team_id in teams) {
-          DatabaseReference ref = FirebaseDatabase.instance.ref('teams/' + team_id);
-          final snapshot = await ref.get();
-          if(snapshot.exists) {
-            final team = Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
-            teamsList.add(team);
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if(user != null) {
+        String uid = user.uid;
+        DatabaseReference ref = FirebaseDatabase.instance.ref('users/' + uid);
+        ref.onValue.listen((DatabaseEvent event) async {
+          if (event.snapshot.exists && event.snapshot.value != null) {
+            final json = event.snapshot.value as Map<dynamic, dynamic>;
+            final data = Users.fromJson(json);
+            final teams = data.joined_teams.keys;
+            teamsList = [];
+            for (String teamId in teams) {
+              DatabaseReference ref =
+                  FirebaseDatabase.instance.ref('teams/' + teamId);
+              final snapshot = await ref.get();
+              if (snapshot.exists) {
+                final team =
+                    Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
+                teamsList.add(team);
+              }
+            }
+            setState(() {
+              teamsList = List.from(teamsList);
+            });
           }
-        }
-        setState(() {
-          teamsList = List.from(teamsList);
         });
-      });
+      }
     });
   }
 
@@ -141,19 +151,14 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemBuilder: (context, index) => TeamCard(
-                imagePath: teamsList[index].img,
-                title: teamsList[index].name,
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/team_page',
-                    arguments: teamsList[index]
-                  );
-                }
-              ),
-              itemCount: teamsList.length
-            ),
+                itemBuilder: (context, index) => TeamCard(
+                    imagePath: teamsList[index].img,
+                    title: teamsList[index].name,
+                    onTap: () {
+                      Navigator.pushNamed(context, '/team_page',
+                          arguments: teamsList[index]);
+                    }),
+                itemCount: teamsList.length),
           )
         ],
       ),

@@ -4,7 +4,8 @@ import 'package:voto_mobile/utils/color.dart';
 
 class ProfileCustomTextField extends StatefulWidget {
   final String initialValue;
-  const ProfileCustomTextField({Key? key, this.initialValue = ''}) : super(key: key);
+  const ProfileCustomTextField({Key? key, this.initialValue = ''})
+      : super(key: key);
 
   @override
   State<ProfileCustomTextField> createState() => _ProfileCustomTextFieldState();
@@ -18,6 +19,7 @@ class _ProfileCustomTextFieldState extends State<ProfileCustomTextField> {
         bottom: 10,
       ),
       child: TextFormField(
+        maxLength: 30,
         initialValue: widget.initialValue,
         style: GoogleFonts.inter(
           fontSize: 12,

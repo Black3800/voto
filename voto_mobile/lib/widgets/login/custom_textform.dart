@@ -5,7 +5,9 @@ import 'package:voto_mobile/utils/color.dart';
 class CustomTextForm extends StatefulWidget {
   final TextEditingController controller;
   final bool isEmail;
-  const CustomTextForm({Key? key, required this.controller, required this.isEmail}) : super(key: key);
+  const CustomTextForm(
+      {Key? key, required this.controller, required this.isEmail})
+      : super(key: key);
 
   @override
   State<CustomTextForm> createState() => _CustomTextFormState();
@@ -22,6 +24,8 @@ class _CustomTextFormState extends State<CustomTextForm> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLength: widget.isEmail ? 50 : 100,
+      buildCounter: (context, {required int currentLength, required int? maxLength, required bool isFocused}) => Container(),
       onChanged: ((value) {
         setState(() {});
       }),

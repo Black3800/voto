@@ -18,23 +18,25 @@ class SimpleTextInput extends StatefulWidget {
   final void Function()? onEditingComplete;
   final void Function(String)? onFieldSubmitted;
   final void Function(String?)? onSaved;
-  const SimpleTextInput({
-    Key? key,
-    this.initialValue,
-    this.accentColor = VotoColors.black,
-    this.icon,
-    this.hintText = 'Aa',
-    this.multiline = false,
-    this.clearable = true,
-    this.keyboardType,
-    this.inputFormatters,
-    this.controller,
-    this.onChanged,
-    this.onTap,
-    this.onEditingComplete,
-    this.onFieldSubmitted,
-    this.onSaved,
-  }) : super(key: key);
+  final max;
+  const SimpleTextInput(
+      {Key? key,
+      this.initialValue,
+      this.accentColor = VotoColors.black,
+      this.icon,
+      this.hintText = 'Aa',
+      this.multiline = false,
+      this.clearable = true,
+      this.keyboardType,
+      this.inputFormatters,
+      this.controller,
+      this.onChanged,
+      this.onTap,
+      this.onEditingComplete,
+      this.onFieldSubmitted,
+      this.onSaved,
+      this.max})
+      : super(key: key);
 
   @override
   State<SimpleTextInput> createState() => _SimpleTextInputState();

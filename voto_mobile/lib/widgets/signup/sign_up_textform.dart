@@ -54,6 +54,7 @@ class _SignUpTextFormState extends State<SignUpTextForm> {
       child: Column(
         children: [
           TextFormField(
+            maxLength: 50,
             onChanged: ((value) {
               setState(() {});
             }),
@@ -94,6 +95,7 @@ class _SignUpTextFormState extends State<SignUpTextForm> {
               top: 25,
             ),
             child: TextFormField(
+              maxLength: 30,
               onChanged: ((value) {
                 setState(() {});
               }),
@@ -138,6 +140,7 @@ class _SignUpTextFormState extends State<SignUpTextForm> {
               top: 25,
             ),
             child: TextFormField(
+              maxLength: 100,
               onChanged: ((value) {
                 setState(() {});
               }),
@@ -183,6 +186,7 @@ class _SignUpTextFormState extends State<SignUpTextForm> {
               top: 25,
             ),
             child: TextFormField(
+              maxLength: 100,
               onChanged: ((value) {
                 setState(() {});
               }),

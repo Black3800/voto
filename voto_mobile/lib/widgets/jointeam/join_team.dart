@@ -54,7 +54,10 @@ class _JoinTeamState extends State<JoinTeam> {
                   style: Theme.of(context).textTheme.headline3?.merge(
                        GoogleFonts.inter(color: VotoColors.black))),
               const SizedBox(height: 15.0),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: const [Pass()],),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [Pass()],
+              ),
               const SizedBox(height: 30.0),
               WideButton(
                   text: 'Join',
@@ -66,8 +69,7 @@ class _JoinTeamState extends State<JoinTeam> {
         );
       },
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))
-      ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
     );
   }
 
@@ -89,12 +91,12 @@ class _JoinTeamState extends State<JoinTeam> {
                   .headline3
                   ?.merge( GoogleFonts.inter(color: VotoColors.black))),
           const SizedBox(height: 15.0),
-          const SimpleTextInput(accentColor: VotoColors.indigo),
+          const SimpleTextInput(
+            accentColor: VotoColors.indigo,
+            max: 6,
+          ),
           const SizedBox(height: 30.0),
-          WideButton(
-              text: 'Join',
-              onPressed: showEnterPasscodeDialog
-          )
+          WideButton(text: 'Join', onPressed: showEnterPasscodeDialog)
         ],
       ),
     );
