@@ -56,7 +56,7 @@ class _PollItemState extends State<PollItem> {
               Expanded(
                 child: Text(
                   widget.name,
-                  style: Theme.of(context).textTheme.bodyText1),GoogleFonts.inter()
+                  style: Theme.of(context).textTheme.bodyText1),
               ),
             ]),
           ),
