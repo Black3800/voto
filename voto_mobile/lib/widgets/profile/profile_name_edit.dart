@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/widgets/profile/profile_custom_email_textfield.dart';
 import 'package:voto_mobile/widgets/profile/profile_custom_textfield.dart';
 
 class ProfileDisplayNameEditing extends StatelessWidget {
   final String name;
   final String email;
-  const ProfileDisplayNameEditing({Key? key, required this.name, required this.email}) : super(key: key);
+  const ProfileDisplayNameEditing(
+      {Key? key, required this.name, required this.email})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +37,9 @@ class ProfileDisplayNameEditing extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       alignment: Alignment.centerLeft,
-      child: const Text(
+      child: Text(
         'Display name',
-        style: TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
@@ -48,9 +51,9 @@ class ProfileDisplayNameEditing extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       alignment: Alignment.centerLeft,
-      child: const Text(
+      child: Text(
         'Email',
-        style: TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),

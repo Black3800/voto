@@ -16,7 +16,7 @@ class EditTeamName extends StatelessWidget {
       child: TextFormField(
         // name,
 
-        style: const TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.normal,
         ),

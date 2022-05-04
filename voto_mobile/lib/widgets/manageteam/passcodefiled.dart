@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Passcode extends StatefulWidget {
@@ -23,7 +24,7 @@ class _PasscodeState extends State<Passcode> {
           decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
               hintText: widget.num,
-              hintStyle: TextStyle(
+              hintStyle: GoogleFonts.inter(
                   color: Colors.black,
                   fontSize: 32,
                   fontWeight: FontWeight.w600),

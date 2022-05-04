@@ -21,7 +21,7 @@ class PinCode extends StatelessWidget {
               children: [
                 Text(
                   'passcode',
-                  style: TextStyle(fontSize: 14.0),
+                  style: GoogleFonts.inter(fontSize: 14.0),
                 ),
                 SizedBox(
                   height: 50.0,

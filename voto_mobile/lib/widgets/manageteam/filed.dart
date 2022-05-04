@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Filed extends StatefulWidget {
@@ -22,7 +23,7 @@ class _FiledState extends State<Filed> {
           decoration: InputDecoration(
               contentPadding: EdgeInsets.only(left: 15),
               hintText: widget.title,
-              hintStyle: TextStyle(color: Colors.black, fontSize: 12),
+              hintStyle: GoogleFonts.inter(color: Colors.black, fontSize: 12),
               filled: true,
               fillColor: Color(0xffF2F4F8),
               border: OutlineInputBorder(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class ProfileButton extends StatelessWidget {
@@ -32,9 +33,9 @@ Widget profileSaveButton() {
       ),
     ),
     onPressed: () {},
-    child: const Text(
+    child:  Text(
       'Save',
-      style: TextStyle(
+      style: GoogleFonts.inter(
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
@@ -52,9 +53,9 @@ Widget profileCancleButton() {
       ),
     ),
     onPressed: () {},
-    child: const Text(
+    child:  Text(
       'Cancle',
-      style: TextStyle(color: VotoColors.indigo, fontWeight: FontWeight.bold),
+      style: GoogleFonts.inter(color: VotoColors.indigo, fontWeight: FontWeight.bold),
     ),
   );
 }

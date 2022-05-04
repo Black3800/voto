@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class LogoutCard extends StatelessWidget {
@@ -36,7 +37,7 @@ class LogoutCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      children: const [
+                      children:  [
                         Icon(
                           Icons.logout,
                           color: VotoColors.indigo,
@@ -45,7 +46,7 @@ class LogoutCard extends StatelessWidget {
                         SizedBox(width: 15.0),
                         Text(
                           'Logout',
-                          style: TextStyle(
+                          style: GoogleFonts.inter(
                               fontSize: 18.0,
                               fontWeight: FontWeight.normal,
                               color: VotoColors.indigo),

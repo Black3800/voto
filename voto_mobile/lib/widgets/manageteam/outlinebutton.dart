@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Outline_button extends StatelessWidget {
@@ -21,7 +22,7 @@ class Outline_button extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(20)))),
       child: Text(
         title,
-        style: TextStyle(
+        style: GoogleFonts.inter(
             color: VotoColors.secondary,
             fontWeight: FontWeight.w600,
             fontSize: size),

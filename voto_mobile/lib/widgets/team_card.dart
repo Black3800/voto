@@ -1,5 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class TeamCard extends StatefulWidget {
@@ -21,7 +22,9 @@ class _TeamCardState extends State<TeamCard> {
   String? imageURL;
 
   Future<void> _getImageURL() async {
-    imageURL = await FirebaseStorage.instance.refFromURL(widget.imagePath).getDownloadURL();
+    imageURL = await FirebaseStorage.instance
+        .refFromURL(widget.imagePath)
+        .getDownloadURL();
     setState(() {});
   }
 
@@ -58,14 +61,15 @@ class _TeamCardState extends State<TeamCard> {
               padding: const EdgeInsets.all(10.0),
               child: Row(children: [
                 CircleAvatar(
-                  backgroundImage: imageURL != null ? NetworkImage(imageURL ?? '') : null,
+                  backgroundImage:
+                      imageURL != null ? NetworkImage(imageURL ?? '') : null,
                   backgroundColor: VotoColors.indigo.shade300,
                   radius: 30.0,
                 ),
                 const SizedBox(width: 15.0),
                 Text(
                   widget.title,
-                  style: const TextStyle(
+                  style: GoogleFonts.inter(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w700,
                       color: VotoColors.indigo),

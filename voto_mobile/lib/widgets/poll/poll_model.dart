@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class PollItem extends StatefulWidget {
@@ -55,7 +56,7 @@ class _PollItemState extends State<PollItem> {
               Expanded(
                 child: Text(
                   widget.name,
-                  style: Theme.of(context).textTheme.bodyText1),
+                  style: Theme.of(context).textTheme.bodyText1),GoogleFonts.inter()
               ),
             ]),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/homepage/drawer_menu.dart';
 
@@ -40,9 +41,11 @@ class _VotoScaffoldState extends State<VotoScaffold> {
             widget.titleContext != null
                 ? Text(
                     widget.titleContext ?? '',
-                    style: const TextStyle(
-                        fontSize: 16.0, color: VotoColors.white),
+                    style: GoogleFonts.inter(
+                        fontSize: 16, color: VotoColors.white),
                   )
+                // fontSize: 16.0, color: VotoColors.white,fontFamily: GoogleFonts.inter),
+
                 : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.start,

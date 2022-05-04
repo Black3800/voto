@@ -26,9 +26,9 @@ class StartButton extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width * 0.8,
               height: 40,
-              child: const Text(
+              child: Text(
                 'Start',
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
