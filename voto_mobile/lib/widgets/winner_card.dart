@@ -17,10 +17,11 @@ class WinnerCard extends StatelessWidget {
               offset: Offset(2.0, 1.0))
         ],
         gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          stops: [-0.0073, 0.1979, 1],
-          colors: [Color(0xFFFFA5A5), Color(0xFFEC368D), Color(0xFF440381)],
+          begin: Alignment(-1.0, 1.0),
+          end: Alignment(1.0, -1.0),
+          stops: [0.0073, 0.1979, 1],
+          colors: [Color(0xFFFD98A3), Color(0xFFEC368D), Color(0xFF620C84)],
+          transform: GradientRotation(1.228712),
         ),
       ),
       padding: const EdgeInsets.all(20),
