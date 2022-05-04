@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/widgets/poll/poll_checkbox.dart';
 import 'package:voto_mobile/widgets/poll/poll_model.dart';
 
 class PollBody extends StatefulWidget {
@@ -13,33 +14,23 @@ class PollBody extends StatefulWidget {
 class _PollBodyState extends State<PollBody> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            editOptionButton(),
-          ],
-        ),
-        const PollItem(name: 'Salad', isVoted: true),
-        const PollItem(name: 'Pizza', isVoted: true),
-        const PollItem(name: 'Pizza', isVoted: false),
-        const PollItem(name: 'Super loooooooooonoooooooooooooooooooooooooooooooooooooooooog hotdog', isVoted: false),
-        const PollItem(name: 'Pizza', isVoted: false),
-        const PollItem(name: 'Pizza', isVoted: true),
-        const PollItem(name: 'Pizza', isVoted: false),
-        const PollItem(name: 'Pizza', isVoted: true),
-        const PollItem(name: 'Pizza', isVoted: false),
-        const PollItem(name: 'Pizza', isVoted: true),
-        const PollItem(name: 'Bonchon', isVoted: false),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 20.0
-          ),
-          child: addOptionButton(),
-        )
-      ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          editOptionButton(),
+        ],
+      ),
+      Poll_check(name: 'Salad'),
+      Poll_check(name: 'Pizza'),
+      Poll_check(name: 'Bonchon'),
+      Poll_check(name: 'KFC'),
+      Poll_check(name: 'Sushi'),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: addOptionButton(),
+      )
+    ]);
   }
 
   Widget addOptionButton() {
