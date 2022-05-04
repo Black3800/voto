@@ -4,6 +4,7 @@ import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/big_button.dart';
 import 'package:voto_mobile/widgets/login/custom_textform.dart';
 import 'package:voto_mobile/widgets/login/sign_up_click.dart';
+import 'package:voto_mobile/widgets/voto_snackbar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({ Key? key }) : super(key: key);
@@ -16,24 +17,12 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  final SnackBar failedSnackBar = SnackBar(
-                                    content: Row(children: const [
-                                      Icon(Icons.clear, color: VotoColors.danger),
-                                      SizedBox(width: 10.0),
-                                      Text('Please check your credentials and try again')
-                                    ]),
-                                  );
-
-  SnackBar successSnackBar(name) => SnackBar(
-                                      content: Row(children: [
-                                        const Icon(Icons.check_circle, color: VotoColors.success),
-                                        const SizedBox(width: 10.0),
-                                        Text("Welcome, ${name ?? 'Anonymous'}!")
-                                      ]),
-                                    );
-
   void handleLogin() async {
-    SnackBar snackBar = failedSnackBar;
+    VotoSnackbar snackBar = VotoSnackbar(
+      text: 'Please check your credentials and try again',
+      icon: Icons.clear,
+      accentColor: VotoColors.danger
+    );
 
     try {
       final credential = await FirebaseAuth.instance
@@ -42,7 +31,10 @@ class _LoginPageState extends State<LoginPage> {
               password: _passwordController.text
           );
 
-      snackBar = successSnackBar(credential.user?.displayName);
+      snackBar.text = "Welcome, ${credential.user?.displayName}";
+      snackBar.icon = Icons.check_circle;
+      snackBar.accentColor = VotoColors.success;
+
       Navigator.pushNamed(context, '/home_page');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -53,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
     } finally {
       _passwordController.clear();
       setState(() {});
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      snackBar.show(context);
     }
   }
 
@@ -72,9 +64,18 @@ class _LoginPageState extends State<LoginPage> {
                 height: 150,
               ),
               const SizedBox(height: 50.0),
-              CustomTextForm(controller: _emailController, isEmail: true),
+              CustomTextForm(
+                controller: _emailController,
+                hintText: 'Email',
+              ),
               const SizedBox(height: 25.0),
-              CustomTextForm(controller: _passwordController, isEmail: false),
+              CustomTextForm(
+                controller: _passwordController,
+                hintText: 'Password',
+                maxLength: 100,
+                icon: Icons.lock_rounded,
+                obscureText: true,
+              ),
               const SizedBox(height: 50.0),
               BigButton(
                 text: 'Login',
