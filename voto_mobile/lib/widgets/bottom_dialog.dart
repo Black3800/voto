@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class BottomDialog extends StatefulWidget {
@@ -21,41 +22,38 @@ class BottomDialog extends StatefulWidget {
 class _BottomDialogState extends State<BottomDialog> {
   @override
   Widget build(BuildContext context) {
-    
     return SizedBox(
-            height: MediaQuery.of(context).size.height * widget.height,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                          icon: const Icon(Icons.close),
-                          iconSize: 32.0,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          splashRadius: 24.0,
-                          color: widget.accentColor),
-                      const SizedBox(width: 10.0),
-                      Text(widget.title,
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              color: widget.accentColor))
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 20.0),
-                      child: widget.child),
-                ),
-                const SizedBox(height: 20.0)
-              ]
-            ),
+      height: MediaQuery.of(context).size.height * widget.height,
+      child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              IconButton(
+                  icon: const Icon(Icons.close),
+                  iconSize: 32.0,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  splashRadius: 24.0,
+                  color: widget.accentColor),
+              const SizedBox(width: 10.0),
+              Text(widget.title,
+                  style: GoogleFonts.inter(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: widget.accentColor))
+            ],
+          ),
+        ),
+        Expanded(
+          child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: widget.child),
+        ),
+        const SizedBox(height: 20.0)
+      ]),
     );
   }
 }

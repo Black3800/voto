@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/homepage/logout_card.dart';
 import 'package:voto_mobile/widgets/homepage/profile_card.dart';
@@ -23,7 +24,8 @@ class DrawerMenu extends StatelessWidget {
           ),
           ProfileCard(
               imagePath: 'assets/user_profile_test.jpg',
-              title: FirebaseAuth.instance.currentUser?.displayName ?? 'Anonymous',
+              title:
+                  FirebaseAuth.instance.currentUser?.displayName ?? 'Anonymous',
               // title: 'Anakin',
               onTap: () {
                 Navigator.pushNamed(context, "/profile_page");
@@ -52,9 +54,9 @@ class DrawerMenu extends StatelessWidget {
         Expanded(
             child: Container(
           padding: const EdgeInsets.only(left: 20),
-          child: const Text(
+          child: Text(
             'Menu',
-            style: TextStyle(
+             style: GoogleFonts.inter(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: VotoColors.indigo),

@@ -17,7 +17,7 @@ class EditTeamName extends StatelessWidget {
         maxLength: 30,
         // name,
 
-        style: const TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.normal,
         ),

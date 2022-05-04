@@ -25,6 +25,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
   Widget build(BuildContext context) {
     return TextFormField(
       maxLength: widget.isEmail ? 50 : 100,
+      buildCounter: (context, {required int currentLength, required int? maxLength, required bool isFocused}) => Container(),
       onChanged: ((value) {
         setState(() {});
       }),

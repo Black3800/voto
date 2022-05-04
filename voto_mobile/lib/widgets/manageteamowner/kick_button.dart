@@ -8,9 +8,29 @@ class KickButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 20),
-      child: Outline_button("Kick", 30, 12, 10),
-    );
+    return Outline_button(
+        text: "Kick",
+        width: 40.0,
+        height: 25.0,
+        fontSize: 12.0,
+        onPressed: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title:
+                    const Text('Are you sure you want to delete this member?'),
+                content: const Text(
+                    'If you kick this member,They will not belong to this group.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ));
   }
 }

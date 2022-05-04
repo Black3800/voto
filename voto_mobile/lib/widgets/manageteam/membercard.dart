@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/widgets/manageteamowner/kick_button.dart';
 
 class Membercard extends StatelessWidget {
   final String name;
   final bool isOwner;
-  const Membercard({ Key? key, required this.name, this.isOwner = false }) : super(key: key);
+  final bool kickable;
+  const Membercard(
+      {Key? key,
+      required this.name,
+      this.isOwner = false,
+      this.kickable = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 15),
@@ -25,23 +32,29 @@ class Membercard extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: const TextStyle(fontSize: 14),
-              ),
-              isOwner ? const Text(
-                "Team owner",
-                style: TextStyle(color: Color(0xff989898), fontSize: 12),
-              ) : Container()
-            ],
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(fontSize: 14),
+                ),
+                isOwner
+                    ? const Text(
+                        "Team owner",
+                        style:
+                            TextStyle(color: Color(0xff989898), fontSize: 12),
+                      )
+                    : Container()
+              ],
+            ),
           ),
-        )
+        ),
+        kickable ? const KickButton() : Container()
       ],
     );
   }

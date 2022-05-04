@@ -11,9 +11,9 @@ class SignUpClick extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RichText(
-            text: const TextSpan(
+            text:  TextSpan(
               text: "Don't have account? ",
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 color: Colors.white,
               ),
             ),

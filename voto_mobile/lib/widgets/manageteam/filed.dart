@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Filed extends StatefulWidget {
-  final String title;
-  final double width;
+  final String text;
+  final bool readOnly;
 
-  const Filed({Key? key, required this.title, required this.width})
+  const Filed({Key? key, required this.text, this.readOnly = true})
       : super(key: key);
 
   @override
@@ -15,21 +16,37 @@ class Filed extends StatefulWidget {
 class _FiledState extends State<Filed> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 35,
-        width: widget.width,
-        child: TextField(
+    return Expanded(
+      child: SizedBox(
+        height: widget.readOnly ? 35.0 : 50.0,
+        child: TextFormField(
+          maxLength: 30,
+          buildCounter: widget.readOnly
+              ? (context,
+                      {required int currentLength,
+                      required bool isFocused,
+                      required int? maxLength}) =>
+                  null
+              : null,
+          initialValue: widget.text,
+          style: GoogleFonts.inter(fontSize: 12.0),
           decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(left: 15),
-              hintText: widget.title,
-              hintStyle: TextStyle(color: Colors.black, fontSize: 12),
-              filled: true,
-              fillColor: Color(0xffF2F4F8),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none)),
-          readOnly: true,
+            contentPadding: const EdgeInsets.all(15.0),
+            filled: true,
+            fillColor: VotoColors.gray,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none),
+            suffixIcon: widget.readOnly
+                ? null
+                : const Icon(
+                    Icons.edit_outlined,
+                    color: Color(0xff7f8082),
+                  ),
+          ),
+          readOnly: widget.readOnly,
         ),
-      );
+      ),
+    );
   }
 }

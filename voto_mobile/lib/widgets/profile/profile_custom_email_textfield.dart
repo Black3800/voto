@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileCustomEmailTextField extends StatefulWidget {
   final String initialValue;
@@ -19,7 +20,7 @@ class _ProfileCustomEmailTextFieldState
       ),
       child: TextFormField(
         initialValue: widget.initialValue,
-        style: const TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: Color(

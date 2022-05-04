@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileDisplayName extends StatelessWidget {
   final String name;
@@ -13,7 +14,7 @@ class ProfileDisplayName extends StatelessWidget {
       height: _deviceHeight * 0.05,
       child: Text(
         name,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class ProfileCustomTextField extends StatefulWidget {
@@ -20,7 +21,7 @@ class _ProfileCustomTextFieldState extends State<ProfileCustomTextField> {
       child: TextFormField(
         maxLength: 30,
         initialValue: widget.initialValue,
-        style: const TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.normal,
           color: VotoColors.indigo,

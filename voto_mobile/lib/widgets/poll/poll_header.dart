@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PollHeader extends StatelessWidget {
   const PollHeader({Key? key}) : super(key: key);
@@ -19,14 +20,14 @@ class PollHeader extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             'Vote for today’s lunch',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w500),
           ),
           Text(
             'Closing on 23 April 2022, 10:00',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
+            style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w300),
           )
         ],
       ),
@@ -34,11 +35,11 @@ class PollHeader extends StatelessWidget {
   }
 
   Widget pollDetail() {
-    return const SizedBox(
+    return SizedBox(
       height: 34,
       child: Text(
         'Let’s order some food for lunch today. Pick two choices you would like as your lunch!',
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+        style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w400),
       ),
     );
   }

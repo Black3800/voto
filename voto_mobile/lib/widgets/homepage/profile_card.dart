@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -46,7 +47,7 @@ class ProfileCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: GoogleFonts.inter(
                         fontSize: 20.0,
                         fontWeight: FontWeight.w700,
                         color: VotoColors.white),

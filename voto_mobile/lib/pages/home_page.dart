@@ -86,26 +86,32 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _getAllTeams() async {
     // Firebase is asynchronous
-    FirebaseAuth.instance.authStateChanges().listen((event) {
-      String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-      DatabaseReference ref = FirebaseDatabase.instance.ref('users/' + uid);
-      ref.onValue.listen((DatabaseEvent event) async {
-        final json = event.snapshot.value as Map<dynamic, dynamic>;
-        final data = Users.fromJson(json);
-        final teams = data.joined_teams.keys;
-        for (String team_id in teams) {
-          DatabaseReference ref =
-              FirebaseDatabase.instance.ref('teams/' + team_id);
-          final snapshot = await ref.get();
-          if (snapshot.exists) {
-            final team = Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
-            teamsList.add(team);
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if(user != null) {
+        String uid = user.uid;
+        DatabaseReference ref = FirebaseDatabase.instance.ref('users/' + uid);
+        ref.onValue.listen((DatabaseEvent event) async {
+          if (event.snapshot.exists && event.snapshot.value != null) {
+            final json = event.snapshot.value as Map<dynamic, dynamic>;
+            final data = Users.fromJson(json);
+            final teams = data.joined_teams.keys;
+            teamsList = [];
+            for (String teamId in teams) {
+              DatabaseReference ref =
+                  FirebaseDatabase.instance.ref('teams/' + teamId);
+              final snapshot = await ref.get();
+              if (snapshot.exists) {
+                final team =
+                    Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
+                teamsList.add(team);
+              }
+            }
+            setState(() {
+              teamsList = List.from(teamsList);
+            });
           }
-        }
-        setState(() {
-          teamsList = List.from(teamsList);
         });
-      });
+      }
     });
   }
 

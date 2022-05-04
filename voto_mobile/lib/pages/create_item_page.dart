@@ -271,7 +271,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
       ),
       heading('Description'),
       SimpleTextInput(
-          max: 200,
+          max: 300,
           controller: _descriptionController,
           onChanged: (value) {
             setState(() {});

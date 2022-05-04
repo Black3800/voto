@@ -46,7 +46,7 @@ class _PollBodyState extends State<PollBody> {
       onPressed: () {},
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: const [
+        children:  [
           Padding(
             padding: EdgeInsets.only(left: 8.0),
             child: Icon(
@@ -57,7 +57,7 @@ class _PollBodyState extends State<PollBody> {
           Expanded(
             child: Text(
               'Add option',
-              style: TextStyle(
+              style: GoogleFonts.inter(
                   color: VotoColors.white, fontWeight: FontWeight.normal),
               textAlign: TextAlign.center,
             ),

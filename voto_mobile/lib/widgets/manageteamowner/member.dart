@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 import 'kick_button.dart';
@@ -36,7 +37,7 @@ class Member extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 15),
                 child: Text(
                   name,
-                  style: TextStyle(fontSize: 14),
+                  style: GoogleFonts.inter(fontSize: 14),
                 ),
               ),
             ],

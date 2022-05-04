@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class RandomResultButton extends StatelessWidget {
@@ -43,9 +44,9 @@ Widget RandomResultSaveButton() {
       ),
     ),
     onPressed: () {},
-    child: const Text(
+    child: Text(
       'Save to device',
-      style: TextStyle(
+      style: GoogleFonts.inter(
         color: VotoColors.indigo,
         fontWeight: FontWeight.bold,
       ),
@@ -63,11 +64,10 @@ Widget RandomResultShareButton() {
       ),
     ),
     onPressed: () {},
-    child: const Text(
+    child: Text(
       'Share',
-      style: TextStyle(
-        color: Color(0xFFF2F4F8),
-       fontWeight: FontWeight.bold),
+      style: GoogleFonts.inter(
+          color: Color(0xFFF2F4F8), fontWeight: FontWeight.bold),
     ),
   );
 }

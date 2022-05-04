@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Ownercard extends StatelessWidget {
@@ -35,11 +36,11 @@ class Ownercard extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: TextStyle(fontSize: 14),
+                  style: GoogleFonts.inter(fontSize: 14),
                 ),
                 Text(
                   "Team owner",
-                  style: TextStyle(color: Color(0xff989898), fontSize: 12),
+                  style: GoogleFonts.inter(color: Color(0xff989898), fontSize: 12),
                 )
               ],
             ),
