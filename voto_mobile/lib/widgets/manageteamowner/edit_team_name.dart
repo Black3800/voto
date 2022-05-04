@@ -11,8 +11,8 @@ class EditTeamName extends StatelessWidget {
     double _deviceHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      height: _deviceHeight * 0.05,
+      margin: const EdgeInsets.only(bottom: 10, top: 5),
+      height: _deviceHeight * 0.06,
       child: TextFormField(
         maxLength: 30,
         // name,

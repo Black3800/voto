@@ -7,6 +7,10 @@ class DeleteTeamButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void deleteTeam() {
+      Navigator.pop(context);
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       child: Outline_button("Delete team", 47, 305, 16),

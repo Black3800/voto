@@ -7,12 +7,13 @@ class Outline_button extends StatelessWidget {
   double width;
   double high;
   double size;
+  
   Outline_button(this.title, this.high, this.width, this.size);
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () => {},
+      onPressed: () {},
       style: OutlinedButton.styleFrom(
           fixedSize: Size(width, high),
           primary: VotoColors.secondary,

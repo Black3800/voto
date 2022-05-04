@@ -1,7 +1,8 @@
+import 'dart:js';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
-
 import '../manageteam/outlinebutton.dart';
 
 class KickButton extends StatelessWidget {
@@ -9,11 +10,7 @@ class KickButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 20),
-      // child: Outline_button("Kick", 30, 12, 10),
-      child: KickButtonn(),
-    );
+    return KickButtonn();
   }
 }
 
@@ -22,13 +19,19 @@ class KickButtonn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () => showDialog<String>(
+    void confirmClickPopup() {
+      showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('Are you sure you want to delete this member?'),
-          content: const Text(
-              'If you kick this member,They will not belong to this group.'),
+          title: Text(
+            'Are you sure you want to delete this member?',
+            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            'If you kick this member, They will not belong to this group.',
+            style:
+                GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.normal),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -40,8 +43,32 @@ class KickButtonn extends StatelessWidget {
             ),
           ],
         ),
+      );
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(left: 20),
+      // child: Outline_button("Kick", 30, 12, 10),
+      child: ElevatedButton(
+        onPressed: () {
+          confirmClickPopup();
+        },
+        style: ElevatedButton.styleFrom(
+          primary: Colors.white,
+          side: BorderSide(color: VotoColors.secondary, width: 1),
+          padding: const EdgeInsets.all(0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+        ),
+        child: Text(
+          'Kick',
+          style: GoogleFonts.inter(
+              fontSize: 10.0,
+              fontWeight: FontWeight.w600,
+              color: VotoColors.secondary),
+        ),
       ),
-      child: Outline_button("Kick", 30, 12, 10),
     );
   }
 }
