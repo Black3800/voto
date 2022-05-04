@@ -4,10 +4,22 @@ import 'package:voto_mobile/utils/color.dart';
 
 class CustomTextForm extends StatefulWidget {
   final TextEditingController controller;
-  final bool isEmail;
-  const CustomTextForm(
-      {Key? key, required this.controller, required this.isEmail})
-      : super(key: key);
+  final int maxLength;
+  final String hintText;
+  final IconData icon;
+  final bool obscureText;
+  final MaterialColor fillColor;
+  final String? Function(String?)? validator;
+  const CustomTextForm({
+    Key? key,
+    required this.controller,
+    this.maxLength = 50,
+    this.hintText = 'Aa',
+    this.icon = Icons.email_rounded,
+    this.obscureText = false,
+    this.fillColor = VotoColors.white,
+    this.validator
+  }) : super(key: key);
 
   @override
   State<CustomTextForm> createState() => _CustomTextFormState();
@@ -24,15 +36,16 @@ class _CustomTextFormState extends State<CustomTextForm> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      maxLength: widget.isEmail ? 50 : 100,
+      maxLength: widget.maxLength,
       buildCounter: (context, {required int currentLength, required int? maxLength, required bool isFocused}) => Container(),
       onChanged: ((value) {
         setState(() {});
       }),
       controller: widget.controller,
+      validator: widget.validator,
       decoration: InputDecoration(
         prefixIcon: Icon(
-          widget.isEmail ? Icons.email_rounded : Icons.lock_rounded,
+          widget.icon,
           color: VotoColors.primary,
         ),
         border: const OutlineInputBorder(
@@ -41,9 +54,13 @@ class _CustomTextFormState extends State<CustomTextForm> {
             Radius.circular(18),
           ),
         ),
-        hintText: widget.isEmail ? 'Email' : 'Password',
-        fillColor: VotoColors.white,
+        hintText: widget.hintText,
+        fillColor: widget.fillColor,
         filled: true,
+        errorStyle: const TextStyle(
+          fontSize: 12.0,
+          color: VotoColors.danger
+        ),
         suffixIcon: widget.controller.text.isEmpty
             ? null
             : IconButton(
@@ -60,7 +77,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
         color: VotoColors.primary,
       ),
       cursorColor: VotoColors.primary,
-      obscureText: !widget.isEmail,
+      obscureText: widget.obscureText,
     );
   }
 }

@@ -1,13 +1,21 @@
 class Users {
-  final Map<dynamic, dynamic> joined_teams;
+  final String? displayName;
+  final String? img;
+  final Map<dynamic, dynamic>? joinedTeams;
   const Users({
-    required this.joined_teams
+    this.displayName,
+    this.img,
+    this.joinedTeams
   });
 
   Users.fromJson(Map<dynamic, dynamic> json)
-    : joined_teams = json['joined_teams'] as Map<dynamic, dynamic>;
+    : displayName = json['display_name'],
+      img = json['img'],
+      joinedTeams = json['joined_teams'] as Map<dynamic, dynamic>?;
 
   Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
-    'joined_teams': joined_teams.toString()
+    'display_name': displayName,
+    'img': img,
+    'joined_teams': joinedTeams.toString()
   };
 }
