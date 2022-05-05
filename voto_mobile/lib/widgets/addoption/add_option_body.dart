@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:voto_mobile/widgets/poll/poll_checkbox.dart';
+import 'package:voto_mobile/widgets/addoption/add_option_items.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class AddOptionBody extends StatefulWidget {
@@ -13,35 +13,48 @@ class AddOptionBody extends StatefulWidget {
 class _AddOptionBodyState extends State<AddOptionBody> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Column(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 42.5),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+          border: Border(
+            top: BorderSide(
+              width: 1,
+              color: Color(0xFFF2F4F8),
+            ),
+          ),
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 65, top: 15),
-              child: Text(
-                'Salad',
-                style: GoogleFonts.inter(fontSize: 14),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 65, top: 15),
-              child: Text(
-                'Pizza',
-                style: GoogleFonts.inter(fontSize: 14),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 65, top: 15),
-              child: Text(
-                'Bonchon',
-                style: GoogleFonts.inter(fontSize: 14),
-              ),
-            ),
+            AddOptionItems(name: 'Salad'),
+            AddOptionItems(name: 'Pizza'),
+            AddOptionItems(name: 'Bonchon'),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 65, top: 15),
+            //   child: Text(
+            //     'Salad',
+            //     style: GoogleFonts.inter(fontSize: 14),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 65, top: 15),
+            //   child: Text(
+            //     'Pizza',
+            //     style: GoogleFonts.inter(fontSize: 14),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 65, top: 15),
+            //   child: Text(
+            //     'Bonchon',
+            //     style: GoogleFonts.inter(fontSize: 14),
+            //   ),
+            // ),
           ],
         ),
-      ],
+      ),
     );
   }
 

@@ -17,19 +17,27 @@ class _AddOptionPageState extends State<AddOptionPage> {
   @override
   Widget build(BuildContext context) {
     return VotoScaffold(
-        useMenu: false,
-        title: 'Add option',
-        titleContext: 'Integrated Project II',
-        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0, left: 48),
-            child: Text(
-              'Poll options',
-              style: GoogleFonts.inter(fontWeight: FontWeight.bold),
-            ),
+      useMenu: false,
+      title: 'Add option',
+      titleContext: 'Integrated Project II',
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0, left: 48),
+                child: Text(
+                  'Poll options',
+                  style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              AddOptionBody(),
+              AddOptionButton(),
+            ],
           ),
-          AddOptionBody(),
-          AddOptionButton(),
           ConfirmButton(
               confirmText: 'Create',
               cancelText: 'Back',
@@ -40,6 +48,8 @@ class _AddOptionPageState extends State<AddOptionPage> {
                 Navigator.pop(context);
               },
               height: 75.0)
-        ]));
+        ],
+      ),
+    );
   }
 }
