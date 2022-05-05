@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:voto_mobile/model/users.dart';
+import 'package:voto_mobile/widgets/confirm_button.dart';
 import 'package:voto_mobile/widgets/image_input.dart';
-import 'package:voto_mobile/widgets/profile/profile_button.dart';
 import 'package:voto_mobile/widgets/profile/profile_display_name.dart';
 import 'package:voto_mobile/widgets/profile/profile_name_edit.dart';
 import 'package:voto_mobile/widgets/profile/profile_picture_edit.dart';
@@ -23,11 +23,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _getProfile() async {
     FirebaseAuth.instance.authStateChanges().listen((user) {
-      if(user != null) {
+      if (user != null) {
         String uid = user.uid;
         DatabaseReference ref = FirebaseDatabase.instance.ref('users/$uid');
         ref.onValue.listen((event) {
-          if(event.snapshot.exists) {
+          if (event.snapshot.exists) {
             final json = event.snapshot.value as Map<dynamic, dynamic>;
             Users data = Users.fromJson(json);
             setState(() {
@@ -49,7 +49,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return VotoScaffold(
       title: 'Edit profile',
       useMenu: false,
@@ -57,23 +56,34 @@ class _ProfilePageState extends State<ProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
-                child: ImageInput(
-                  image: image ?? 'gs://cs21-voto.appspot.com/dummy/blank.webp',
-                  radius: 150.0,
-                  onChanged: (newPath) {
-                    // setState(() => createTeamImage = newPath);
-                  },
+          Expanded(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  child: ImageInput(
+                    image:
+                        image ?? 'gs://cs21-voto.appspot.com/dummy/blank.webp',
+                    radius: 150.0,
+                    onChanged: (newPath) {
+                      // setState(() => createTeamImage = newPath);
+                    },
+                  ),
                 ),
-              ),
-              ProfileDisplayName(name: displayName ?? ''),
-              ProfileDisplayNameEditing(name: displayName ?? '', email: email ?? ''),
-            ],
+                ProfileDisplayName(name: displayName ?? ''),
+                ProfileDisplayNameEditing(
+                    name: displayName ?? '', email: email ?? ''),
+              ],
+            ),
           ),
-          const ProfileButton(),
+          ConfirmButton(
+              confirmText: 'Save',
+              onConfirm: () {
+                Navigator.pushNamed(context, '/profile_page');
+              },
+              onCancel: () {
+                Navigator.pushNamed(context, '/profile_page');
+              })
         ],
       ),
     );
