@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Poll_check extends StatefulWidget {
@@ -40,8 +41,11 @@ class _Poll_checkState extends State<Poll_check> {
         child: CheckboxListTile(
           title: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child:
-                Text(widget.name, style: Theme.of(context).textTheme.bodyText1),
+            child: Text(
+              widget.name,
+              style: GoogleFonts.inter(
+                  textStyle: Theme.of(context).textTheme.bodyText1),
+            ),
           ),
           controlAffinity: ListTileControlAffinity.leading,
           value: isChecked,
