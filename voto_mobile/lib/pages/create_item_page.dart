@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/model/poll_settings.dart';
 import 'package:voto_mobile/widgets/confirm_button.dart';
-import 'package:voto_mobile/widgets/create_item/simple_checkbox.dart';
+import 'package:voto_mobile/widgets/create_item/heading.dart';
+import 'package:voto_mobile/widgets/create_item/poll_settings_widgets.dart';
 import 'package:voto_mobile/widgets/simple_text_input.dart';
 import 'package:voto_mobile/widgets/toggle_switch.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
-import 'package:intl/intl.dart';
 
 class CreateItemPage extends StatefulWidget {
   const CreateItemPage({Key? key}) : super(key: key);
@@ -18,13 +17,13 @@ class CreateItemPage extends StatefulWidget {
 class _CreateItemPageState extends State<CreateItemPage> {
   bool isPoll = true;
   bool isLuckyDrawer = true;
-  int numberOfWinners = 2;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late TextEditingController _multipleWinnerController;
   DateTime selectedDate = DateTime.now().add(const Duration(days: 1));
   TimeOfDay selectedTime = const TimeOfDay(hour: 9, minute: 0);
   PollSettings pollSettings = PollSettings();
+  late PollSettingsWidgets _pollSettingsWidgetsInstance;
 
   void toggleType() {
     setState(() {
@@ -32,11 +31,25 @@ class _CreateItemPageState extends State<CreateItemPage> {
     });
   }
 
+  void handlePollSettingsChange() {
+    setState(() {
+      selectedDate = _pollSettingsWidgetsInstance.selectedDate;
+      selectedTime = _pollSettingsWidgetsInstance.selectedTime;
+      pollSettings = _pollSettingsWidgetsInstance.pollSettings;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _multipleWinnerController =
-        TextEditingController(text: numberOfWinners.toString());
+        TextEditingController(text: pollSettings.winnerCount.toString());
+    _pollSettingsWidgetsInstance = PollSettingsWidgets(
+        selectedDate: selectedDate,
+        selectedTime: selectedTime,
+        pollSettings: pollSettings,
+        multipleWinnerController: _multipleWinnerController,
+        onChanged: handlePollSettingsChange);
   }
 
   @override
@@ -47,182 +60,10 @@ class _CreateItemPageState extends State<CreateItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _selectDate(BuildContext context) async {
-      final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: selectedDate,
-          firstDate: DateTime.now(),
-          lastDate: DateTime(2222));
-      if (picked != null && picked != selectedDate) {
-        setState(() {
-          selectedDate = picked;
-        });
-      }
-    }
-
-    Future<void> _selectTime(BuildContext context) async {
-      final TimeOfDay? picked = await showTimePicker(
-        context: context,
-        initialTime: selectedTime,
-      );
-      if (picked != null && picked != selectedTime) {
-        setState(() {
-          selectedTime = picked;
-        });
-      }
-    }
-
-    Widget heading(text) => Text(text,
-        style: Theme.of(context)
-            .textTheme
-            .headline3!
-            .merge(const TextStyle(color: VotoColors.black)));
-
-    Widget datePickerButton() => OutlinedButton(
-          onPressed: () => _selectDate(context),
-          child: Row(children: [
-            const Icon(
-              Icons.event,
-              size: 24.0,
-            ),
-            const SizedBox(width: 10.0),
-            Text(DateFormat('yMMMMd').format(selectedDate))
-          ]),
-          style: OutlinedButton.styleFrom(
-              primary: VotoColors.magenta,
-              padding: const EdgeInsets.all(15.0),
-              textStyle: Theme.of(context).textTheme.bodyText1,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0))),
-        );
-
-    Widget timePickerButton() => OutlinedButton(
-          onPressed: () => _selectTime(context),
-          child: Row(children: [
-            const Icon(
-              Icons.access_time,
-              size: 24.0,
-            ),
-            const SizedBox(width: 10.0),
-            Text(selectedTime.toString().replaceAll(RegExp(r'[^\d:]'), ''))
-          ]),
-          style: OutlinedButton.styleFrom(
-              primary: VotoColors.magenta,
-              padding: const EdgeInsets.all(15.0),
-              textStyle: Theme.of(context).textTheme.bodyText1,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0))),
-        );
-
-    List<Widget> _pollSettingsWidgets = <Widget>[
-      heading('Closing date'),
-      Row(
-        children: [datePickerButton(), timePickerButton()],
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-      ),
-      heading('Settings'),
-      SimpleCheckbox(
-        text: 'Multiple vote',
-        color: VotoColors.magenta,
-        isChecked: pollSettings.multipleVote,
-        onChanged: () {
-          setState(() {
-            pollSettings.multipleVote = !pollSettings.multipleVote;
-          });
-        },
-      ),
-      SimpleCheckbox(
-        text: 'Anonymous vote',
-        color: VotoColors.magenta,
-        isChecked: pollSettings.anonymousVote,
-        onChanged: () {
-          setState(() {
-            pollSettings.anonymousVote = !pollSettings.anonymousVote;
-          });
-        },
-      ),
-      SimpleCheckbox(
-        text: 'Tiebreaker',
-        color: VotoColors.magenta,
-        isChecked: pollSettings.tiebreaker,
-        onChanged: () {
-          setState(() {
-            pollSettings.tiebreaker = !pollSettings.tiebreaker;
-          });
-        },
-      ),
-      Row(children: [
-        Expanded(
-          child: SimpleCheckbox(
-            text: 'Multiple winner',
-            color: VotoColors.magenta,
-            isChecked: pollSettings.multipleWinner,
-            onChanged: () {
-              setState(() {
-                pollSettings.multipleWinner = !pollSettings.multipleWinner;
-              });
-            },
-          ),
-        ),
-        pollSettings.multipleWinner
-            ? Expanded(
-                child: SimpleTextInput(
-                controller: _multipleWinnerController,
-                hintText: 'Count',
-                clearable: false,
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                onFieldSubmitted: (value) {
-                  if (value.isEmpty || int.parse(value) < 2) {
-                    _multipleWinnerController.text = numberOfWinners.toString();
-                  } else {
-                    numberOfWinners = int.parse(value);
-                  }
-                },
-              ))
-            : Container()
-      ]),
-      SimpleCheckbox(
-        text: 'Allow members to add new option',
-        color: VotoColors.magenta,
-        isChecked: pollSettings.allowAdd,
-        onChanged: () {
-          setState(() {
-            pollSettings.allowAdd = !pollSettings.allowAdd;
-          });
-        },
-      ),
-      pollSettings.allowAdd
-          ? SimpleCheckbox(
-              text: 'Allow members to vote their own option',
-              color: VotoColors.magenta,
-              isChecked: pollSettings.allowVoteOwnOption,
-              onChanged: () {
-                setState(() {
-                  pollSettings.allowVoteOwnOption =
-                      !pollSettings.allowVoteOwnOption;
-                });
-              },
-            )
-          : Container(),
-      pollSettings.allowAdd
-          ? SimpleCheckbox(
-              text: 'Show owner of each option',
-              color: VotoColors.magenta,
-              isChecked: pollSettings.showOptionOwner,
-              onChanged: () {
-                setState(() {
-                  pollSettings.showOptionOwner = !pollSettings.showOptionOwner;
-                });
-              },
-            )
-          : Container()
-    ];
+    List<Widget> _pollSettingsWidgets = _pollSettingsWidgetsInstance.getList(context);
 
     List<Widget> _randomSettingsWidgets = <Widget>[
-      heading('Settings'),
+      const Heading('Settings'),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
@@ -238,6 +79,9 @@ class _CreateItemPageState extends State<CreateItemPage> {
               },
             ),
             const SizedBox(height: 10.0),
+            /***
+             * Help text that describes the random type chosen
+             */
             Row(
               children: [
                 const Icon(Icons.info, color: Color(0xffaaaaaa)),
@@ -261,7 +105,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
     ];
 
     List<Widget> _list = <Widget>[
-      heading('Title'),
+      const Heading('Title'),
       SimpleTextInput(
         max: 30,
         controller: _titleController,
@@ -269,7 +113,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
           setState(() {});
         },
       ),
-      heading('Description'),
+      const Heading('Description'),
       SimpleTextInput(
           max: 300,
           controller: _descriptionController,
@@ -277,7 +121,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
             setState(() {});
           },
           multiline: true),
-      heading('Type'),
+      const Heading('Type'),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: ToggleSwitch(
@@ -319,23 +163,4 @@ class _CreateItemPageState extends State<CreateItemPage> {
           )
         ]));
   }
-}
-
-class PollSettings {
-  bool multipleVote;
-  bool anonymousVote;
-  bool tiebreaker;
-  bool multipleWinner;
-  bool allowAdd;
-  bool allowVoteOwnOption;
-  bool showOptionOwner;
-
-  PollSettings(
-      {this.multipleVote = false,
-      this.anonymousVote = false,
-      this.tiebreaker = false,
-      this.multipleWinner = false,
-      this.allowAdd = false,
-      this.allowVoteOwnOption = false,
-      this.showOptionOwner = false});
 }
