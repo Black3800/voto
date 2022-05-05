@@ -29,8 +29,12 @@ class WinnerCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          winnerText(),
-          medalPic(),
+          Expanded(
+            child: winnerText(),
+          ),
+          Container(
+            child: medalPic(),
+          ),
         ],
       ),
     );

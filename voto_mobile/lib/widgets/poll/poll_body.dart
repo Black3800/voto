@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/poll/poll_checkbox.dart';
-import 'package:voto_mobile/widgets/poll/poll_model.dart';
+import 'package:voto_mobile/widgets/poll/poll_radio.dart';
 
 class PollBody extends StatefulWidget {
   const PollBody({Key? key}) : super(key: key);
@@ -21,11 +21,20 @@ class _PollBodyState extends State<PollBody> {
           editOptionButton(),
         ],
       ),
-      Poll_check(name: 'Salad'),
-      Poll_check(name: 'Pizza'),
-      Poll_check(name: 'Bonchon'),
-      Poll_check(name: 'KFC'),
-      Poll_check(name: 'Sushi'),
+      // Poll_check(name: 'Salad'),
+      // Poll_check(name: 'Pizza'),
+      // Poll_check(name: 'Bonchon'),
+      // Poll_check(name: 'KFC'),
+      // Poll_check(name: 'Sushi'),
+      PollRadio(
+        name: 'Salad',
+      ),
+      PollRadio(
+        name: 'Pizza',
+      ),
+      PollRadio(
+        name: 'Bonchon',
+      ),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
         child: addOptionButton(),
@@ -46,8 +55,8 @@ class _PollBodyState extends State<PollBody> {
       onPressed: () {},
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children:  [
-          Padding(
+        children: [
+          const Padding(
             padding: EdgeInsets.only(left: 8.0),
             child: Icon(
               Icons.add_circle,
