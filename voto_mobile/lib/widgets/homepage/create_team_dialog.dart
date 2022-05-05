@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/utils/random_image.dart';
 import 'package:voto_mobile/widgets/bottom_dialog.dart';
+import 'package:voto_mobile/widgets/create_item/heading.dart';
 import 'package:voto_mobile/widgets/image_input.dart';
 import 'package:voto_mobile/widgets/simple_text_input.dart';
 import 'package:voto_mobile/widgets/wide_button.dart';
@@ -55,22 +56,14 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
       title: "Create team",
       child: ListView.separated(
         itemBuilder: (context, index) => [
-          Text("Team name",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline3
-                  ?.merge(const TextStyle(color: VotoColors.black))),
+          const Heading("Team name"),
           SimpleTextInput(
             controller: _teamNameController,
             icon: Icons.people,
             accentColor: VotoColors.indigo,
             max: 30,
           ),
-          Text("Team picture",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline3
-                  ?.merge(const TextStyle(color: VotoColors.black))),
+          const Heading("Team picture"),
           Center(
               child:
                   ImageInput(

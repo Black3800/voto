@@ -10,7 +10,7 @@ class Heading extends StatelessWidget {
     return Text(text,
         style: Theme.of(context)
             .textTheme
-            .headline3!
-            .merge(const TextStyle(color: VotoColors.black)));
+            .headline3
+            ?.merge(const TextStyle(color: VotoColors.black)));
   }
 }

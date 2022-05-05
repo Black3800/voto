@@ -33,7 +33,7 @@ class RandomTask extends StatelessWidget {
             child: TextFormField(
               initialValue: 'Arny Anakin',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 height: 2,
@@ -63,7 +63,7 @@ class RandomTask extends StatelessWidget {
             child: TextFormField(
               initialValue: 'Tanny Panitnun',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 height: 2,
@@ -93,7 +93,7 @@ class RandomTask extends StatelessWidget {
             child: TextFormField(
               initialValue: 'Earth Chutirat',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 height: 2,

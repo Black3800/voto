@@ -57,7 +57,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
         hintText: widget.hintText,
         fillColor: widget.fillColor,
         filled: true,
-        errorStyle: const TextStyle(
+        errorStyle: GoogleFonts.inter(
           fontSize: 12.0,
           color: VotoColors.danger
         ),
