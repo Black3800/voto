@@ -25,8 +25,8 @@ class WinnerCard extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.all(20),
-      width: 305,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           winnerText(),
@@ -48,46 +48,48 @@ class WinnerCard extends StatelessWidget {
   }
 
   Widget winnerText() {
-    return SizedBox(
-      width: 218,
-      height: 86,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-          height: 32,
-          alignment: Alignment.topLeft,
-          child: Text(
-            'Winner',
-            style: GoogleFonts.inter(
-              color: VotoColors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Container(
+        margin: const EdgeInsets.only(bottom: 15),
+        alignment: Alignment.topLeft,
+        child: Text(
+          'Winner',
+          style: GoogleFonts.inter(
+            color: VotoColors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(
-          height: 54,
-          child: Column(
-            children: [
-              Text(
-                '1. Salad',
-                style: GoogleFonts.inter(
-                  color: VotoColors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Text(
-                '2. Pizza',
-                style: GoogleFonts.inter(
-                  color: VotoColors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
+      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '1. Salad',
+            style: GoogleFonts.inter(
+              color: VotoColors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        )
-      ]),
-    );
+          Text(
+            '2. Pizza',
+            style: GoogleFonts.inter(
+              color: VotoColors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Text(
+            '3. Bonchon',
+            style: GoogleFonts.inter(
+              color: VotoColors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      )
+    ]);
   }
 }

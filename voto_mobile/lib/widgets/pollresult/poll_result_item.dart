@@ -17,8 +17,6 @@ class PollResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 305,
-      height: 78,
       padding: const EdgeInsets.all(10),
       child: Column(children: [
         itemName(),
@@ -31,7 +29,6 @@ class PollResultItem extends StatelessWidget {
   Widget itemName() {
     return Container(
       alignment: Alignment.centerLeft,
-      height: 17,
       child: Text(
         name,
         style: GoogleFonts.inter(
@@ -46,8 +43,6 @@ class PollResultItem extends StatelessWidget {
   Widget sliderVoteCount(context) {
     return Container(
       alignment: Alignment.centerLeft,
-      width: 305,
-      height: 17,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -72,7 +67,14 @@ class PollResultItem extends StatelessWidget {
           const SizedBox(
             width: 10,
           ),
-          Text(voteCount.toString())
+          Text(
+            voteCount.toString(),
+            style: GoogleFonts.inter(
+              color: VotoColors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+          )
         ],
       ),
     );
@@ -82,7 +84,6 @@ class PollResultItem extends StatelessWidget {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.all(0),
-      height: 24,
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         voterImageDefault(),
         voterImageDefault(),

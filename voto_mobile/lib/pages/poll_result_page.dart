@@ -18,8 +18,11 @@ class PollResultPage extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 20.0, left: 42.5, right: 42.5),
+              padding: const EdgeInsets.only(
+                top: 20.0,
+                left: 42.5,
+                right: 42.5,
+              ),
               child: ListView(children: const [
                 PollHeader(),
                 SizedBox(height: 20.0),

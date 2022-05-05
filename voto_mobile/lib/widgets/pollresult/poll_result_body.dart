@@ -21,7 +21,7 @@ class _PollResultBodyState extends State<PollResultBody> {
         fullResultText(),
         PollResultItem(onTap: showVoter, name: 'Salad', voteCount: 23),
         PollResultItem(onTap: showVoter, name: 'Pizza', voteCount: 7),
-        PollResultItem(onTap: showVoter, name: 'Salad', voteCount: 5),
+        PollResultItem(onTap: showVoter, name: 'ฺBonchon', voteCount: 5),
       ],
     );
   }
