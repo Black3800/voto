@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:voto_mobile/model/team.dart';
 import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/utils/random_image.dart';
 import 'package:voto_mobile/widgets/bottom_dialog.dart';
+import 'package:voto_mobile/widgets/homepage/create_team_dialog.dart';
 import 'package:voto_mobile/widgets/image_input.dart';
 import 'package:voto_mobile/widgets/jointeam/join_team.dart';
 import 'package:voto_mobile/widgets/rich_button.dart';
@@ -26,48 +28,12 @@ class _HomePageState extends State<HomePage> {
   void showCreateTeamDialog() {
     showModalBottomSheet<void>(
       isScrollControlled: true,
-      context: context,
-      builder: (BuildContext context) {
-        return BottomDialog(
-          title: "Create team",
-          child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Team name",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline3
-                      ?.merge(const TextStyle(color: VotoColors.black))),
-              const SizedBox(height: 15.0),
-              const SimpleTextInput(
-                icon: Icons.people,
-                accentColor: VotoColors.indigo,
-                max: 30,
-              ),
-              const SizedBox(height: 15.0),
-              Text("Team picture",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline3
-                      ?.merge(const TextStyle(color: VotoColors.black))),
-              const SizedBox(height: 15.0),
-              const Center(
-                  child: ImageInput(
-                initial: 'T',
-                radius: 150.0,
-              )),
-              const SizedBox(height: 30.0),
-              WideButton(
-                  text: 'Create',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-            ],
-          ),
-        );
-      },
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
+      context: context,
+      builder: (_) {
+        return const CreateTeamDialog();
+      },
     );
   }
 
@@ -84,7 +50,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _getAllTeams() async {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if(user != null) {
+      if (user != null) {
         /***
          * Fetch user's joined teams
          */
@@ -95,11 +61,11 @@ class _HomePageState extends State<HomePage> {
             final json = event.snapshot.value as Map<dynamic, dynamic>;
             final data = Users.fromJson(json);
             final teams = data.joinedTeams?.keys;
-            teamsList = [];
+            List<Team> newTeamsList = [];
             /***
              * For each team, fetch the name and image
              */
-            if(teams != null) {
+            if (teams != null) {
               for (String teamId in teams) {
                 DatabaseReference ref =
                     FirebaseDatabase.instance.ref('teams/' + teamId);
@@ -107,18 +73,16 @@ class _HomePageState extends State<HomePage> {
                 if (snapshot.exists) {
                   final team =
                       Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
-                  
+
                   /***
                    * Add team to the list for the ListView.builder to buid
                    */
-                  teamsList.add(team);
+                  newTeamsList.add(team);
                 }
               }
             }
             if (mounted) {
-              setState(() {
-                teamsList = List.from(teamsList);
-              });
+              setState(() => teamsList = newTeamsList);
             }
           }
         });
@@ -128,8 +92,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _getAllTeams();
     super.initState();
+    _getAllTeams();
   }
 
   @override
@@ -162,13 +126,15 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: ListView.builder(
-                itemBuilder: (context, index) => TeamCard(
+                itemBuilder: (context, index) {
+                  return TeamCard(
                     imagePath: teamsList[index].img,
                     title: teamsList[index].name,
                     onTap: () {
                       Navigator.pushNamed(context, '/team_page',
                           arguments: teamsList[index]);
-                    }),
+                    });
+                },
                 itemCount: teamsList.length),
           )
         ],

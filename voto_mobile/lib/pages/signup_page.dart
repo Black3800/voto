@@ -86,7 +86,7 @@ class _SignupPageState extends State<SignupPage> {
         DatabaseReference ref = FirebaseDatabase.instance.ref("users/${user?.uid}");
         await ref.set({
           "display_name": _name,
-          "img": "gs://cs21-voto.appspot.com/blank.webp",
+          "img": "gs://cs21-voto.appspot.com/dummy/blank.webp",
         });
 
         /***

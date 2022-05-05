@@ -35,6 +35,12 @@ class _TeamCardState extends State<TeamCard> {
   }
 
   @override
+  void didUpdateWidget(covariant TeamCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _getImageURL();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding:
