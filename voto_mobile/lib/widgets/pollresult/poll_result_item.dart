@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class PollResultItem extends StatelessWidget {
   const PollResultItem({
-    required this.onTap,
     required this.name,
     required this.voteCount, //ใช้ชั่วคราว จริงๆต้องใช้ object user
+    required this.onTap,
     Key? key,
   }) : super(key: key);
 
@@ -16,13 +16,16 @@ class PollResultItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: Column(children: [
-        itemName(),
-        sliderVoteCount(context),
-        voterImage(),
-      ]),
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(children: [
+          itemName(),
+          sliderVoteCount(context),
+          voterImage(),
+        ]),
+      ),
     );
   }
 
