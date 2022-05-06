@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/big_button.dart';
 import 'package:voto_mobile/widgets/login/custom_textform.dart';
+import 'package:voto_mobile/widgets/login/loading_button.dart';
 import 'package:voto_mobile/widgets/login/sign_up_click.dart';
 import 'package:voto_mobile/widgets/voto_snackbar.dart';
 
@@ -77,10 +78,11 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
               ),
               const SizedBox(height: 50.0),
-              BigButton(
-                text: 'Login',
-                onPressed: handleLogin,
-              ),
+              LoadingButton(),
+              // BigButton(
+              //   text: 'Login',
+              //   onPressed: handleLogin,
+              // ),
               const SizedBox(height: 25.0),
               const SignUpClick(),
             ],

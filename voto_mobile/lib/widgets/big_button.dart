@@ -7,7 +7,7 @@ class BigButton extends StatelessWidget {
   final MaterialColor color;
   final Function()? onPressed;
   const BigButton({Key? key, required this.text, required this.onPressed, this.color = VotoColors.magenta}) : super(key: key);
-
+   
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
