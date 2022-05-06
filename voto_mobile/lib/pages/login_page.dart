@@ -17,8 +17,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isSubmitted = false;
 
   void handleLogin() async {
+    setState(() => isSubmitted = true);
     VotoSnackbar snackBar = VotoSnackbar(
       text: 'Please check your credentials and try again',
       icon: Icons.clear,
@@ -45,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     } finally {
       _passwordController.clear();
-      setState(() {});
+      setState(() => isSubmitted = false);
       snackBar.show(context);
     }
   }
@@ -78,11 +80,11 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
               ),
               const SizedBox(height: 50.0),
-              LoadingButton(),
-              // BigButton(
-              //   text: 'Login',
-              //   onPressed: handleLogin,
-              // ),
+              BigButton(
+                text: 'Login',
+                isLoading: isSubmitted,
+                onPressed: handleLogin,
+              ),
               const SizedBox(height: 25.0),
               const SignUpClick(),
             ],
