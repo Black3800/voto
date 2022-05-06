@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:voto_mobile/model/items.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/team/card_action_button.dart';
 
 class RandomCard extends StatelessWidget {
-  final String title;
-  final String description;
+  final Items item;
   final bool showStartRandom;
+  final String teamName;
   const RandomCard(
       {Key? key,
-      required this.title,
-      required this.description,
-      this.showStartRandom = true})
+      required this.item,
+      this.showStartRandom = true,
+      this.teamName = ''})
       : super(key: key);
 
   @override
@@ -46,7 +47,7 @@ class RandomCard extends StatelessWidget {
               children: [
                 Expanded(
                     child: Text(
-                  title,
+                  '${item.title}',
                   style: GoogleFonts.inter(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w500,
@@ -65,7 +66,7 @@ class RandomCard extends StatelessWidget {
             ),
             const SizedBox(height: 10.0),
             Text(
-              description,
+              '${item.description}',
               style: GoogleFonts.inter(fontSize: 12.0, color: VotoColors.white),
             ),
             const SizedBox(height: 20.0),
@@ -79,7 +80,11 @@ class RandomCard extends StatelessWidget {
                 ? CardActionButton(
                     text: 'Start random',
                     onPressed: () {
-                      Navigator.pushNamed(context, '/random_page');
+                      Navigator.pushNamed(
+                        context,
+                        '/random_page',
+                        arguments: item
+                      );
                     },
                   )
                 : Container(),

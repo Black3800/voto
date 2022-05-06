@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/model/team.dart';
 import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
@@ -131,8 +133,12 @@ class _HomePageState extends State<HomePage> {
                     imagePath: teamsList[index].img,
                     title: teamsList[index].name,
                     onTap: () {
-                      Navigator.pushNamed(context, '/team_page',
-                          arguments: teamsList[index]);
+                      Provider.of<PersistentState>(context, listen: false)
+                        .updateTeamName(teamsList[index].name);
+                      Navigator.pushNamed(
+                        context,
+                        '/team_page',
+                        arguments: teamsList[index]);
                     });
                 },
                 itemCount: teamsList.length),

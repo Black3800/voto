@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 
-class PollRadio extends StatefulWidget {
-  final String name;
+class PollRadio extends StatelessWidget {
+  final String text;
+  final int value;
+  final int groupValue;
+  final Function(int?)? onChanged;
+  const PollRadio({
+    Key? key,
+    required this.text,
+    required this.value,
+    required this.groupValue,
+    this.onChanged
+  }) : super(key: key);
 
-  PollRadio({Key? key, required this.name}) : super(key: key);
-
-  @override
-  State<PollRadio> createState() => _PollRadioState();
-}
-
-class _PollRadioState extends State<PollRadio> {
-  Object? val = -1;
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 10, bottom: 10),
+      padding: const EdgeInsets.only(top: 10, bottom: 10),
       decoration: const BoxDecoration(
         color: Colors.transparent,
         border: Border(
           top: BorderSide(
             width: 1,
-            color: Color(0xFFF2F4F8),
+            color: VotoColors.gray,
           ),
           bottom: BorderSide(
             width: 1,
-            color: Color(0xFFF2F4F8),
+            color: VotoColors.gray,
           ),
         ),
       ),
@@ -33,17 +35,13 @@ class _PollRadioState extends State<PollRadio> {
         title: Padding(
           padding: const EdgeInsets.only(left: 10),
           child:
-              Text(widget.name, style: Theme.of(context).textTheme.bodyText1),
+              Text(text, style: Theme.of(context).textTheme.bodyText1),
         ),
-        value: 1,
-        groupValue: val,
+        value: value,
+        groupValue: groupValue,
         controlAffinity: ListTileControlAffinity.leading,
-        onChanged: (value) {
-          setState(() {
-            val = value;
-          });
-        },
-        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+        onChanged: onChanged,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 0),
       ),
     );
   }

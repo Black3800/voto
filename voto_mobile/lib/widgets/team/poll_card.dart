@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:voto_mobile/model/items.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/team/card_action_button.dart';
 
 class PollCard extends StatelessWidget {
-  final String title;
-  final String closeDate;
-  final String description;
-  const PollCard({ Key? key, required this.title, required this.closeDate, required this.description }) : super(key: key);
+  final Items item;
+  const PollCard({ Key? key, required this.item }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String closeDate = DateFormat('yMMMMd').format(
+        item.pollSettings?.closeDate ??
+            DateTime.now().add(const Duration(days: 7)));
     return Container(
       margin: const EdgeInsets.symmetric(
         vertical: 8.0,
@@ -43,7 +46,7 @@ class PollCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      '${item.title}',
                       style: GoogleFonts.inter(
                         fontSize: 20.0,
                         fontWeight: FontWeight.w500,
@@ -51,7 +54,7 @@ class PollCard extends StatelessWidget {
                         ),
                     ),
                     Text(
-                      'Closing on ' + closeDate,
+                      'Closing on $closeDate',
                       style: GoogleFonts.inter(
                         fontSize: 10.0,
                         fontWeight: FontWeight.w300,
@@ -70,7 +73,7 @@ class PollCard extends StatelessWidget {
           ),
           const SizedBox(height: 20.0),
           Text(
-              description,
+              '${item.description}',
               style: GoogleFonts.inter(fontSize: 12.0, color: VotoColors.white),
             ),
           const SizedBox(height: 20.0),
@@ -78,7 +81,11 @@ class PollCard extends StatelessWidget {
             text: 'Vote now',
             isPrimary: false,
             onPressed: () {
-              Navigator.pushNamed(context, '/poll_page');
+              Navigator.pushNamed(
+                context,
+                '/poll_page',
+                arguments: item
+              );
             },
           )
         ],

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voto_mobile/model/items.dart';
+import 'package:voto_mobile/model/poll_settings.dart';
 import 'package:voto_mobile/model/team.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/rich_button.dart';
@@ -40,18 +42,31 @@ class _TeamPageState extends State<TeamPage> {
           ),
           Expanded(
             child: ListView(
-              children: const [
+              children: [
                 RandomCard(
+                  teamName: args.name,
+                  item: Items(
                     title: 'Random food',
-                    description: 'Let\'s random food for dinner'),
-                // RandomCard(
-                //     title: 'Random food',
-                //     description: 'Let\'s random food for dinner',
-                //     showStartRandom: false,),
+                    description: 'Let\'s random food for dinner'
+                  ),
+                ),
                 PollCard(
-                  title: 'Vote for theme app',
-                  closeDate: '22 April 2022',
-                  description: 'Let\'s vote for the main theme of our app'),
+                  item: Items(
+                    title: 'Vote for app theme (single)',
+                    description: 'Let\'s vote for the main theme of our app',
+                    pollSettings: PollSettings(closeDate: DateTime.now().add(const Duration(days: 7)))
+                  )
+                ),
+                PollCard(
+                  item: Items(
+                    title: 'Vote for app theme (multiple)',
+                    description: 'Let\'s vote for the main theme of our app',
+                    pollSettings: PollSettings(
+                      closeDate: DateTime.now().add(const Duration(days: 7)),
+                      multipleVote: true
+                    ),
+                  )
+                ),
                 ResultCard(
                     title: 'Vote project topic',
                     closeDate: '22 April 2022',
