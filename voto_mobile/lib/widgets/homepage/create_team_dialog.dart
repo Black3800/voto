@@ -32,6 +32,9 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
           "img": createTeamImage,
           "name": _teamNameController.text,
           "owner": uid,
+          "members": {
+            uid: true
+          }
         });
         /***
          * Add team to user's joined_teams
@@ -42,6 +45,7 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
           await userRef.update({
             teamId: true
           });
+          await userRef.update({teamId: true});
           Navigator.pop(context);
         } else {
           throw Exception('teamKey.ref returns null');
