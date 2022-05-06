@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class PollRadio extends StatelessWidget {
+  bool? isPress;
   final String text;
   final int value;
   final int groupValue;
   final Function(int?)? onChanged;
-  const PollRadio({
-    Key? key,
-    required this.text,
-    required this.value,
-    required this.groupValue,
-    this.onChanged
-  }) : super(key: key);
+  PollRadio(
+      {Key? key,
+      required this.text,
+      required this.value,
+      required this.groupValue,
+      this.onChanged,
+      this.isPress})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,19 @@ class PollRadio extends StatelessWidget {
       child: RadioListTile(
         title: Padding(
           padding: const EdgeInsets.only(left: 10),
-          child:
-              Text(text, style: Theme.of(context).textTheme.bodyText1),
+          child: Text(text, style: Theme.of(context).textTheme.bodyText1),
         ),
+        secondary: Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: isPress!
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.delete,
+                      color: VotoColors.danger,
+                    ),
+                    onPressed: () {},
+                  )
+                : SizedBox()),
         value: value,
         groupValue: groupValue,
         controlAffinity: ListTileControlAffinity.leading,

@@ -3,8 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Poll_check extends StatefulWidget {
+  bool? isPress;
   final String name;
-  const Poll_check({Key? key, required this.name}) : super(key: key);
+  Poll_check({Key? key, required this.name, this.isPress}) : super(key: key);
 
   @override
   State<Poll_check> createState() => _Poll_checkState();
@@ -47,6 +48,17 @@ class _Poll_checkState extends State<Poll_check> {
                   textStyle: Theme.of(context).textTheme.bodyText1),
             ),
           ),
+          secondary: Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: widget.isPress!
+                  ? IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: VotoColors.danger,
+                      ),
+                      onPressed: () {},
+                    )
+                  : SizedBox()),
           controlAffinity: ListTileControlAffinity.leading,
           value: isChecked,
           onChanged: (value) {
@@ -59,19 +71,3 @@ class _Poll_checkState extends State<Poll_check> {
     );
   }
 }
-
-
-// Container(
-//         child: Theme(
-//       data:
-//           Theme.of(context).copyWith(unselectedWidgetColor: VotoColors.indigo),
-//       child: CheckboxListTile(
-//         title: Text(widget.name, style: Theme.of(context).textTheme.bodyText1),
-//         controlAffinity: ListTileControlAffinity.leading,
-//         value: isChecked,
-//         onChanged: (value) {
-//           setState(() => isChecked = value!);
-//         },
-//         activeColor: VotoColors.indigo,
-//       ),
-//     ));

@@ -14,6 +14,7 @@ class PollBody extends StatefulWidget {
 }
 
 class _PollBodyState extends State<PollBody> {
+  bool isEditing = false;
   int _radioValue = -1;
   List<Choice> _choices = [];
 
@@ -24,16 +25,10 @@ class _PollBodyState extends State<PollBody> {
   Future<void> _getChoices() async {
     await Future.delayed(const Duration(seconds: 1));
     setState(() => _choices = [
-      Choice(
-        text: 'Salad'
-      ),
-      Choice(
-        text: 'Pizza'
-      ),
-      Choice(
-        text: 'Bonchon'
-      )
-    ]);
+          Choice(text: 'Salad'),
+          Choice(text: 'Pizza'),
+          Choice(text: 'Bonchon')
+        ]);
   }
 
   @override
@@ -61,16 +56,18 @@ class _PollBodyState extends State<PollBody> {
 
   Widget pollItem(Choice choice) {
     if (widget.isMultipleValue) {
-      return  Poll_check(
-                name: choice.text ?? ''
-              );
+      return Poll_check(
+        name: choice.text ?? '',
+        isPress: isEditing,
+      );
     } else {
       return PollRadio(
-              text: choice.text ?? '',
-              value: _choices.indexOf(choice),
-              groupValue: _radioValue,
-              onChanged: _handleRadioChange,
-            );
+        text: choice.text ?? '',
+        value: _choices.indexOf(choice),
+        groupValue: _radioValue,
+        onChanged: _handleRadioChange,
+        isPress: isEditing,
+      );
     }
   }
 
@@ -110,15 +107,28 @@ class _PollBodyState extends State<PollBody> {
 
   Widget editOptionButton() {
     return TextButton(
-      onPressed: () {},
-      child: Text(
-        'Edit',
-        style: GoogleFonts.inter(
-          color: VotoColors.indigo,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+      onPressed: () {
+        setState(() {
+          isEditing = !isEditing;
+        });
+      },
+      child: isEditing
+          ? Text(
+              'Done',
+              style: GoogleFonts.inter(
+                color: VotoColors.indigo,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            )
+          : Text(
+              'Edit',
+              style: GoogleFonts.inter(
+                color: VotoColors.indigo,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
     );
   }
 }
