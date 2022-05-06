@@ -7,13 +7,11 @@ import 'package:voto_mobile/widgets/team/card_action_button.dart';
 class RandomCard extends StatelessWidget {
   final Items item;
   final bool showStartRandom;
-  final String teamName;
-  const RandomCard(
-      {Key? key,
-      required this.item,
-      this.showStartRandom = true,
-      this.teamName = ''})
-      : super(key: key);
+  const RandomCard({
+    Key? key,
+    required this.item,
+    this.showStartRandom = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

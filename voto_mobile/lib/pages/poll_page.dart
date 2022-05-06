@@ -18,7 +18,7 @@ class PollPage extends StatelessWidget {
       VotoScaffold(
         useMenu: false,
         title: 'Vote',
-        titleContext: appState.teamName,
+        titleContext: appState.currentTeam?.name,
         body: Column(children: [
           Expanded(
             child: Padding(

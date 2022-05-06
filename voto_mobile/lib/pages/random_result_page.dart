@@ -23,7 +23,7 @@ class RandomResultPage extends StatelessWidget {
             child: ListView(
               children: const [
                 RandomDetail(),
-                RandomTask(),
+                // RandomTask(),
               ],
             )),
           ShareButton(shareText: 'Share', onShare: () {}, onSave: () {}),

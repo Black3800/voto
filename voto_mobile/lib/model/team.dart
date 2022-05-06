@@ -1,22 +1,29 @@
 class Team {
   final String img;
   final String name;
-  final String id;
+  final String owner;
+  final Map<dynamic, dynamic> members;
+  String? id;
 
-  const Team({
+  Team({
     required this.img,
     required this.name,
-    this.id = ''
+    required this.owner,
+    required this.members,
+    this.id = '',
   });
 
   Team.fromJson(Map<dynamic, dynamic> json)
     : img = json['img'] as String,
       name = json['name'] as String,
-      id = '';
+      members = json['members'] as Map<dynamic, dynamic>,
+      owner = json['owner'] as String;
 
   Map<dynamic, dynamic> toJson( )=> <dynamic, dynamic>{
     'img': img,
     'name': name,
-    'id': ''
+    'owner': owner,
+    'members': members,
+    'id': id,
   };
 }

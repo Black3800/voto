@@ -44,10 +44,10 @@ class _TeamPageState extends State<TeamPage> {
             child: ListView(
               children: [
                 RandomCard(
-                  teamName: args.name,
                   item: Items(
                     title: 'Random food',
-                    description: 'Let\'s random food for dinner'
+                    description: 'Let\'s random food for dinner',
+                    options: 'bbccdd9999'
                   ),
                 ),
                 PollCard(

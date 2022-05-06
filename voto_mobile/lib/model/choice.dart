@@ -1,4 +1,5 @@
 class Choice {
+  String? id;
   String? text;
   int? voteCount;
   Map<dynamic, dynamic>? votedBy;

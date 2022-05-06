@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:voto_mobile/model/team.dart';
 
 class PersistentState extends ChangeNotifier {
-  String _teamName = '';
+  Team? _currentTeam;
 
-  String get teamName => _teamName;
+  Team? get currentTeam => _currentTeam;
 
-  void updateTeamName(String newTeamName) {
-    _teamName = newTeamName;
+  void updateTeam(Team newTeam) {
+    _currentTeam = newTeam;
   }
 }

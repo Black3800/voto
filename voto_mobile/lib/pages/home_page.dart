@@ -75,6 +75,8 @@ class _HomePageState extends State<HomePage> {
                 if (snapshot.exists) {
                   final team =
                       Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
+                  
+                  team.id = teamId;
 
                   /***
                    * Add team to the list for the ListView.builder to buid
@@ -84,7 +86,7 @@ class _HomePageState extends State<HomePage> {
               }
             }
             if (mounted) {
-              setState(() => teamsList = newTeamsList);
+              setState(() => teamsList = List.from(newTeamsList));
             }
           }
         });
@@ -134,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                     title: teamsList[index].name,
                     onTap: () {
                       Provider.of<PersistentState>(context, listen: false)
-                        .updateTeamName(teamsList[index].name);
+                        .updateTeam(teamsList[index]);
                       Navigator.pushNamed(
                         context,
                         '/team_page',
