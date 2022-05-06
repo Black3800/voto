@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/model/poll_settings.dart';
 import 'package:voto_mobile/widgets/confirm_button.dart';
 import 'package:voto_mobile/widgets/create_item/heading.dart';
@@ -135,10 +137,11 @@ class _CreateItemPageState extends State<CreateItemPage> {
       const SizedBox(height: 30.0),
     ];
 
-    return VotoScaffold(
+    return Consumer<PersistentState>(builder: (context, appState, child) => 
+      VotoScaffold(
         useMenu: false,
         title: 'Create new item',
-        titleContext: 'Integrated Project II',
+        titleContext: appState.currentTeam?.name,
         body: Column(children: [
           Expanded(
               child: Padding(
@@ -161,6 +164,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
             },
             height: 75.0,
           )
-        ]));
+      ]))
+    );
   }
 }
