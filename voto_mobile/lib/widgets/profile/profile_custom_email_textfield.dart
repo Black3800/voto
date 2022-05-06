@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:voto_mobile/utils/color.dart';
 
-class ProfileCustomEmailTextField extends StatefulWidget {
-  final String initialValue;
-  const ProfileCustomEmailTextField({Key? key, this.initialValue = ''}) : super(key: key);
+class ProfileCustomEmailTextfield extends StatelessWidget {
+  final TextEditingController controller;
+  const ProfileCustomEmailTextfield({Key? key, required this.controller})
+      : super(key: key);
 
-  @override
-  State<ProfileCustomEmailTextField> createState() =>
-      _ProfileCustomEmailTextFieldState();
-}
-
-class _ProfileCustomEmailTextFieldState
-    extends State<ProfileCustomEmailTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -19,20 +14,16 @@ class _ProfileCustomEmailTextFieldState
         bottom: 10,
       ),
       child: TextFormField(
-        initialValue: widget.initialValue,
+        controller: controller,
         style: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w400,
-          color: Color(
-            0xFF999999,
-          ),
+          color: const Color(0xff999999),
         ),
         decoration: const InputDecoration(
           prefixIcon: Icon(
             Icons.email,
-            color: Color(
-              0xFF999999,
-            ),
+            color: Color(0xff999999),
           ),
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
@@ -41,7 +32,7 @@ class _ProfileCustomEmailTextFieldState
             ),
           ),
           hintText: 'Email',
-          fillColor: Color(0xFFF2F4F8),
+          fillColor: VotoColors.gray,
           filled: true,
         ),
         readOnly: true,

@@ -17,6 +17,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   String? displayName;
   String? email;
   String? image;
@@ -30,11 +32,12 @@ class _ProfilePageState extends State<ProfilePage> {
           if (event.snapshot.exists) {
             final json = event.snapshot.value as Map<dynamic, dynamic>;
             Users data = Users.fromJson(json);
-            setState(() {
-              displayName = data.displayName;
-              email = user.email;
-              image = data.img;
-            });
+            WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {
+                  displayName = data.displayName;
+                  image = data.img;
+                  _nameController.text = '${data.displayName}';
+                  _emailController.text = '${user.email}';
+                }));
           }
         });
       }
@@ -72,7 +75,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 ProfileDisplayName(name: displayName ?? ''),
                 ProfileDisplayNameEditing(
-                    name: displayName ?? '', email: email ?? ''),
+                    nameController: _nameController,
+                    emailController: _emailController),
               ],
             ),
           ),

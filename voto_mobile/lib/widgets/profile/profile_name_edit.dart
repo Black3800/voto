@@ -4,10 +4,10 @@ import 'package:voto_mobile/widgets/profile/profile_custom_email_textfield.dart'
 import 'package:voto_mobile/widgets/profile/profile_custom_textfield.dart';
 
 class ProfileDisplayNameEditing extends StatelessWidget {
-  final String name;
-  final String email;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
   const ProfileDisplayNameEditing(
-      {Key? key, required this.name, required this.email})
+      {Key? key, required this.nameController, required this.emailController})
       : super(key: key);
 
   @override
@@ -25,9 +25,9 @@ class ProfileDisplayNameEditing extends StatelessWidget {
       child: Column(
         children: [
           displayName(),
-          ProfileCustomTextField(initialValue: name),
+          ProfileCustomTextfield(controller: nameController),
           displayEmail(),
-          ProfileCustomEmailTextField(initialValue: email),
+          ProfileCustomEmailTextfield(controller: emailController),
         ],
       ),
     );
