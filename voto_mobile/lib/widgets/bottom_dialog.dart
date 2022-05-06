@@ -38,11 +38,14 @@ class _BottomDialogState extends State<BottomDialog> {
                   splashRadius: 24.0,
                   color: widget.accentColor),
               const SizedBox(width: 10.0),
-              Text(widget.title,
-                  style: GoogleFonts.inter(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: widget.accentColor))
+              Expanded(
+                child: Text(widget.title,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.inter(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: widget.accentColor)),
+              )
             ],
           ),
         ),
