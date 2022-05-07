@@ -8,19 +8,21 @@ class Outline_button extends StatelessWidget {
   final double? height;
   final double fontSize;
   final double padding;
+  final Function()? onPressed;
   const Outline_button(
       {Key? key,
       required this.text,
       this.width,
       this.height,
       this.fontSize = 16.0,
-      this.padding = 8.0})
+      this.padding = 8.0,
+      this.onPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () => {},
+      onPressed: onPressed ?? () {},
       style: OutlinedButton.styleFrom(
           padding: EdgeInsets.all(padding),
           fixedSize: width != null ? Size(width ?? 0.0, height ?? 50.0) : null,
