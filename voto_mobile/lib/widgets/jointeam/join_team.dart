@@ -36,8 +36,10 @@ class _JoinTeamState extends State<JoinTeam> {
             // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("The following team requires passcode to join",
-                  style: Theme.of(context).textTheme.bodyText1?.merge(
-                      GoogleFonts.inter(color: VotoColors.black))),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.merge(GoogleFonts.inter(color: VotoColors.black))),
               const SizedBox(height: 15.0),
               const Center(
                   child: CircleAvatar(
@@ -46,17 +48,21 @@ class _JoinTeamState extends State<JoinTeam> {
               const SizedBox(height: 15.0),
               Center(
                 child: Text("Integrated Project II",
-                    style: Theme.of(context).textTheme.headline2?.merge(
-                        GoogleFonts.inter(color: VotoColors.black))),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline2
+                        ?.merge(GoogleFonts.inter(color: VotoColors.black))),
               ),
               const SizedBox(height: 15.0),
               Text("Passcode",
-                  style: Theme.of(context).textTheme.headline3?.merge(
-                       GoogleFonts.inter(color: VotoColors.black))),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline3
+                      ?.merge(GoogleFonts.inter(color: VotoColors.black))),
               const SizedBox(height: 15.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [Pass()],
+                children: [Pass(isEditing: false)],
               ),
               const SizedBox(height: 30.0),
               WideButton(
@@ -83,13 +89,13 @@ class _JoinTeamState extends State<JoinTeam> {
               style: Theme.of(context)
                   .textTheme
                   .bodyText1
-                  ?.merge( GoogleFonts.inter(color: VotoColors.black))),
+                  ?.merge(GoogleFonts.inter(color: VotoColors.black))),
           const SizedBox(height: 15.0),
           Text("Join code",
               style: Theme.of(context)
                   .textTheme
                   .headline3
-                  ?.merge( GoogleFonts.inter(color: VotoColors.black))),
+                  ?.merge(GoogleFonts.inter(color: VotoColors.black))),
           const SizedBox(height: 15.0),
           const SimpleTextInput(
             accentColor: VotoColors.indigo,

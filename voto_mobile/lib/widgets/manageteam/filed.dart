@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Filed extends StatefulWidget {
-  final String text;
+  final String? text;
   final bool readOnly;
 
   const Filed({Key? key, required this.text, this.readOnly = true})

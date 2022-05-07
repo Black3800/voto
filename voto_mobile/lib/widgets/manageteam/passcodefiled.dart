@@ -3,8 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Passcode extends StatefulWidget {
-  String num;
-  Passcode({Key? key, required this.num}) : super(key: key);
+  int passNumber;
+  bool isEditing;
+  Passcode({Key? key, required this.passNumber, required this.isEditing})
+      : super(key: key);
 
   @override
   State<Passcode> createState() => _PasscodeState();
@@ -19,21 +21,24 @@ class _PasscodeState extends State<Passcode> {
         margin: const EdgeInsets.only(bottom: 8.5),
         height: 56,
         width: 54,
-        child: TextField(
+        child: TextFormField(
+          initialValue: widget.passNumber.toString(),
+          style: GoogleFonts.inter(
+              color: Colors.black, fontSize: 32, fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
           decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
-              hintText: widget.num,
-              hintStyle: GoogleFonts.inter(
-                  color: Colors.black,
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600),
+              // hintText: widget.passNumber.toString(),
+              // hintStyle: GoogleFonts.inter(
+              //     color: Colors.black,
+              //     fontSize: 32,
+              //     fontWeight: FontWeight.w600),
               filled: true,
               fillColor: Color(0xffF2F4F8),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none)),
-          readOnly: true,
+          readOnly: widget.isEditing,
         ),
       ),
     );

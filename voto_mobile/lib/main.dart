@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
           '/random_page': (context) => const RandomPage(),
           '/poll_result_page': (context) => const PollResultPage(),
           '/random_result_page': (context) => const RandomResultPage(),
-          '/manage_team_owner_page': (context) => const ManageTeamOwnerPage(),
+          // '/manage_team_owner_page': (context) => const ManageTeamOwnerPage(),
         },
       ),
     );
