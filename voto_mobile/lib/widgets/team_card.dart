@@ -73,12 +73,14 @@ class _TeamCardState extends State<TeamCard> {
                   radius: 30.0,
                 ),
                 const SizedBox(width: 15.0),
-                Text(
-                  widget.title,
-                  style: GoogleFonts.inter(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w700,
-                      color: VotoColors.indigo),
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: GoogleFonts.inter(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w700,
+                        color: VotoColors.indigo),
+                  ),
                 )
               ]),
             ),
