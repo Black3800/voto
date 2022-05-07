@@ -13,12 +13,14 @@ class ImageInput extends StatefulWidget {
   final String image;
   final double radius;
   final Function(String)? onChanged;
-  const ImageInput(
-      {Key? key,
-      required this.image,
-      this.onChanged,
-      this.radius = 120.0})
-      : super(key: key);
+  final bool readOnly;
+  const ImageInput({
+    Key? key,
+    required this.image,
+    this.onChanged,
+    this.radius = 120.0,
+    this.readOnly = false
+  }) : super(key: key);
 
   @override
   State<ImageInput> createState() => _ImageInputState();
@@ -32,8 +34,10 @@ class _ImageInputState extends State<ImageInput> {
     imageURL = await FirebaseStorage.instance
         .refFromURL(widget.image)
         .getDownloadURL();
-    setState(() {
-      isLoading = false;
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      if(mounted) {
+        setState(() => isLoading = false);
+      }
     });
   }
 
@@ -41,7 +45,9 @@ class _ImageInputState extends State<ImageInput> {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      if (mounted) setState(() => isLoading = true);
+      WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {
+        isLoading = true;
+      }));
       Uint8List fileBytes = result.files.first.bytes ?? Uint8List(0);
       if (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.android) {
@@ -108,24 +114,26 @@ class _ImageInputState extends State<ImageInput> {
                 ? const CircularProgressIndicator(color: VotoColors.indigo,)
                 : null,
             radius: widget.radius),
-        Positioned(
-            top: position,
-            left: position,
-            child: Container(
-                height: widget.radius / 3,
-                width: widget.radius / 3,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: VotoColors.primary,
-                ),
-                child: Center(
-                  child: IconButton(
-                    icon: const Icon(Icons.camera_alt),
-                    iconSize: widget.radius / 6,
-                    onPressed: _handleInput,
-                    color: VotoColors.white,
-                  ),
-                ))),
+        widget.readOnly
+            ? Container()
+            : Positioned(
+                top: position,
+                left: position,
+                child: Container(
+                    height: widget.radius / 3,
+                    width: widget.radius / 3,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: VotoColors.primary,
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        icon: const Icon(Icons.camera_alt),
+                        iconSize: widget.radius / 6,
+                        onPressed: _handleInput,
+                        color: VotoColors.white,
+                      ),
+                    ))),
       ]),
     );
   }

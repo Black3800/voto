@@ -52,7 +52,15 @@ class ManageTeamPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(width: 70.0, child: Filed(text: joinCode)),
+                        Container(
+                          width: 80,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: VotoColors.gray,
+                            borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: Center(child: Text('${appState.currentTeam?.id}'))
+                        ),
                         Purple_button()
                       ],
                     ),

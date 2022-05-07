@@ -8,6 +8,7 @@ class SimpleTextInput extends StatefulWidget {
   final MaterialColor accentColor;
   final IconData? icon;
   final String hintText;
+  final String? errorText;
   final bool multiline;
   final bool clearable;
   final TextInputType? keyboardType;
@@ -30,6 +31,7 @@ class SimpleTextInput extends StatefulWidget {
       this.keyboardType,
       this.inputFormatters,
       this.controller,
+      this.errorText,
       this.onChanged,
       this.onTap,
       this.onEditingComplete,
@@ -97,7 +99,8 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
           ),
         ),
         hintText: widget.hintText,
-        hintStyle: GoogleFonts.inter(color: Color(0xffc4c4c4)),
+        hintStyle: GoogleFonts.inter(color: const Color(0xffc4c4c4)),
+        errorText: widget.errorText,
         fillColor: VotoColors.gray,
         filled: true,
         suffixIcon: widget.clearable &&

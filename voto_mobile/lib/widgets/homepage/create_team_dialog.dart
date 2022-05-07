@@ -39,7 +39,6 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
           "img": createTeamImage,
           "name": _teamNameController.text,
           "owner": uid,
-          "join_code": teamId,
           "members": {
             uid: true
           }
@@ -50,9 +49,15 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
         DatabaseReference userRef =
             FirebaseDatabase.instance.ref("users/$uid/joined_teams");
         await userRef.update({teamId: true});
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _teamNameController.dispose();
+    super.dispose();
   }
 
   @override

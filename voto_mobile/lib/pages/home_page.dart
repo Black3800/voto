@@ -45,7 +45,9 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
       context: context,
       builder: (_) {
-        return const JoinTeam();
+        return JoinTeam(
+          teams: teamsList
+        );
       },
     );
   }
@@ -98,6 +100,12 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _getAllTeams();
+  }
+
+  @override
+  void dispose() {
+    teamsList = [];
+    super.dispose();
   }
 
   @override

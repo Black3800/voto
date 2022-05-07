@@ -20,7 +20,7 @@ class Purple_button extends StatelessWidget {
           Icon(Icons.copy, size: 16),
           SizedBox(width: 10.0),
           Text(
-            'Copy link to team',
+            'Copy to clipboard',
             style: GoogleFonts.inter(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
             textAlign: TextAlign.center,
