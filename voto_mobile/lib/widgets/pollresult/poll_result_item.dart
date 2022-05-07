@@ -5,14 +5,18 @@ import 'package:google_fonts/google_fonts.dart';
 class PollResultItem extends StatelessWidget {
   const PollResultItem({
     required this.name,
-    required this.voteCount, //ใช้ชั่วคราว จริงๆต้องใช้ object user
+    required this.voteCount,
+    required this.totalVote,
     required this.onTap,
+    this.showVoter = true,
     Key? key,
   }) : super(key: key);
 
   final String name;
   final Function()? onTap;
   final int voteCount;
+  final int totalVote;
+  final bool showVoter;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class PollResultItem extends StatelessWidget {
         child: Column(children: [
           itemName(),
           sliderVoteCount(context),
-          voterImage(),
+          showVoter ? voterImage() : Container(),
         ]),
       ),
     );
@@ -53,7 +57,7 @@ class PollResultItem extends StatelessWidget {
             child: SliderTheme(
               child: Slider(
                 value: voteCount.toDouble(),
-                max: 35,
+                max: totalVote.toDouble(),
                 min: 0,
                 activeColor: VotoColors.indigo,
                 inactiveColor: const Color(0xFFF2F4F8),

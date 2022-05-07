@@ -54,7 +54,9 @@ class _TeamPageState extends State<TeamPage> {
                   item: Items(
                     title: 'Vote for app theme (single)',
                     description: 'Let\'s vote for the main theme of our app',
-                    pollSettings: PollSettings(closeDate: DateTime.now().add(const Duration(days: 7)))
+                    pollSettings: PollSettings(
+                          closeDateFormatted: '23 April 2022, 10:00',
+                        )
                   )
                 ),
                 PollCard(
@@ -62,16 +64,34 @@ class _TeamPageState extends State<TeamPage> {
                     title: 'Vote for app theme (multiple)',
                     description: 'Let\'s vote for the main theme of our app',
                     pollSettings: PollSettings(
-                      closeDate: DateTime.now().add(const Duration(days: 7)),
+                      closeDateFormatted: '23 April 2022, 10:00',
                       multipleVote: true
                     ),
                   )
                 ),
                 ResultCard(
+                  item: Items(
                     title: 'Vote project topic',
-                    closeDate: '22 April 2022',
-                    description: 'Winner: Vo-To'),
-                SizedBox(height: 50.0)
+                    description: 'What should we do?',
+                    pollSettings: PollSettings(
+                      closeDate: DateTime.now().add(const Duration(days: 7)),
+                      closeDateFormatted: '23 April 2022, 10:00',
+                      anonymousVote: false
+                    ),
+                  )
+                ),
+                ResultCard(
+                  item: Items(
+                    title: 'Vote project topic (Anonymous)',
+                    description: 'What should we do?',
+                    pollSettings: PollSettings(
+                      closeDate: DateTime.now().add(const Duration(days: 7)),
+                      closeDateFormatted: '23 April 2022, 10:00',
+                      anonymousVote: true
+                    ),
+                  )
+                ),
+                const SizedBox(height: 50.0)
               ],
             ),
           )

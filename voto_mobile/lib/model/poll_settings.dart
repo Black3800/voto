@@ -8,6 +8,7 @@ class PollSettings {
   bool showOptionOwner;
   int winnerCount;
   DateTime? closeDate;
+  String? closeDateFormatted;
 
   PollSettings(
       {this.multipleVote = false,
@@ -18,7 +19,8 @@ class PollSettings {
       this.allowVoteOwnOption = false,
       this.showOptionOwner = false,
       this.winnerCount = 2,
-      this.closeDate});
+      this.closeDate,
+      this.closeDateFormatted});
 
   PollSettings.fromJson(Map<dynamic, dynamic> json)
     : multipleVote = json['multiple_vote'],

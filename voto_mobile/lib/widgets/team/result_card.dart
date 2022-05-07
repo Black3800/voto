@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:voto_mobile/model/items.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/team/card_action_button.dart';
 
 class ResultCard extends StatelessWidget {
-  final String title;
-  final String? closeDate;
-  final String description;
-  const ResultCard({ Key? key, required this.title, this.closeDate, required this.description }) : super(key: key);
+  final Items item;
+  const ResultCard({ Key? key, required this.item }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +41,15 @@ class ResultCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      '${item.title}',
                       style: GoogleFonts.inter(
                         fontSize: 20.0,
                         fontWeight: FontWeight.w500,
                         color: VotoColors.indigo
                         ),
                     ),
-                    closeDate != null ? Text(
-                      'Closing on ' + closeDate!,
+                    item.pollSettings?.closeDate != null ? Text(
+                      'Closed on ${item.pollSettings?.closeDateFormatted}',
                       style: GoogleFonts.inter(
                         fontSize: 10.0,
                         fontWeight: FontWeight.w300,
@@ -69,12 +68,16 @@ class ResultCard extends StatelessWidget {
           ),
           const SizedBox(height: 20.0),
           Text(
-              description,
+              '${item.description}',
               style: GoogleFonts.inter(fontSize: 12.0, color: VotoColors.indigo),
             ),
           const SizedBox(height: 20.0),
           CardActionButton(text: 'View full result', onPressed: () {
-            Navigator.pushNamed(context, '/poll_result_page');
+            Navigator.pushNamed(
+              context,
+              '/poll_result_page',
+              arguments: item
+            );
           },)
         ],
       )

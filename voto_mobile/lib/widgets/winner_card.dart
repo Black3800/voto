@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:voto_mobile/model/choice.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WinnerCard extends StatelessWidget {
-  const WinnerCard({Key? key}) : super(key: key);
+  WinnerCard({
+    Key? key,
+    required this.winners}) : super(key: key);
+  
+  final List<Choice> winners;
+  String _text = '';
 
   @override
   Widget build(BuildContext context) {
+    int i = 0;
+    _text = winners.map((e) {
+      i++;
+      return '$i. ${e.text}';
+    }).join('\n');
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -65,34 +77,13 @@ class WinnerCard extends StatelessWidget {
           ),
         ),
       ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '1. Salad',
-            style: GoogleFonts.inter(
-              color: VotoColors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            '2. Pizza',
-            style: GoogleFonts.inter(
-              color: VotoColors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            '3. Bonchon',
-            style: GoogleFonts.inter(
-              color: VotoColors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
+      Text(
+        _text,
+        style: GoogleFonts.inter(
+          color: VotoColors.white,
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
+        ),
       )
     ]);
   }

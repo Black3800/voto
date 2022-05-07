@@ -18,11 +18,11 @@ class _PollResultBodyState extends State<PollResultBody> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const WinnerCard(),
+        // const WinnerCard(),
         const Heading('Full result'),
-        PollResultItem(onTap: showVoter, name: 'Salad', voteCount: 23),
-        PollResultItem(onTap: showVoter, name: 'Pizza', voteCount: 7),
-        PollResultItem(onTap: showVoter, name: 'ฺBonchon', voteCount: 5),
+        // PollResultItem(onTap: showVoter, name: 'Salad', voteCount: 23),
+        // PollResultItem(onTap: showVoter, name: 'Pizza', voteCount: 7),
+        // PollResultItem(onTap: showVoter, name: 'ฺBonchon', voteCount: 5),
       ],
     );
   }
