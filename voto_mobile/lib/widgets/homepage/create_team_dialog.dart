@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/utils/random_image.dart';
+import 'package:voto_mobile/utils/random_join_code.dart';
 import 'package:voto_mobile/widgets/bottom_dialog.dart';
 import 'package:voto_mobile/widgets/create_item/heading.dart';
 import 'package:voto_mobile/widgets/image_input.dart';
@@ -21,8 +22,14 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
   String createTeamImage = RandomImage.get();
 
   Future<void> _createTeam() async {
-    DatabaseReference teamRef = FirebaseDatabase.instance.ref("teams/").push();
+    String teamId;
+    while (true) {
+      teamId = RandomJoinCode.get();
+      final data = await FirebaseDatabase.instance.ref('teams/$teamId/name').once();
+      if (!data.snapshot.exists) break;
+    }
     FirebaseAuth.instance.authStateChanges().listen((user) async {
+      DatabaseReference teamRef = FirebaseDatabase.instance.ref('teams/$teamId');
       if (user != null) {
         /***
          * Create team
@@ -32,6 +39,7 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
           "img": createTeamImage,
           "name": _teamNameController.text,
           "owner": uid,
+          "join_code": teamId,
           "members": {
             uid: true
           }
@@ -39,17 +47,10 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
         /***
          * Add team to user's joined_teams
          */
-        if (teamRef.key != null) {
-          final String teamId = teamRef.key ?? '';
-          DatabaseReference userRef = FirebaseDatabase.instance.ref("users/$uid/joined_teams");
-          await userRef.update({
-            teamId: true
-          });
-          await userRef.update({teamId: true});
-          Navigator.pop(context);
-        } else {
-          throw Exception('teamKey.ref returns null');
-        }
+        DatabaseReference userRef =
+            FirebaseDatabase.instance.ref("users/$uid/joined_teams");
+        await userRef.update({teamId: true});
+        Navigator.pop(context);
       }
     });
   }
