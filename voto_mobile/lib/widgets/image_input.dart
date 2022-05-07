@@ -12,13 +12,11 @@ import 'package:voto_mobile/utils/color.dart';
 class ImageInput extends StatefulWidget {
   final String image;
   final double radius;
-  final String? initial;
   final Function(String)? onChanged;
   const ImageInput(
       {Key? key,
       required this.image,
       this.onChanged,
-      this.initial,
       this.radius = 120.0})
       : super(key: key);
 
@@ -107,8 +105,7 @@ class _ImageInputState extends State<ImageInput> {
             backgroundImage: isLoading ? null : NetworkImage(imageURL ?? ''),
             backgroundColor: VotoColors.gray,
             child: isLoading
-                ? Text('Loading',
-                    style: GoogleFonts.inter(color: VotoColors.black.shade300))
+                ? const CircularProgressIndicator(color: VotoColors.indigo,)
                 : null,
             radius: widget.radius),
         Positioned(

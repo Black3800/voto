@@ -19,7 +19,7 @@ class RandomTask extends StatefulWidget {
 }
 
 class _RandomTaskState extends State<RandomTask> {
-  String _currentMember = 'Loading...';
+  String? _currentMember = '';
   List<String> _memberNames = [];
 
   Future<void> _getMemberNames(BuildContext context) async {
@@ -60,14 +60,12 @@ class _RandomTaskState extends State<RandomTask> {
                   color: VotoColors.gray
                 ),
                 child: Center(
-                  child: Text(
-                    _currentMember,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold
-                    )
-                  )
+                  child: _currentMember != null
+                          ? Text('$_currentMember',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                  fontSize: 20, fontWeight: FontWeight.bold))
+                          : const CircularProgressIndicator()
                 )
               )
             )
