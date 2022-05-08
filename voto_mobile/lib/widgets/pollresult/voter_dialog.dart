@@ -20,7 +20,7 @@ class _VoterDialogState extends State<VoterDialog> {
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
       // Generate a fake list (Should fetch DB here)
-      _voterList = List<Users>.generate(widget.choice.voteCount ?? 0, (index) => const Users(displayName: 'Anakin'));
+      _voterList = List<Users>.generate(widget.choice.voteCount ?? 0, (index) => Users(displayName: 'Anakin'));
     });
   }
 

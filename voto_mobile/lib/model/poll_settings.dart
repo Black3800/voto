@@ -34,14 +34,14 @@ class PollSettings {
       closeDate = DateTime.parse(json['close_date']);
 
   Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
-    'multipleVote': multipleVote,
-    'anonymousVote': anonymousVote,
+    'multiple_vote': multipleVote,
+    'anonymous_vote': anonymousVote,
     'tiebreaker': tiebreaker,
-    'multipleWinner': multipleWinner,
-    'allowAdd': allowAdd,
-    'allowVoteOwnOption': allowVoteOwnOption,
-    'showOptionOwner': showOptionOwner,
-    'winnerCount': winnerCount,
+    'multiple_winner': multipleWinner,
+    'allow_add': allowAdd,
+    'allow_vote_own': allowVoteOwnOption,
+    'show_owner': showOptionOwner,
+    'winner_count': winnerCount,
     'close_date': closeDate?.toIso8601String()
   };
 }

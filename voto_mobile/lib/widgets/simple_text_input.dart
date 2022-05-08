@@ -11,6 +11,7 @@ class SimpleTextInput extends StatefulWidget {
   final String? errorText;
   final bool multiline;
   final bool clearable;
+  final bool autofocus;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
@@ -28,6 +29,7 @@ class SimpleTextInput extends StatefulWidget {
       this.hintText = 'Aa',
       this.multiline = false,
       this.clearable = true,
+      this.autofocus = false,
       this.keyboardType,
       this.inputFormatters,
       this.controller,
@@ -65,6 +67,7 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
     return TextFormField(
       controller: widget.controller ?? _controller,
       maxLength: widget.max,
+      autofocus: widget.autofocus,
       initialValue: widget.initialValue,
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,

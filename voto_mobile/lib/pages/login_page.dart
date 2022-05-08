@@ -1,5 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
+import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/big_button.dart';
 import 'package:voto_mobile/widgets/login/custom_textform.dart';
@@ -19,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool isSubmitted = false;
 
-  void handleLogin() async {
+  Future<void> handleLogin() async {
     setState(() => isSubmitted = true);
     VotoSnackbar snackBar = VotoSnackbar(
       text: 'Please check your credentials and try again',
@@ -33,6 +37,14 @@ class _LoginPageState extends State<LoginPage> {
               email: _emailController.text,
               password: _passwordController.text
           );
+
+      final profileImg = await FirebaseDatabase.instance.ref('users/${credential.user?.uid}/img').once();
+      Provider.of<PersistentState>(context, listen: false).updateUser(Users(
+        uid: credential.user?.uid,
+        displayName: credential.user?.displayName,
+        email: credential.user?.email,
+        img: profileImg.snapshot.value as String
+      ));
 
       snackBar.text = "Welcome, ${credential.user?.displayName}";
       snackBar.icon = Icons.check_circle;

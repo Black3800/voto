@@ -3,9 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Poll_check extends StatefulWidget {
-  bool? isPress;
+  bool? isEditing;
   final String name;
-  Poll_check({Key? key, required this.name, this.isPress}) : super(key: key);
+  Poll_check({
+    Key? key,
+    required this.name,
+    this.isEditing
+  }) : super(key: key);
 
   @override
   State<Poll_check> createState() => _Poll_checkState();
@@ -16,7 +20,7 @@ class _Poll_checkState extends State<Poll_check> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 10, bottom: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: const BoxDecoration(
         color: Colors.transparent,
         border: Border(
@@ -33,7 +37,7 @@ class _Poll_checkState extends State<Poll_check> {
       child: Theme(
         data: ThemeData(
           checkboxTheme: CheckboxThemeData(
-            side: BorderSide(width: 1, color: VotoColors.indigo),
+            side: const BorderSide(width: 1, color: VotoColors.indigo),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
@@ -50,7 +54,7 @@ class _Poll_checkState extends State<Poll_check> {
           ),
           secondary: Padding(
               padding: const EdgeInsets.only(right: 15),
-              child: widget.isPress!
+              child: widget.isEditing!
                   ? IconButton(
                       icon: const Icon(
                         Icons.delete,
@@ -58,14 +62,14 @@ class _Poll_checkState extends State<Poll_check> {
                       ),
                       onPressed: () {},
                     )
-                  : SizedBox()),
+                  : const SizedBox()),
           controlAffinity: ListTileControlAffinity.leading,
           value: isChecked,
           onChanged: (value) {
             setState(() => isChecked = value!);
           },
           activeColor: VotoColors.indigo,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 0),
         ),
       ),
     );

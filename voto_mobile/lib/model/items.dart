@@ -8,8 +8,10 @@ class Items {
   String? options;
   PollSettings? pollSettings;
   String? randomType;
+  String? id;
 
   Items({
+    this.id,
     this.title,
     this.description,
     this.type,
@@ -32,9 +34,9 @@ class Items {
     'title': title,
     'description': description,
     'type': type,
-    'lastModified': lastModified?.toIso8601String(),
+    'last_modified': lastModified?.toIso8601String(),
     'options': options,
-    'pollSettings': pollSettings,
-    'randomType': randomType
+    'poll_settings': pollSettings?.toJson(),
+    'random_type': randomType
   };
 }

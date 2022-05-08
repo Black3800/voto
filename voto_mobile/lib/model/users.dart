@@ -3,11 +3,13 @@ class Users {
   final String? email;
   final String? img;
   final Map<dynamic, dynamic>? joinedTeams;
-  const Users({
+  String? uid;
+  Users({
     this.displayName,
     this.email,
     this.img,
-    this.joinedTeams
+    this.joinedTeams,
+    this.uid = '',
   });
 
   Users.fromJson(Map<dynamic, dynamic> json)

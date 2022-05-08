@@ -56,6 +56,16 @@ class PollSettingsWidgets {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0))),
       );
+
+  void _updateCloseDate() {
+    pollSettings.closeDate = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedTime.minute
+    );
+  }
   
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -65,6 +75,7 @@ class PollSettingsWidgets {
         lastDate: DateTime(2222));
         if (picked != null && picked != selectedDate) {
           selectedDate = picked;
+          _updateCloseDate();
           onChanged?.call();
         }
   }
@@ -76,6 +87,7 @@ class PollSettingsWidgets {
     );
     if (picked != null && picked != selectedTime) {
       selectedTime = picked;
+      _updateCloseDate();
       onChanged?.call();
     }
   }

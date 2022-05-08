@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class PollRadio extends StatelessWidget {
-  bool? isPress;
+  bool? isEditing;
   final String text;
-  final int value;
-  final int groupValue;
-  final Function(int?)? onChanged;
-  PollRadio(
+  final String value;
+  final String groupValue;
+  final Function(String?)? onChanged;
+    PollRadio(
       {Key? key,
       required this.text,
       required this.value,
       required this.groupValue,
       this.onChanged,
-      this.isPress})
+      this.isEditing})
       : super(key: key);
 
   @override
@@ -40,7 +40,7 @@ class PollRadio extends StatelessWidget {
         ),
         secondary: Padding(
             padding: const EdgeInsets.only(right: 15),
-            child: isPress!
+            child: isEditing!
                 ? IconButton(
                     icon: const Icon(
                       Icons.delete,
@@ -48,7 +48,7 @@ class PollRadio extends StatelessWidget {
                     ),
                     onPressed: () {},
                   )
-                : SizedBox()),
+                : const SizedBox()),
         value: value,
         groupValue: groupValue,
         controlAffinity: ListTileControlAffinity.leading,

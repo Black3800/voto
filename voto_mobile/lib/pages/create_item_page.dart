@@ -1,7 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:voto_mobile/model/items.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/model/poll_settings.dart';
+import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/confirm_button.dart';
 import 'package:voto_mobile/widgets/create_item/heading.dart';
 import 'package:voto_mobile/widgets/create_item/poll_settings_widgets.dart';
@@ -33,7 +36,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
     });
   }
 
-  void handlePollSettingsChange() {
+  void _handlePollSettingsChange() {
     setState(() {
       selectedDate = _pollSettingsWidgetsInstance.selectedDate;
       selectedTime = _pollSettingsWidgetsInstance.selectedTime;
@@ -41,23 +44,104 @@ class _CreateItemPageState extends State<CreateItemPage> {
     });
   }
 
+  Future<bool> _handlePop() {
+    /***
+     * If user hasnt given any input, we can safely pop
+     */
+    if(_titleController.text.isEmpty && _descriptionController.text.isEmpty) {
+      return Future.value(true);
+    }
+    final willPop = showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+          'Discard',
+          style: Theme.of(context).textTheme.headline2,
+        ),
+        content: Text(
+          'This item will be deleted',
+          style: Theme.of(context).textTheme.bodyText1
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Discard'),
+            style: TextButton.styleFrom(
+              primary: VotoColors.danger
+            )
+          ),
+        ],
+      ),
+    ).then((value) async {
+      String? teamId =
+          Provider.of<PersistentState>(context, listen: false).currentTeam?.id;
+      String? itemId =
+          Provider.of<PersistentState>(context, listen: false).currentItem?.id;
+      if(value ?? true && itemId != null && teamId != null) {
+        await FirebaseDatabase.instance.ref('items/$itemId').remove();
+        await FirebaseDatabase.instance.ref('options/$itemId').remove();
+        await FirebaseDatabase.instance.ref('teams/$teamId/items/$itemId').remove();
+        Provider.of<PersistentState>(context, listen: false).disposeItem();
+      }
+      return value ?? true;
+    });
+    return willPop;
+  }
+
+  Future<void> _createItem() async {
+    String? teamId = Provider.of<PersistentState>(context, listen: false).currentTeam?.id;
+    String? itemId = Provider.of<PersistentState>(context, listen: false).currentItem?.id;
+    DatabaseReference itemRef;
+    if(itemId == null) {
+      itemRef = FirebaseDatabase.instance.ref('items/').push();
+    } else {
+      itemRef = FirebaseDatabase.instance.ref('items/$itemId');
+    }
+    Items item = Items(
+      id: itemId ?? itemRef.key,
+      title: _titleController.text,
+      description: _descriptionController.text,
+      type: isPoll ? 'poll' : 'random',
+      pollSettings: isPoll ? pollSettings : null,
+      randomType: isPoll ? null : (isLuckyDrawer ? 'lucky' : 'pair')
+    );
+    if(itemRef.key != null) {
+      await itemRef.set(item.toJson());
+      await FirebaseDatabase.instance.ref('teams/$teamId/items').update({
+        '${itemRef.key}': true
+      });
+    }
+    Provider.of<PersistentState>(context, listen: false).updateItem(item);
+  }
+
   @override
   void initState() {
     super.initState();
     _multipleWinnerController =
         TextEditingController(text: pollSettings.winnerCount.toString());
+    pollSettings.closeDate = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedTime.minute
+    );
     _pollSettingsWidgetsInstance = PollSettingsWidgets(
         selectedDate: selectedDate,
         selectedTime: selectedTime,
         pollSettings: pollSettings,
         multipleWinnerController: _multipleWinnerController,
-        onChanged: handlePollSettingsChange);
+        onChanged: _handlePollSettingsChange);
   }
 
   @override
   void dispose() {
-    super.dispose();
     _multipleWinnerController.dispose();
+    super.dispose();
   }
 
   @override
@@ -142,6 +226,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
         useMenu: false,
         title: 'Create new item',
         titleContext: appState.currentTeam?.name,
+        onWillPop: _handlePop,
         body: Column(children: [
           Expanded(
               child: Padding(
@@ -157,10 +242,14 @@ class _CreateItemPageState extends State<CreateItemPage> {
             disabled: _titleController.text.isEmpty ||
                 _descriptionController.text.isEmpty,
             onConfirm: () {
-              Navigator.pushNamed(context, '/add_option_page');
+              _createItem().then((_) {
+                Navigator.pushNamed(context, '/add_option_page');
+              });
             },
             onCancel: () {
-              Navigator.pop(context);
+              _handlePop().then((willPop) {
+                if (willPop) Navigator.of(context).pop();
+              });
             },
             height: 75.0,
           )
