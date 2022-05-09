@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/items.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/team/card_action_button.dart';
 
@@ -50,7 +52,7 @@ class PollCard extends StatelessWidget {
                         ),
                     ),
                     Text(
-                      'Closing on ${item.pollSettings?.closeDateFormatted}}',
+                      'Closing on ${item.pollSettings?.closeDateFormatted}',
                       style: GoogleFonts.inter(
                         fontSize: 10.0,
                         fontWeight: FontWeight.w300,
@@ -77,6 +79,7 @@ class PollCard extends StatelessWidget {
             text: 'Vote now',
             isPrimary: false,
             onPressed: () {
+              Provider.of<PersistentState>(context, listen: false).updateItem(item);
               Navigator.pushNamed(
                 context,
                 '/poll_page',

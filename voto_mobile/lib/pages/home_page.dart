@@ -6,16 +6,11 @@ import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/model/team.dart';
 import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
-import 'package:voto_mobile/utils/random_image.dart';
-import 'package:voto_mobile/widgets/bottom_dialog.dart';
 import 'package:voto_mobile/widgets/homepage/create_team_dialog.dart';
-import 'package:voto_mobile/widgets/image_input.dart';
 import 'package:voto_mobile/widgets/jointeam/join_team.dart';
 import 'package:voto_mobile/widgets/rich_button.dart';
-import 'package:voto_mobile/widgets/simple_text_input.dart';
 import 'package:voto_mobile/widgets/team_card.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
-import 'package:voto_mobile/widgets/wide_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -145,10 +140,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Provider.of<PersistentState>(context, listen: false)
                         .updateTeam(teamsList[index]);
-                      Navigator.pushNamed(
-                        context,
-                        '/team_page',
-                        arguments: teamsList[index]);
+                      Navigator.pushNamed(context, '/team_page');
                     });
                 },
                 itemCount: teamsList.length),

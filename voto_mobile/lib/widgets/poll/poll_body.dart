@@ -100,11 +100,26 @@ class _PollBodyState extends State<PollBody> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, null),
-            child: const Text('Cancel'),
+            child: Text('Cancel', style: GoogleFonts.inter(
+              fontWeight: FontWeight.normal
+            )),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, _addOptionController.text),
-            child: const Text('OK'),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                if(states.contains(MaterialState.disabled)) {
+                  return VotoColors.indigo.shade300;
+                } else if(states.contains(MaterialState.pressed)) {
+                  return VotoColors.indigo.shade700;
+                }
+                return VotoColors.indigo;
+              }),
+              fixedSize: MaterialStateProperty.all<Size>(const Size.fromWidth(100))
+            )
+            child: Text('Add', style: GoogleFonts.inter(
+              color: VotoColors.white
+            )),
           ),
         ],
       ),

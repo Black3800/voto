@@ -106,7 +106,8 @@ class _CreateItemPageState extends State<CreateItemPage> {
       title: _titleController.text,
       description: _descriptionController.text,
       type: isPoll ? 'poll' : 'random',
-      pollSettings: isPoll ? pollSettings : null,
+      lastModified: DateTime.now(),
+      pollSettings: pollSettings,
       randomType: isPoll ? null : (isLuckyDrawer ? 'lucky' : 'pair')
     );
     if(itemRef.key != null) {

@@ -18,6 +18,7 @@ class AddOptionPage extends StatefulWidget {
 class _AddOptionPageState extends State<AddOptionPage> {
 
   Future<void> _addOption(String _newOption) async {
+    if (_newOption.isEmpty) return;
     String? itemId =
         Provider.of<PersistentState>(context, listen: false).currentItem?.id;
     bool showOptionOwner = Provider.of<PersistentState>(context, listen: false)
