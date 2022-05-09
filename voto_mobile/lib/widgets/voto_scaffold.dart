@@ -74,8 +74,9 @@ class _VotoScaffoldState extends State<VotoScaffold> {
                       widget.onWillPop!().then((willPop) {
                         if(willPop) Navigator.of(context).pop();
                       });
+                    } else {
+                      Navigator.of(context).pop();
                     }
-                    Navigator.of(context).pop();
                   },
                 ),
           leadingWidth: widget.useMenu ? 90.0 : 50.0,

@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class PollRadio extends StatelessWidget {
-  bool? isEditing;
+  final bool? isEditing;
   final String text;
   final String value;
   final String groupValue;
   final Function(String?)? onChanged;
-    PollRadio(
+  final Function()? onDeleted;
+    const PollRadio(
       {Key? key,
       required this.text,
       required this.value,
       required this.groupValue,
       this.onChanged,
-      this.isEditing})
+      this.onDeleted,
+      this.isEditing = false})
       : super(key: key);
 
   @override
@@ -46,7 +48,7 @@ class PollRadio extends StatelessWidget {
                       Icons.delete,
                       color: VotoColors.danger,
                     ),
-                    onPressed: () {},
+                    onPressed: onDeleted,
                   )
                 : const SizedBox()),
         value: value,

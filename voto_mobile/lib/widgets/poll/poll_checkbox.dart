@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
-class Poll_check extends StatefulWidget {
-  bool? isEditing;
-  final String name;
-  Poll_check({
+class PollCheckbox extends StatelessWidget {
+  final String text;
+  final bool isChecked;
+  final bool isEditing;
+  final Function(bool?)? onChanged;
+  final Function()? onDeleted;
+  const PollCheckbox({
     Key? key,
-    required this.name,
-    this.isEditing
+    required this.text,
+    required this.isChecked,
+    this.isEditing = false,
+    this.onChanged,
+    this.onDeleted
   }) : super(key: key);
-
-  @override
-  State<Poll_check> createState() => _Poll_checkState();
-}
-
-class _Poll_checkState extends State<Poll_check> {
-  bool isChecked = false;
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,27 +47,25 @@ class _Poll_checkState extends State<Poll_check> {
           title: Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Text(
-              widget.name,
+              text,
               style: GoogleFonts.inter(
                   textStyle: Theme.of(context).textTheme.bodyText1),
             ),
           ),
           secondary: Padding(
               padding: const EdgeInsets.only(right: 15),
-              child: widget.isEditing!
+              child: isEditing
                   ? IconButton(
                       icon: const Icon(
                         Icons.delete,
                         color: VotoColors.danger,
                       ),
-                      onPressed: () {},
+                      onPressed: onDeleted,
                     )
                   : const SizedBox()),
           controlAffinity: ListTileControlAffinity.leading,
           value: isChecked,
-          onChanged: (value) {
-            setState(() => isChecked = value!);
-          },
+          onChanged: onChanged,
           activeColor: VotoColors.indigo,
           contentPadding: const EdgeInsets.symmetric(horizontal: 0),
         ),

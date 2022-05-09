@@ -5,12 +5,12 @@ import 'package:voto_mobile/utils/color.dart';
 class AddOptionItem extends StatefulWidget {
   final String text;
   final bool isEditing;
-  final Function()? onDelete;
+  final Function()? onDeleted;
   const AddOptionItem({
     Key? key,
     required this.text,
     this.isEditing = false,
-    this.onDelete
+    this.onDeleted
   }) : super(key: key);
 
   @override
@@ -54,7 +54,7 @@ class _AddOptionItemState extends State<AddOptionItem> {
                       Icons.delete,
                       color: VotoColors.danger,
                     ),
-                    onPressed: widget.onDelete,
+                    onPressed: widget.onDeleted,
                   ),
                   maintainSize: true,
                   maintainAnimation: true,

@@ -35,7 +35,10 @@ class BigButton extends StatelessWidget {
             )
           : Text(
               text,
-              style: GoogleFonts.inter(fontSize: 14),
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: VotoColors.white
+              ),
               textAlign: TextAlign.center,
             ),
     );

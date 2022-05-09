@@ -15,14 +15,20 @@ class PollBody extends StatefulWidget {
   final bool isEditable;
   final bool isSelectable;
   final bool isAddable;
-  final Function(String)? onAdded;
+  final bool isLoading;
+  final String? radioValue;
+  final Function(String?, {bool isInitialValue})? onRadioChanged;
+  final Function({required String id, required bool value})? onCheckboxChanged;
   const PollBody({
     Key? key,
     this.isMultipleValue = false,
     this.isEditable = true,
     this.isSelectable = true,
     this.isAddable = false,
-    this.onAdded
+    this.isLoading = false,
+    this.radioValue,
+    this.onRadioChanged,
+    this.onCheckboxChanged
   }) : super(key: key);
 
   @override
@@ -31,26 +37,35 @@ class PollBody extends StatefulWidget {
 
 class _PollBodyState extends State<PollBody> {
   bool isEditing = false;
-  String _radioValue = '';
   String? itemId;
+  String? uid;
   late Future<List<Choice>> _choices;
   final TextEditingController _addOptionController = TextEditingController();
   bool listenerAdded = false;
-
-  void _handleRadioChange(value) {
-    setState(() => _radioValue = value);
-  }
+  Map<String, bool> _checkbox = <String, bool>{};
 
   List<Choice> _applyChoices(DataSnapshot snapshot) {
     if (snapshot.exists) {
       final data = snapshot.value as Map<dynamic, dynamic>?;
       if (data != null) {
         List<Choice> _newChoices = [];
+        _checkbox = <String, bool>{};
         for (String choiceId in data.keys) {
           Choice choice =
               Choice.fromJson(data[choiceId] as Map<dynamic, dynamic>);
           choice.id = choiceId;
           _newChoices.add(choice);
+
+          if(choice.votedBy?.keys.contains(uid) ?? false) {
+            _checkbox[choiceId] = true;
+            widget.onRadioChanged?.call(choiceId, isInitialValue: true);
+          } else {
+            _checkbox[choiceId] = false;
+          }
+          widget.onCheckboxChanged?.call(
+            id: choiceId,
+            value: _checkbox[choiceId] ?? false
+          );
         }
         return _newChoices;
       }
@@ -59,17 +74,20 @@ class _PollBodyState extends State<PollBody> {
   }
 
   Future<List<Choice>> _getChoices() async {
+    if(widget.isLoading) return [];
     if(itemId != null) {
       DatabaseReference optionsRef = FirebaseDatabase.instance.ref('options/$itemId/choices');
       final snapshot = await optionsRef.get();
       if (!listenerAdded) {
         optionsRef.onValue.listen((event) {
+          if(widget.isLoading) return;
           if(event.snapshot.exists) {
             _choices = Future.value(_applyChoices(event.snapshot));
             WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
           }
         });
         optionsRef.onChildRemoved.listen((event) async {
+          if(widget.isLoading) return;
           final currentChoices = await _choices;
           if(currentChoices.length == 1) {
             _choices = Future.value([]);
@@ -125,9 +143,25 @@ class _PollBodyState extends State<PollBody> {
       ),
     );
     if(newOption != null) {
-      widget.onAdded?.call(newOption);
+      _addOption(newOption);
     }
     _addOptionController.clear();
+  }
+
+  Future<void> _addOption(String _newOption) async {
+    if (_newOption.isEmpty) return;
+    String? itemId =
+        Provider.of<PersistentState>(context, listen: false).currentItem!.id;
+    bool showOptionOwner =
+        Provider.of<PersistentState>(context, listen: false).currentItem!.pollSettings!.showOptionOwner;
+    String? uid =
+        Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
+    if (itemId != null) {
+      DatabaseReference choiceRef =
+          FirebaseDatabase.instance.ref('options/$itemId/choices').push();
+      await choiceRef
+          .set({'text': _newOption, 'owner': showOptionOwner ? uid : null});
+    }
   }
 
   Future<void> _handleDelete(String? choiceId) async {
@@ -139,9 +173,11 @@ class _PollBodyState extends State<PollBody> {
   @override
   void initState() {
     super.initState();
-    itemId = Provider.of<PersistentState>(context, listen: false).currentItem?.id;
+    itemId = Provider.of<PersistentState>(context, listen: false).currentItem!.id;
+    uid = Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
     _choices = _getChoices();
   }
+
   @override
   void dispose() {
     _addOptionController.dispose();
@@ -153,6 +189,7 @@ class _PollBodyState extends State<PollBody> {
     return FutureBuilder(
       future: _choices,
       builder: (context, snapshot) {
+        if(widget.isLoading) return loader();
         if(snapshot.hasData) {
           final _pollItems = snapshot.data as List<Choice>?;
           return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -197,38 +234,42 @@ class _PollBodyState extends State<PollBody> {
               ) : Container()
             ]);
         } else {
-          return const Center(
-            child: SizedBox(
-              width: 32,
-              height: 32,
-              child: CircularProgressIndicator()
-            ),
-          );
+          return loader();
         }
-
       }
     );
   }
 
   Widget pollItem(Choice choice) {
-    if(!widget.isSelectable) {
+    if(!widget.isSelectable || isEditing) {
       return AddOptionItem(
         text: '${choice.text}',
         isEditing: isEditing,
-        onDelete: () => _handleDelete(choice.id),
+        onDeleted: () => _handleDelete(choice.id),
       );
     }
     if (widget.isMultipleValue) {
-      return Poll_check(
-        name: '${choice.text}',
+      return PollCheckbox(
+        text: '${choice.text}',
+        isChecked: _checkbox[choice.id] ?? false,
         isEditing: isEditing,
+        onChanged: (value) {
+          _checkbox.update('${choice.id}', (value) => !value);
+          setState(() => _checkbox = Map.from(_checkbox));
+          widget.onCheckboxChanged?.call(
+            id: '${choice.id}',
+            value: value ?? false
+          );
+        },
+        onDeleted: () => _handleDelete(choice.id),
       );
     } else {
       return PollRadio(
         text: '${choice.text}',
         value: '${choice.id}',
-        groupValue: _radioValue,
-        onChanged: _handleRadioChange,
+        groupValue: '${widget.radioValue}',
+        onChanged: widget.onRadioChanged,
+        onDeleted: () => _handleDelete(choice.id),
         isEditing: isEditing,
       );
     }
@@ -294,4 +335,12 @@ class _PollBodyState extends State<PollBody> {
             ),
     );
   }
+
+  Widget loader() => const Center(
+            child: SizedBox(
+              width: 32,
+              height: 32,
+              child: CircularProgressIndicator()
+            ),
+          );
 }

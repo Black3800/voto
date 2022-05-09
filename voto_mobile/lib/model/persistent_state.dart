@@ -15,17 +15,21 @@ class PersistentState extends ChangeNotifier {
 
   void updateUser(Users? newUser) {
     _currentUser = newUser;
+    notifyListeners();
   }
 
   void updateTeam(Team? newTeam) {
     _currentTeam = newTeam;
+    notifyListeners();
   }
 
   void updateItem(Items? newItem) {
     _currentItem = newItem;
+    notifyListeners();
   }
 
   void disposeItem() {
     _currentItem = null;
+    // notifyListeners();
   }
 }

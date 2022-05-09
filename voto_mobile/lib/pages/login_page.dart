@@ -7,7 +7,6 @@ import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/big_button.dart';
 import 'package:voto_mobile/widgets/login/custom_textform.dart';
-import 'package:voto_mobile/widgets/login/loading_button.dart';
 import 'package:voto_mobile/widgets/login/sign_up_click.dart';
 import 'package:voto_mobile/widgets/voto_snackbar.dart';
 

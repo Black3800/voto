@@ -20,7 +20,7 @@ class SimpleTextInput extends StatefulWidget {
   final void Function()? onEditingComplete;
   final void Function(String)? onFieldSubmitted;
   final void Function(String?)? onSaved;
-  final max;
+  final int? max;
   const SimpleTextInput(
       {Key? key,
       this.initialValue,

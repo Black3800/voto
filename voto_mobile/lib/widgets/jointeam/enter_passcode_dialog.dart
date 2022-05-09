@@ -6,7 +6,6 @@ import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/bottom_dialog.dart';
 import 'package:voto_mobile/widgets/image_input.dart';
 import 'package:voto_mobile/widgets/simple_text_input.dart';
-import 'package:voto_mobile/widgets/voto_snackbar.dart';
 import 'package:voto_mobile/widgets/wide_button.dart';
 
 class EnterPasscodeDialog extends StatefulWidget {

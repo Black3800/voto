@@ -17,25 +17,6 @@ class AddOptionPage extends StatefulWidget {
 
 class _AddOptionPageState extends State<AddOptionPage> {
 
-  Future<void> _addOption(String _newOption) async {
-    if (_newOption.isEmpty) return;
-    String? itemId =
-        Provider.of<PersistentState>(context, listen: false).currentItem?.id;
-    bool showOptionOwner = Provider.of<PersistentState>(context, listen: false)
-            .currentItem
-            ?.pollSettings
-            ?.showOptionOwner ??
-        false;
-    String? uid =
-        Provider.of<PersistentState>(context, listen: false).currentUser?.uid;
-    if (itemId != null) {
-      DatabaseReference choiceRef =
-          FirebaseDatabase.instance.ref('options/$itemId/choices').push();
-      await choiceRef
-          .set({'text': _newOption, 'owner': showOptionOwner ? uid : null});
-    }
-  }
-
   Future<void> _handleCreate() async {
     String? itemId =
         Provider.of<PersistentState>(context, listen: false).currentItem?.id;
@@ -75,10 +56,10 @@ class _AddOptionPageState extends State<AddOptionPage> {
                     const SizedBox(height: 20.0),
                     const Heading('Options'),
                     const SizedBox(height: 20.0),
-                    PollBody(
+                    const PollBody(
                       isSelectable: false,
                       isAddable: true,
-                      onAdded: _addOption
+                      isEditable: true,
                     )
                   ],
                 ),

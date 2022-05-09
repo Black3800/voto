@@ -80,6 +80,16 @@ class _TeamPageState extends State<TeamPage> {
         WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
       }
     });
+    itemsRef.onChildRemoved.listen((event) async {
+      String? itemId = event.snapshot.key;
+      List<Items> _newItems = await _items ?? [];
+      _newItems.removeWhere((item) => item.id == itemId);
+      _newItems.sort((a, b) =>
+          b.lastModified!.compareTo(a.lastModified ?? DateTime.now()));
+
+      _items = Future.value(_newItems);
+      WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
+    });
   }
 
   @override
@@ -98,62 +108,68 @@ class _TeamPageState extends State<TeamPage> {
         title: '${appState.currentTeam?.name}',
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: RichButton(
-                text: 'Create new poll/random',
-                icon: Icons.add,
-                accentColor: VotoColors.indigo,
-                onPressed: () {
-                  Navigator.pushNamed(context, '/create_item_page');
-                },
-                width: 250
-              )
-            ),
+            appState.currentUser!.uid == appState.currentTeam!.owner
+                      ? Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: RichButton(
+                              text: 'Create new poll/random',
+                              icon: Icons.add,
+                              accentColor: VotoColors.indigo,
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, '/create_item_page');
+                              },
+                              width: 250))
+                      : Container(),
             Expanded(
-              child: FutureBuilder(
-                future: _items,
-                builder: (context, snapshot) {
-                  if(snapshot.hasData) {
-                    final _currentItems = snapshot.data as List<Items>?;
-                    if(_currentItems!.isNotEmpty) {
-                      return ListView.builder(
-                        itemBuilder: (context, index) => itemCard(_currentItems[index]),
-                        itemCount: _currentItems.length,
-                      );
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: (appState.currentUser!.uid == appState.currentTeam!.owner) ? 0 : 20
+                ),
+                child: FutureBuilder(
+                  future: _items,
+                  builder: (context, snapshot) {
+                    if(snapshot.hasData) {
+                      final _currentItems = snapshot.data as List<Items>?;
+                      if(_currentItems!.isNotEmpty) {
+                        return ListView.builder(
+                          itemBuilder: (context, index) => itemCard(_currentItems[index]),
+                          itemCount: _currentItems.length,
+                        );
+                      } else {
+                        return Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.celebration,
+                                          color: VotoColors.magenta,
+                                          size: 64,
+                                        ),
+                                        const SizedBox(height: 24),
+                                        Text('Welcome to your team!',
+                                            style: GoogleFonts.inter(
+                                                fontSize: 18,
+                                                color: VotoColors.black)),
+                                        Text('Start by creating some items',
+                                            style: GoogleFonts.inter(
+                                                fontSize: 16,
+                                                color: VotoColors.black.shade400)),
+                                      ]),
+                                );
+                      }
                     } else {
-                      return Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(
-                                        Icons.celebration,
-                                        color: VotoColors.magenta,
-                                        size: 64,
-                                      ),
-                                      const SizedBox(height: 24),
-                                      Text('Welcome to your team!',
-                                          style: GoogleFonts.inter(
-                                              fontSize: 18,
-                                              color: VotoColors.black)),
-                                      Text('Start by creating some items',
-                                          style: GoogleFonts.inter(
-                                              fontSize: 16,
-                                              color: VotoColors.black.shade400)),
-                                    ]),
+                      return const Center(
+                                child: SizedBox(
+                                    width: 32,
+                                    height: 32,
+                                    child: CircularProgressIndicator()),
                               );
                     }
-                  } else {
-                    return const Center(
-                              child: SizedBox(
-                                  width: 32,
-                                  height: 32,
-                                  child: CircularProgressIndicator()),
-                            );
                   }
-                }
+                ),
               ),
             )
           ],
