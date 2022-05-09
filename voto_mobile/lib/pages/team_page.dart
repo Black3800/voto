@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:html';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,17 +25,24 @@ class TeamPage extends StatefulWidget {
 class _TeamPageState extends State<TeamPage> {
 
   late Future<List<Items>?> _items;
+  Map<String, Timer> _timers = {};
+
+  void _forceRebuild() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
+  }
 
   Future<List<Items>?> _getItems() async {
     String? teamId = Provider.of<PersistentState>(context, listen: false).currentTeam?.id;
     if(teamId != null) {
       DatabaseReference itemsRef = FirebaseDatabase.instance.ref('teams/$teamId/items');
       List<Items> newItems = [];
+
       final snapshot = await itemsRef.get();
       if(snapshot.exists) {
         final data = snapshot.value as Map<dynamic,dynamic>?;
         for (String itemId in data!.keys) {
-          final itemSnapshot = await FirebaseDatabase.instance.ref('items/$itemId').get();
+          DatabaseReference itemRef = FirebaseDatabase.instance.ref('items/$itemId');
+          final itemSnapshot = await itemRef.get();
           final itemData = itemSnapshot.value as Map<dynamic,dynamic>?;
           if(itemData != null) {
             Items item = Items.fromJson(itemData);
@@ -41,7 +51,47 @@ class _TeamPageState extends State<TeamPage> {
                 .add_Hm()
                 .format(item.pollSettings!.closeDate ?? DateTime.now());
             newItems.add(item);
+
+            final timer = Timer(item.pollSettings!.closeDate!.difference(DateTime.now()), () async {
+              await FirebaseDatabase.instance
+                  .ref('items/$itemId')
+                  .update({'last_modified': DateTime.now().toIso8601String()});
+            });
+            _timers[itemId] = timer;
           }
+
+          itemRef.onValue.listen((event) async {
+            final itemSnapshot = event.snapshot;
+            final itemData = itemSnapshot.value as Map<dynamic, dynamic>?;
+            if (itemData != null) {
+              Items item = Items.fromJson(itemData);
+              item.id = event.snapshot.key;
+              item.pollSettings!.closeDateFormatted = DateFormat.yMMMd()
+                  .add_Hm()
+                  .format(item.pollSettings!.closeDate ?? DateTime.now());
+
+              _timers[item.id]!.cancel();
+              
+              final currentItems = await _items ?? [];
+              final index = currentItems.indexWhere((element) => element.id == item.id);
+              if(index >= 0) {
+                currentItems[index] = Items.fromItems(item);
+                _items = Future.value(List.from(currentItems));
+                _forceRebuild();
+              }
+
+              if(item.pollSettings!.closeDate!.isAfter(DateTime.now())) {
+                final timer = Timer(
+                    item.pollSettings!.closeDate!.difference(DateTime.now()),
+                    () async =>
+                      await FirebaseDatabase.instance.ref('items/$itemId').update({
+                        'last_modified': DateTime.now().toIso8601String()
+                      })
+                );
+                _timers[itemId] = timer;
+              }
+            }
+          });
         }
         newItems.sort((a, b) =>
             b.lastModified!.compareTo(a.lastModified ?? DateTime.now()));
@@ -77,7 +127,7 @@ class _TeamPageState extends State<TeamPage> {
             b.lastModified!.compareTo(a.lastModified ?? DateTime.now()));
 
         _items = Future.value(_newItems);
-        WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
+        _forceRebuild();
       }
     });
     itemsRef.onChildRemoved.listen((event) async {
@@ -88,7 +138,7 @@ class _TeamPageState extends State<TeamPage> {
           b.lastModified!.compareTo(a.lastModified ?? DateTime.now()));
 
       _items = Future.value(_newItems);
-      WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
+      _forceRebuild();
     });
   }
 
@@ -97,6 +147,14 @@ class _TeamPageState extends State<TeamPage> {
     super.initState();
     _items = _getItems();
     _addListener();
+  }
+
+  @override
+  void dispose() {
+    for (Timer t in  _timers.values) {
+      t.cancel();
+    }
+    super.dispose();
   }
 
   @override

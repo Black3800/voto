@@ -29,9 +29,20 @@ class Items {
       type = json['type'],
       lastModified = json['last_modified'] != null ? DateTime.parse(json['last_modified']) : null,
       options = json['options'],
-      pollSettings = PollSettings.fromJson(json['poll_settings']),
+      pollSettings = PollSettings.fromJson(json['poll_settings'] as Map<dynamic,dynamic>),
       randomType = json['random_type'],
       closed = json['closed'];
+
+  Items.fromItems(Items items)
+    : id = items.id,
+      title = items.title,
+      description = items.description,
+      type = items.type,
+      lastModified = items.lastModified,
+      options = items.options,
+      pollSettings = items.pollSettings,
+      randomType = items.randomType,
+      closed = items.closed;
 
   Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
     'title': title,

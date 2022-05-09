@@ -44,6 +44,10 @@ class _PollBodyState extends State<PollBody> {
   bool listenerAdded = false;
   Map<String, bool> _checkbox = <String, bool>{};
 
+  void _forceRebuild() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) => setState((){}));
+  }
+
   List<Choice> _applyChoices(DataSnapshot snapshot) {
     if (snapshot.exists) {
       final data = snapshot.value as Map<dynamic, dynamic>?;
@@ -83,7 +87,7 @@ class _PollBodyState extends State<PollBody> {
           if(widget.isLoading) return;
           if(event.snapshot.exists) {
             _choices = Future.value(_applyChoices(event.snapshot));
-            WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
+            _forceRebuild();
           }
         });
         optionsRef.onChildRemoved.listen((event) async {
@@ -91,7 +95,7 @@ class _PollBodyState extends State<PollBody> {
           final currentChoices = await _choices;
           if(currentChoices.length == 1) {
             _choices = Future.value([]);
-            WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
+            _forceRebuild();
           }
         });
         listenerAdded = true;
