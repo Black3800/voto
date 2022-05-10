@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
@@ -10,8 +13,41 @@ import 'package:voto_mobile/widgets/manageteam/topic.dart';
 import 'package:voto_mobile/widgets/purple_button.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
 
-class ManageTeamPage extends StatelessWidget {
+class ManageTeamPage extends StatefulWidget {
   const ManageTeamPage({Key? key}) : super(key: key);
+
+  @override
+  State<ManageTeamPage> createState() => _ManageTeamPageState();
+}
+
+class _ManageTeamPageState extends State<ManageTeamPage> {
+
+  String _copyText = 'Copy to clipboard';
+  IconData _copyIcon = Icons.copy;
+  Timer? _copyTimer;
+
+  void _handleCopy() {
+    _copyTimer?.cancel;
+    setState(() {
+      _copyText = 'Copied';
+      _copyIcon = Icons.check;
+    });
+    _copyTimer = Timer(const Duration(seconds: 3), () {
+      _revertCopyState();
+    });
+  }
+
+  void _revertCopyState() {
+    setState(() {
+      _copyText = 'Copy to clipboard';
+      _copyIcon = Icons.copy;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +97,14 @@ class ManageTeamPage extends StatelessWidget {
                           ),
                           child: Center(child: Text('${appState.currentTeam?.id}'))
                         ),
-                        Purple_button()
+                        Purple_button(
+                          text: _copyText,
+                          icon: _copyIcon,
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(text: appState.currentTeam?.id));
+                            _handleCopy();
+                          }
+                        )
                       ],
                     ),
                     const SizedBox(height: 15.0),
