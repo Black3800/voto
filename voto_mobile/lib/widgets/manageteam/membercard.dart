@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:voto_mobile/widgets/image_input.dart';
 import 'package:voto_mobile/widgets/manageteamowner/kick_button.dart';
 
 class Membercard extends StatelessWidget {
   final String name;
+  final String image;
   final bool isOwner;
   final bool kickable;
   const Membercard(
       {Key? key,
       required this.name,
+      required this.image,
       this.isOwner = false,
       this.kickable = false})
       : super(key: key);
@@ -20,17 +23,11 @@ class Membercard extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 15),
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: const BoxDecoration(
-              // border: Border.all(width: 1, color: VotoColors.primary),
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('assets/user_profile_test.jpg'),
-              ),
-            ),
+          child: ImageInput(
+            image: image,
+            radius: 40,
+            readOnly: true,
+            showLoadingStatus: false,
           ),
         ),
         Expanded(

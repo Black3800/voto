@@ -5,48 +5,41 @@ import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/bottom_dialog.dart';
 import 'package:voto_mobile/widgets/manageteam/membercard.dart';
 
-class VoterDialog extends StatefulWidget {
-  final Choice choice;
-  const VoterDialog({Key? key, required this.choice}) : super(key: key);
-
-  @override
-  State<VoterDialog> createState() => _VoterDialogState();
-}
-
-class _VoterDialogState extends State<VoterDialog> {
-  List<Users> _voterList = [];
-
-  Future<void> _getVoterList() async {
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      // Generate a fake list (Should fetch DB here)
-      _voterList = List<Users>.generate(widget.choice.voteCount ?? 0, (index) => Users(displayName: 'Anakin'));
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _getVoterList();
-  }
+class VoterDialog extends StatelessWidget {
+  final String text;
+  final String? owner;
+  final int voteCount;
+  final List<Users> voters;
+  const VoterDialog({
+    Key? key,
+    required this.text,
+    required this.voteCount,
+    required this.voters,
+    this.owner
+  }) : super(key: key);
 
   final _divider = const Divider(
-                          height: 15.0,
-                          color: VotoColors.gray,
-                          thickness: 1.0,
-                          indent: 20.0,
-                          endIndent: 20.0,
-                        );
+    height: 15.0,
+    color: VotoColors.gray,
+    thickness: 1.0,
+    indent: 20.0,
+    endIndent: 20.0,
+  );
 
   @override
   Widget build(BuildContext context) {
     return BottomDialog(
-      title: "${widget.choice.text} (${widget.choice.voteCount})",
+      title: "$text ($voteCount)",
+      titleContext: owner,
       height: 0.6,
       child: ListView.separated(
-        itemBuilder: (context, index) => Membercard(name: _voterList[index].displayName ?? ''),
+        itemBuilder: (context, index) =>
+            Membercard(
+              image: voters[index].img ?? 'gs://cs21-voto.appspot.com/dummy/blank.webp',
+              name: voters[index].displayName ?? ''
+            ),
         separatorBuilder: (context, index) => _divider,
-        itemCount: _voterList.length,
+        itemCount: voters.length,
       ),
     );
   }

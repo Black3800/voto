@@ -158,13 +158,19 @@ class _PollBodyState extends State<PollBody> {
         Provider.of<PersistentState>(context, listen: false).currentItem!.id;
     bool showOptionOwner =
         Provider.of<PersistentState>(context, listen: false).currentItem!.pollSettings!.showOptionOwner;
+    bool isPoll =
+        Provider.of<PersistentState>(context, listen: false).currentItem!.type == 'poll';
     String? uid =
         Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
     if (itemId != null) {
       DatabaseReference choiceRef =
           FirebaseDatabase.instance.ref('options/$itemId/choices').push();
       await choiceRef
-          .set({'text': _newOption, 'owner': showOptionOwner ? uid : null});
+          .set({
+            'text': _newOption,
+            'owner': showOptionOwner ? uid : null,
+            'vote_count': isPoll ? 0 : null
+          });
     }
   }
 

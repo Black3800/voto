@@ -52,12 +52,15 @@ class _TeamPageState extends State<TeamPage> {
                 .format(item.pollSettings!.closeDate ?? DateTime.now());
             newItems.add(item);
 
-            final timer = Timer(item.pollSettings!.closeDate!.difference(DateTime.now()), () async {
-              await FirebaseDatabase.instance
-                  .ref('items/$itemId')
-                  .update({'last_modified': DateTime.now().toIso8601String()});
-            });
-            _timers[itemId] = timer;
+            if (item.pollSettings!.closeDate!.isAfter(DateTime.now())) {
+              final timer = Timer(
+                  item.pollSettings!.closeDate!.difference(DateTime.now()),
+                  () async => await FirebaseDatabase.instance
+                      .ref('items/$itemId')
+                      .update(
+                          {'last_modified': DateTime.now().toIso8601String()}));
+              _timers[itemId] = timer;
+            }
           }
 
           itemRef.onValue.listen((event) async {
@@ -70,7 +73,7 @@ class _TeamPageState extends State<TeamPage> {
                   .add_Hm()
                   .format(item.pollSettings!.closeDate ?? DateTime.now());
 
-              _timers[item.id]!.cancel();
+              _timers[item.id]?.cancel();
               
               final currentItems = await _items ?? [];
               final index = currentItems.indexWhere((element) => element.id == item.id);

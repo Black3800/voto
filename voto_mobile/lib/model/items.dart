@@ -29,7 +29,7 @@ class Items {
       type = json['type'],
       lastModified = json['last_modified'] != null ? DateTime.parse(json['last_modified']) : null,
       options = json['options'],
-      pollSettings = PollSettings.fromJson(json['poll_settings'] as Map<dynamic,dynamic>),
+      pollSettings = json['poll_settings'] != null ? PollSettings.fromJson(json['poll_settings'] as Map<dynamic,dynamic>) : null,
       randomType = json['random_type'],
       closed = json['closed'];
 

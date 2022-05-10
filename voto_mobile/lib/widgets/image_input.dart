@@ -14,12 +14,14 @@ class ImageInput extends StatefulWidget {
   final double radius;
   final Function(String)? onChanged;
   final bool readOnly;
+  final bool showLoadingStatus;
   const ImageInput({
     Key? key,
     required this.image,
     this.onChanged,
     this.radius = 120.0,
-    this.readOnly = false
+    this.readOnly = false,
+    this.showLoadingStatus = true
   }) : super(key: key);
 
   @override
@@ -110,7 +112,7 @@ class _ImageInputState extends State<ImageInput> {
         CircleAvatar(
             backgroundImage: isLoading ? null : NetworkImage(imageURL ?? ''),
             backgroundColor: VotoColors.gray,
-            child: isLoading
+            child: isLoading && widget.showLoadingStatus
                 ? const CircularProgressIndicator(color: VotoColors.indigo,)
                 : null,
             radius: widget.radius),

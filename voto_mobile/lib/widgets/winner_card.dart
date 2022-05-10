@@ -4,22 +4,21 @@ import 'package:voto_mobile/utils/color.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WinnerCard extends StatelessWidget {
-  WinnerCard({
+  const WinnerCard({
     Key? key,
     required this.winners}) : super(key: key);
   
   final List<Choice> winners;
-  String _text = '';
 
   @override
   Widget build(BuildContext context) {
     int i = 0;
-    _text = winners.map((e) {
+    String _text = winners.map((e) {
       i++;
       return '$i. ${e.text}';
     }).join('\n');
 
-    return Container(
+    return winners.isNotEmpty ? Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         boxShadow: const <BoxShadow>[
@@ -42,14 +41,14 @@ class WinnerCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: winnerText(),
+            child: winnerText(_text),
           ),
           Container(
             child: medalPic(),
           ),
         ],
       ),
-    );
+    ) : Container();
   }
 
   Widget medalPic() {
@@ -63,7 +62,7 @@ class WinnerCard extends StatelessWidget {
     );
   }
 
-  Widget winnerText() {
+  Widget winnerText(text) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
         margin: const EdgeInsets.only(bottom: 15),
@@ -78,7 +77,7 @@ class WinnerCard extends StatelessWidget {
         ),
       ),
       Text(
-        _text,
+        text,
         style: GoogleFonts.inter(
           color: VotoColors.white,
           fontSize: 22,

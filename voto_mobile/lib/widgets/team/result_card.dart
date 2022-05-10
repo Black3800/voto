@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/items.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/team/card_action_button.dart';
 
@@ -73,11 +75,8 @@ class ResultCard extends StatelessWidget {
             ),
           const SizedBox(height: 20.0),
           CardActionButton(text: 'View full result', onPressed: () {
-            Navigator.pushNamed(
-              context,
-              '/poll_result_page',
-              arguments: item
-            );
+            Provider.of<PersistentState>(context, listen: false).updateItem(item);
+            Navigator.pushNamed(context, '/poll_result_page');
           },)
         ],
       )

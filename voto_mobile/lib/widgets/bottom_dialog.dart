@@ -4,6 +4,7 @@ import 'package:voto_mobile/utils/color.dart';
 
 class BottomDialog extends StatefulWidget {
   final String title;
+  final String? titleContext;
   final MaterialColor accentColor;
   final Widget child;
   final double height;
@@ -12,7 +13,8 @@ class BottomDialog extends StatefulWidget {
       required this.title,
       required this.child,
       this.accentColor = VotoColors.indigo,
-      this.height = 0.75})
+      this.height = 0.75,
+      this.titleContext})
       : super(key: key);
 
   @override
@@ -39,12 +41,22 @@ class _BottomDialogState extends State<BottomDialog> {
                   color: widget.accentColor),
               const SizedBox(width: 10.0),
               Expanded(
-                child: Text(widget.title,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: widget.accentColor)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            color: widget.accentColor)),
+                    if (widget.titleContext != null)
+                      Text('${widget.titleContext}',
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.inter(
+                              fontSize: 12.0, color: VotoColors.black))
+                  ],
+                ),
               )
             ],
           ),

@@ -80,11 +80,7 @@ class PollCard extends StatelessWidget {
             isPrimary: false,
             onPressed: () {
               Provider.of<PersistentState>(context, listen: false).updateItem(item);
-              Navigator.pushNamed(
-                context,
-                '/poll_page',
-                arguments: item
-              );
+              Navigator.pushNamed(context, '/poll_page');
             },
           )
         ],

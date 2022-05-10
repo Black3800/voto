@@ -76,6 +76,7 @@ class ManageTeamPage extends StatelessWidget {
                     Expanded(
                       child: ListView.separated(
                           itemBuilder: (context, index) => Membercard(
+                                image: 'gs://cs21-voto.appspot.com/dummy/blank.webp',
                                 name: membersName[index],
                                 isOwner: membersName[index] == ownerName,
                                 kickable:

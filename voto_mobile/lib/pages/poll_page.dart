@@ -45,19 +45,60 @@ class _PollPageState extends State<PollPage> {
       if (item.pollSettings!.multipleVote) {
         final _choices = Map.from(_checkbox);
         for (String choiceId in _choices.keys) {
-          await FirebaseDatabase.instance
-              .ref('options/${item.id}/choices/$choiceId/voted_by')
-              .update({
-                uid: (_choices[choiceId] ?? false) ? true : null
-              });
+          bool isVoted = _choices[choiceId] ?? false;
+          await FirebaseDatabase.instance.ref('options/${item.id}/choices/$choiceId').runTransaction((Object? choice) {
+            if (choice == null) {
+              return Transaction.abort();
+            }
+
+            Map<String, dynamic> _choice = Map<String, dynamic>.from(choice as Map);
+            if (_choice['voted_by'] != null) {
+              // Someone has chosen this before
+              if ((_choice['voted_by'] as Map?)?.containsKey(uid) ?? false) {
+                // This user has chosen before
+                _choice['vote_count'] = isVoted
+                  ? _choice['vote_count']
+                  : (_choice['vote_count'] ?? 1) - 1;
+
+                if (!isVoted) {
+                  (_choice['voted_by'] as Map?)?.remove(uid);
+                }
+              } else {
+                // This user has never chosen before
+                _choice['vote_count'] = isVoted
+                  ? (_choice['vote_count'] ?? 0) + 1
+                  : _choice['vote_count'];
+
+                if (isVoted) {
+                  _choice['voted_by'][uid] = true;
+                }
+              }
+            } else {
+              // No one has chosen this before
+              _choice['vote_count'] = isVoted
+                ? (_choice['vote_count'] ?? 0) + 1
+                : _choice['vote_count'];
+
+              if (isVoted) {
+                _choice['voted_by'] = {
+                  uid: true
+                };
+              }
+            }
+            return Transaction.success(_choice);
+          });
         }
       } else {
-        await FirebaseDatabase.instance
-            .ref('options/${item.id}/choices/$_initialRadioValue/voted_by')
-            .update({uid: null});
-        await FirebaseDatabase.instance
-            .ref('options/${item.id}/choices/$_radioValue/voted_by')
-            .update({uid: true});
+        Map<String, Object?> updates = {};
+        if(_initialRadioValue.isNotEmpty) {
+          updates['options/${item.id}/choices/$_initialRadioValue/voted_by/$uid'] = null;
+          updates['options/${item.id}/choices/$_initialRadioValue/vote_count'] = ServerValue.increment(-1);
+        } else {
+          updates['options/${item.id}/total_vote'] = ServerValue.increment(1);
+        }
+        updates['options/${item.id}/choices/$_radioValue/voted_by/$uid'] = true;
+        updates['options/${item.id}/choices/$_radioValue/vote_count'] = ServerValue.increment(1);
+        FirebaseDatabase.instance.ref().update(updates);
       }
     }
     _handlePop().then((willPop) {
@@ -110,7 +151,7 @@ class _PollPageState extends State<PollPage> {
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        'Closed on ${appState.currentItem!.pollSettings!.closeDateFormatted}',
+                        'Closing on ${appState.currentItem!.pollSettings!.closeDateFormatted}',
                         style: GoogleFonts.inter(
                             fontSize: 12, fontWeight: FontWeight.w300),
                       ),
@@ -126,7 +167,7 @@ class _PollPageState extends State<PollPage> {
                   PollBody(
                     isLoading: _isSubmitting,
                     isEditable: isOwner,
-                    isAddable: isOwner || appState.currentItem!.pollSettings!.multipleVote,
+                    isAddable: isOwner || appState.currentItem!.pollSettings!.allowAdd,
                     isMultipleValue: appState.currentItem!.pollSettings!.multipleVote,
                     radioValue: _radioValue,
                     onRadioChanged: !(appState.currentItem!.pollSettings!.multipleVote) ? _handleRadioChanged : null,
