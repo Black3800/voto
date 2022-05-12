@@ -22,6 +22,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
 
+  bool isSubmitted = false;
+
   String? _validateEmail(String? value) {
     RegExp emailRegex = RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$', caseSensitive: false);
     if (value == null || value.isEmpty) {
@@ -108,6 +110,8 @@ class _SignupPageState extends State<SignupPage> {
         snackBar.icon = Icons.clear;
         snackBar.accentColor = VotoColors.danger;
       } finally {
+        isSubmitted = false;
+        setState(() {});
         snackBar.show(context);
       }
     }
@@ -172,12 +176,14 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 36.0),
-                            child: BigButton(
-                              text: 'Sign up',
-                              onPressed: () {
-                                _submitForm(context);
-                              }
-                            ),
+                            child:  BigButton(
+                                      text: 'Login',
+                                      isLoading: isSubmitted,
+                                      onPressed: () {
+                                        setState(() => isSubmitted = true);
+                                        _submitForm(context);
+                                      },
+                                    ),
                           ),
                         ][index],
                     separatorBuilder: (context, index) => const SizedBox(height: 15.0),
