@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/model/team.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/bottom_dialog.dart';
@@ -11,7 +12,7 @@ import 'package:voto_mobile/widgets/voto_snackbar.dart';
 import 'package:voto_mobile/widgets/wide_button.dart';
 
 class JoinTeam extends StatefulWidget {
-  final List<Team> teams;
+  final List<String> teams;
   const JoinTeam({
     Key? key,
     this.teams = const []
@@ -42,15 +43,16 @@ class _JoinTeamState extends State<JoinTeam> {
   }
 
   Future<void> _pushTeamUpdate(Team team) async {
-    FirebaseAuth.instance.authStateChanges().listen((user) async {
+    String? uid = Provider.of<PersistentState>(context, listen: false).currentUser?.uid;
+    if (uid != null) {
       DatabaseReference userRef =
-          FirebaseDatabase.instance.ref("users/${user?.uid}/joined_teams");
-      await userRef.update({'${team.id}': true});
+          FirebaseDatabase.instance.ref("users/$uid/joined_teams");
+      await userRef.update({'${team.id}': DateTime.now().toIso8601String()});
 
       DatabaseReference teamRef =
           FirebaseDatabase.instance.ref("teams/${team.id}/members");
-      await teamRef.update({'${user?.uid}': true});
-    });
+      await teamRef.update({uid: DateTime.now().toIso8601String()});
+    }
   }
 
   Future<void> _joinTeam() async {
@@ -58,7 +60,7 @@ class _JoinTeamState extends State<JoinTeam> {
     /***
      * Check if team is already joined
      */
-    if(widget.teams.any((team) => team.id == teamId)) {
+    if(widget.teams.any((_team) => _team == teamId)) {
       Navigator.pop(context);
       VotoSnackbar(
         text: 'You are already in that team',

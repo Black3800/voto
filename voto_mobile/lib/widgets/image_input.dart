@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 import 'package:voto_mobile/utils/color.dart';
 
@@ -15,13 +14,15 @@ class ImageInput extends StatefulWidget {
   final Function(String)? onChanged;
   final bool readOnly;
   final bool showLoadingStatus;
+  final bool showBorder;
   const ImageInput({
     Key? key,
     required this.image,
     this.onChanged,
     this.radius = 120.0,
     this.readOnly = false,
-    this.showLoadingStatus = true
+    this.showLoadingStatus = true,
+    this.showBorder = false
   }) : super(key: key);
 
   @override
@@ -29,27 +30,20 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
-  String? imageURL;
-  bool isLoading = true;
+  late Future<String?> imageURL;
 
-  Future<void> _getImageURL() async {
-    imageURL = await FirebaseStorage.instance
+  Future<String?> _getImageURL() async {
+    return Future.value(
+      await FirebaseStorage.instance
         .refFromURL(widget.image)
-        .getDownloadURL();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      if(mounted) {
-        setState(() => isLoading = false);
-      }
-    });
+        .getDownloadURL()
+    );
   }
 
   Future<void> _handleInput() async {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {
-        isLoading = true;
-      }));
       Uint8List fileBytes = result.files.first.bytes ?? Uint8List(0);
       if (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.android) {
@@ -83,20 +77,29 @@ class _ImageInputState extends State<ImageInput> {
      */
     if (previousImage != null && previousImage.split('/')[3] != 'dummy') {
       FirebaseStorage.instance.ref(previousImage).delete();
+      print('deleting $previousImage for ${widget.image }');
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _getImageURL();
+    imageURL = _getImageURL();
   }
 
   @override
   void didUpdateWidget(covariant ImageInput oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _deletePreviousImage(oldWidget.image);
-    _getImageURL();
+    if (widget.image.isNotEmpty && widget.image != oldWidget.image) {
+      _deletePreviousImage(oldWidget.image);
+    }
+    imageURL = _getImageURL();
+  }
+
+  @override
+  void deactivate() {
+    widget.onChanged?.call('');
+    super.deactivate();
   }
 
   @override
@@ -108,35 +111,47 @@ class _ImageInputState extends State<ImageInput> {
     return SizedBox(
       width: size,
       height: size,
-      child: Stack(children: [
-        CircleAvatar(
-            backgroundImage: isLoading ? null : NetworkImage(imageURL ?? ''),
-            backgroundColor: VotoColors.gray,
-            child: isLoading && widget.showLoadingStatus
-                ? const CircularProgressIndicator(color: VotoColors.indigo,)
-                : null,
-            radius: widget.radius),
-        widget.readOnly
-            ? Container()
-            : Positioned(
-                top: position,
-                left: position,
-                child: Container(
-                    height: widget.radius / 3,
-                    width: widget.radius / 3,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: VotoColors.primary,
-                    ),
-                    child: Center(
-                      child: IconButton(
-                        icon: const Icon(Icons.camera_alt),
-                        iconSize: widget.radius / 6,
-                        onPressed: _handleInput,
-                        color: VotoColors.white,
-                      ),
-                    ))),
-      ]),
+      child: FutureBuilder(
+        future: imageURL,
+        builder: (context, snapshot) {
+          print(snapshot.data);
+          final bool isLoaded = snapshot.hasData;
+          final String? imageURL = snapshot.data as String?;
+          return Stack(children: [
+            CircleAvatar(
+              radius: widget.radius,
+              backgroundColor: VotoColors.black.shade400,
+              child: CircleAvatar(
+                  backgroundImage: isLoaded ? NetworkImage('$imageURL') : null,
+                  child: isLoaded || !widget.showLoadingStatus
+                        ? null
+                        : const CircularProgressIndicator(),
+                  backgroundColor: VotoColors.gray,
+                  radius: widget.radius - 2),
+            ),
+            widget.readOnly
+                ? Container()
+                : Positioned(
+                    top: position,
+                    left: position,
+                    child: Container(
+                        height: widget.radius / 3,
+                        width: widget.radius / 3,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: VotoColors.primary,
+                        ),
+                        child: Center(
+                          child: IconButton(
+                            icon: const Icon(Icons.camera_alt),
+                            iconSize: widget.radius / 6,
+                            onPressed: _handleInput,
+                            color: VotoColors.white,
+                          ),
+                        ))),
+          ]);
+        }
+      ),
     );
   }
 }

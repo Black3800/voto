@@ -25,11 +25,25 @@ class PersistentState extends ChangeNotifier {
 
   void updateItem(Items? newItem) {
     _currentItem = newItem;
-    notifyListeners();
+  }
+
+  void disposeUser() {
+    _currentUser = null;
+  }
+
+  void disposeTeam() {
+    _currentTeam = null;
   }
 
   void disposeItem() {
     _currentItem = null;
-    // notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    disposeUser();
+    disposeTeam();
+    disposeItem();
+    super.dispose();
   }
 }

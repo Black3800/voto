@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/utils/random_image.dart';
 import 'package:voto_mobile/utils/random_join_code.dart';
@@ -20,38 +21,42 @@ class CreateTeamDialog extends StatefulWidget {
 class _CreateTeamDialogState extends State<CreateTeamDialog> {
   final TextEditingController _teamNameController = TextEditingController();
   String createTeamImage = RandomImage.get();
+  String? _errorText;
 
   Future<void> _createTeam() async {
+    final String teamImg = createTeamImage;
+    final String teamName = _teamNameController.text;
+    if (teamName.isEmpty) {
+      setState(() => _errorText = 'Required');
+      return;
+    }
     String teamId;
     while (true) {
       teamId = RandomJoinCode.get();
-      final data = await FirebaseDatabase.instance.ref('teams/$teamId/name').once();
-      if (!data.snapshot.exists) break;
+      final data = await FirebaseDatabase.instance.ref('teams/$teamId/name').get();
+      if (!data.exists) break;
     }
-    FirebaseAuth.instance.authStateChanges().listen((user) async {
-      DatabaseReference teamRef = FirebaseDatabase.instance.ref('teams/$teamId');
-      if (user != null) {
-        /***
-         * Create team
-         */
-        final String? uid = user.uid;
-        await teamRef.set({
-          "img": createTeamImage,
-          "name": _teamNameController.text,
-          "owner": uid,
-          "members": {
-            uid: true
-          }
-        });
-        /***
-         * Add team to user's joined_teams
-         */
-        DatabaseReference userRef =
-            FirebaseDatabase.instance.ref("users/$uid/joined_teams");
-        await userRef.update({teamId: true});
-        Navigator.of(context, rootNavigator: true).pop();
-      }
-    });
+    DatabaseReference teamRef = FirebaseDatabase.instance.ref('teams/$teamId');
+    String? uid = Provider.of<PersistentState>(context, listen: false).currentUser?.uid;
+    if (uid != null) {
+      /***
+       * Create team
+       */
+      await teamRef.set({
+        "img": teamImg,
+        "name": _teamNameController.text,
+        "owner": uid,
+        "members": {uid: DateTime.now().toIso8601String()}
+      });
+      /***
+       * Add team to user's joined_teams
+       */
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref("users/$uid/joined_teams");
+      await userRef.update({teamId: DateTime.now().toIso8601String()});
+      _teamNameController.clear();
+      Navigator.of(context, rootNavigator: true).pop();
+    }
   }
 
   @override
@@ -71,6 +76,7 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
             controller: _teamNameController,
             icon: Icons.people,
             accentColor: VotoColors.indigo,
+            errorText: _errorText,
             max: 30,
           ),
           const Heading("Team picture"),

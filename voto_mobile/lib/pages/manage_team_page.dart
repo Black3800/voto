@@ -50,6 +50,12 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
   }
 
   @override
+  void dispose() {
+    _copyTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String ownerName = 'Tanny Panitnun';
     bool iAmOwner = true;

@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
-import 'package:voto_mobile/model/team.dart';
-import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/homepage/create_team_dialog.dart';
 import 'package:voto_mobile/widgets/jointeam/join_team.dart';
@@ -20,9 +18,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Team> teamsList = [];
+  String? uid;
+  late DatabaseReference teamsRef;
+  List<String> teamsList = [];
 
-  void showCreateTeamDialog() {
+  void _showCreateTeamDialog() {
     showModalBottomSheet<void>(
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  showJoinTeamDialog() {
+  void _showJoinTeamDialog() {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
@@ -47,60 +47,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _getAllTeams() async {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null) {
-        /***
-         * Fetch user's joined teams
-         */
-        String uid = user.uid;
-        DatabaseReference ref = FirebaseDatabase.instance.ref('users/' + uid);
-        ref.onValue.listen((DatabaseEvent event) async {
-          if (event.snapshot.exists && event.snapshot.value != null) {
-            final json = event.snapshot.value as Map<dynamic, dynamic>;
-            final data = Users.fromJson(json);
-            final teams = data.joinedTeams?.keys;
-            List<Team> newTeamsList = [];
-            /***
-             * For each team, fetch the name and image
-             */
-            if (teams != null) {
-              for (String teamId in teams) {
-                DatabaseReference ref =
-                    FirebaseDatabase.instance.ref('teams/' + teamId);
-                final snapshot = await ref.get();
-                if (snapshot.exists) {
-                  final team =
-                      Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
-                  
-                  team.id = teamId;
-
-                  /***
-                   * Add team to the list for the ListView.builder to buid
-                   */
-                  newTeamsList.add(team);
-                }
-              }
-            }
-            if (mounted) {
-              setState(() => teamsList = List.from(newTeamsList));
-            }
-          }
-        });
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _getAllTeams();
-  }
-
-  @override
-  void dispose() {
-    teamsList = [];
-    super.dispose();
+    uid = Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
+    teamsRef = FirebaseDatabase.instance.ref('users/$uid/joined_teams');
   }
 
   @override
@@ -119,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                     text: 'Create team',
                     icon: Icons.add,
                     accentColor: VotoColors.indigo,
-                    onPressed: showCreateTeamDialog),
+                    onPressed: _showCreateTeamDialog),
                 const SizedBox(
                   width: 10.0,
                 ),
@@ -127,23 +78,59 @@ class _HomePageState extends State<HomePage> {
                     text: 'Join team',
                     icon: Icons.people,
                     accentColor: VotoColors.magenta,
-                    onPressed: showJoinTeamDialog)
+                    onPressed: _showJoinTeamDialog)
               ],
             ),
           ),
           Expanded(
-            child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return TeamCard(
-                    imagePath: teamsList[index].img,
-                    title: teamsList[index].name,
-                    onTap: () {
-                      Provider.of<PersistentState>(context, listen: false)
-                        .updateTeam(teamsList[index]);
-                      Navigator.pushNamed(context, '/team_page');
-                    });
-                },
-                itemCount: teamsList.length),
+            child: StreamBuilder(
+              stream: teamsRef.onValue,
+              builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  const Center(
+                      child: SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: CircularProgressIndicator()),
+                    );
+                }
+                if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
+                  final _teams = snapshot.data?.snapshot.value as Map<dynamic, dynamic>?;
+                  if(_teams != null) {
+                    final _teamsList = _teams
+                          .map((key, value) =>
+                              MapEntry(key, DateTime.parse(value)))
+                          .entries
+                          .toList();
+                    _teamsList.sort((a, b) => a.value.compareTo(b.value));
+                    teamsList = List.from(_teamsList.map((e) => e.key));
+                    return ListView.builder(
+                        itemBuilder: (context, index) =>
+                            TeamCard(id: teamsList[index]),
+                        itemCount: teamsList.length);
+                  } else {
+                    return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.group_add,
+                                color: VotoColors.black.shade400,
+                                size: 64,
+                              ),
+                              const SizedBox(height: 24),
+                              Text('Create or join a team to get started',
+                                  style: GoogleFonts.inter(
+                                      fontSize: 18, color: VotoColors.black)),
+                            ]),
+                      );
+                  }
+                }
+                return Container();
+              }
+            ),
           )
         ],
       ),
