@@ -20,6 +20,7 @@ class _TeamPageState extends State<TeamPage> {
   String? teamId;
   late DatabaseReference itemsRef;
   final ScrollController _scrollController = ScrollController();
+  bool isFirstRender = true;
 
   void _scrollDown() {
     _scrollController.animateTo(
@@ -27,6 +28,7 @@ class _TeamPageState extends State<TeamPage> {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
+    isFirstRender = false;
   }
 
   @override
@@ -85,7 +87,7 @@ class _TeamPageState extends State<TeamPage> {
                           itemBuilder: (context, index) => ItemCard(
                                     id: _itemsList[index],
                                     onBuildComplete:
-                                        index == _currentItems!.length - 1
+                                        index == _currentItems!.length - 1 && isFirstRender
                                             ? _scrollDown
                                             : null,
                                   ),

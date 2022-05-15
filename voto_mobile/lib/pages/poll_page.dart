@@ -52,7 +52,7 @@ class _PollPageState extends State<PollPage> {
         Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
     final bool isValid = _radioValue.isNotEmpty || _checkbox.containsValue(true);
     if (!isValid) {
-      _showToast();
+      _showErrorToast('At least one option is required');
       return;
     }
     if (mounted) setState(() => _isSubmitting = true);
@@ -134,12 +134,16 @@ class _PollPageState extends State<PollPage> {
     });
   }
 
+  void _handleVoteOwn() {
+    _showErrorToast('The team owner did not allow you to vote your own option in this poll');
+  }
+
   Future<bool> _handlePop() async {
     Provider.of<PersistentState>(context, listen: false).disposeItem();
     return Future.value(true);
   }
 
-  void _showToast() {
+  void _showErrorToast(String text) {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       decoration: BoxDecoration(
@@ -150,8 +154,13 @@ class _PollPageState extends State<PollPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.clear, color: VotoColors.danger),
-          const SizedBox(width: 6.0,),
-          Text("At least one option is required",style: GoogleFonts.inter(color: VotoColors.white)),
+          const SizedBox(width: 6.0),
+          Flexible(
+              child: Text(
+            text,
+            style: GoogleFonts.inter(color: VotoColors.white),
+            textAlign: TextAlign.center,
+          )),
         ],
       ),
     );
@@ -227,8 +236,13 @@ class _PollPageState extends State<PollPage> {
                             (appState.currentItem?.pollSettings!.allowAdd ?? false),
                         isMultipleValue:
                             (appState.currentItem?.pollSettings!.multipleVote ?? false),
+                        allowVoteOwn:
+                            (appState.currentItem?.pollSettings!.allowAdd ?? false)
+                            &&
+                            (appState.currentItem?.pollSettings!.allowVoteOwnOption ?? false),
                         onRadioChanged: _handleRadioChanged,
                         onCheckboxChanged: _handleCheckboxChanged,
+                        onVoteOwn: _handleVoteOwn,
                       ),
                     ]),
                   ),

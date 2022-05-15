@@ -6,6 +6,7 @@ import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/addoption/add_option_item.dart';
 import 'package:voto_mobile/widgets/poll/poll_checkbox.dart';
+import 'package:voto_mobile/widgets/poll/poll_null.dart';
 import 'package:voto_mobile/widgets/poll/poll_radio.dart';
 
 class PollItemContainer extends StatefulWidget {
@@ -13,18 +14,22 @@ class PollItemContainer extends StatefulWidget {
   final bool isEditable;
   final bool isSelectable;
   final bool isMultipleValue;
+  final bool allowVoteOwn;
   final Function(String?, {bool isInitialValue, String? deletedId})? onRadioChanged;
   final Function({required String id, required bool? value})? onCheckboxChanged;
   final Function(String?)? onDeleted;
+  final Function()? onVoteOwn;
   const PollItemContainer({
     Key? key,
     required this.choices,
     this.isEditable = false,
     this.isSelectable = true,
     this.isMultipleValue = false,
+    this.allowVoteOwn = true,
     this.onRadioChanged,
     this.onCheckboxChanged,
-    this.onDeleted
+    this.onDeleted,
+    this.onVoteOwn
   }) : super(key: key);
 
   @override
@@ -130,7 +135,15 @@ class _PollItemContainerState extends State<PollItemContainer> {
   }
 
   Widget pollItem(Choice choice) {
-    if(!widget.isSelectable || isEditing) {
+    if (!widget.allowVoteOwn && choice.owner == uid) {
+      return PollNull(
+        text: '${choice.text}',
+        isEditing: isEditing,
+        onChangeAttempted: widget.onVoteOwn,
+        onDeleted: () => _handleDelete(choice.id!),
+      );
+    }
+    if (!widget.isSelectable || isEditing) {
       return AddOptionItem(
         text: '${choice.text}',
         isEditing: isEditing,

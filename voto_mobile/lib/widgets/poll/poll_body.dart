@@ -14,8 +14,10 @@ class PollBody extends StatefulWidget {
   final bool isSelectable;
   final bool isAddable;
   final bool isLoading;
+  final bool allowVoteOwn;
   final Function(String?, {bool isInitialValue, String? deletedId})? onRadioChanged;
   final Function({required String id, required bool? value})? onCheckboxChanged;
+  final Function()? onVoteOwn;
   const PollBody({
     Key? key,
     this.isMultipleValue = false,
@@ -23,8 +25,10 @@ class PollBody extends StatefulWidget {
     this.isSelectable = true,
     this.isAddable = false,
     this.isLoading = false,
+    this.allowVoteOwn = true,
     this.onRadioChanged,
-    this.onCheckboxChanged
+    this.onCheckboxChanged,
+    this.onVoteOwn
   }) : super(key: key);
 
   @override
@@ -89,8 +93,8 @@ class _PollBodyState extends State<PollBody> {
     if (_newOption.isEmpty) return;
     String? itemId =
         Provider.of<PersistentState>(context, listen: false).currentItem!.id;
-    bool showOptionOwner =
-        Provider.of<PersistentState>(context, listen: false).currentItem!.pollSettings!.showOptionOwner;
+    bool allowAdd =
+        Provider.of<PersistentState>(context, listen: false).currentItem!.pollSettings!.allowAdd;
     bool isPoll =
         Provider.of<PersistentState>(context, listen: false).currentItem!.type == 'poll';
     String? uid =
@@ -101,7 +105,7 @@ class _PollBodyState extends State<PollBody> {
       await choiceRef
           .set({
             'text': _newOption,
-            'owner': showOptionOwner ? uid : null,
+            'owner': allowAdd ? uid : null,
             'vote_count': isPoll ? 0 : null
           });
     }
@@ -156,9 +160,11 @@ class _PollBodyState extends State<PollBody> {
                 isEditable: widget.isEditable,
                 isSelectable: widget.isSelectable,
                 isMultipleValue: widget.isMultipleValue,
+                allowVoteOwn: widget.allowVoteOwn,
                 onRadioChanged: widget.onRadioChanged,
                 onCheckboxChanged: widget.onCheckboxChanged,
                 onDeleted: _handleDelete,
+                onVoteOwn: widget.onVoteOwn
               ),
               widget.isAddable ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
