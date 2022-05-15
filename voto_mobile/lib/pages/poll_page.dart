@@ -19,74 +19,78 @@ class _PollPageState extends State<PollPage> {
 
   String _radioValue = '';
   String _initialRadioValue = '';
-  Map<String, bool> _checkbox = <String, bool>{};
+  final Map<String, bool> _checkbox = <String, bool>{};
   bool _isSubmitting = false;
 
   void _handleRadioChanged(String? value, { bool isInitialValue = false }) {
-    if(mounted) setState(() => _radioValue = '$value');
+    _radioValue = '$value';
     if(isInitialValue) _initialRadioValue = '$value';
   }
 
   void _handleCheckboxChanged({ required String id, required bool value }) {
     _checkbox[id] = value;
-    _checkbox = Map.from(_checkbox);
-    if(mounted) setState(() {});
   }
 
   Future<void> _handleVote() async {
     if (mounted) setState(() => _isSubmitting = true);
     Items? item = Provider.of<PersistentState>(context, listen: false).currentItem;
     String? uid = Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
-    if(item != null && uid != null) {
+    bool isValid = _radioValue.isNotEmpty || _checkbox.containsValue(true);
+    if(isValid && item != null && uid != null) {
       if (item.pollSettings!.closeDate!.isBefore(DateTime.now())) {
         // Poll has already closed
         return Future.value();
       }
       if (item.pollSettings!.multipleVote) {
         final _choices = Map.from(_checkbox);
-        for (String choiceId in _choices.keys) {
-          bool isVoted = _choices[choiceId] ?? false;
-          await FirebaseDatabase.instance.ref('options/${item.id}/choices/$choiceId').runTransaction((Object? choice) {
-            if (choice == null) {
-              return Transaction.abort();
-            }
+        for (final choice in _choices.entries) {
+          String choiceId = choice.key;
+          bool isVoted = choice.value;
+          TransactionResult _result;
+          do {
+            _result = await FirebaseDatabase.instance
+                .ref('options/${item.id}/choices/$choiceId')
+                .runTransaction((Object? choice) {
+              if (choice == null) {
+                return Transaction.abort();
+              }
 
-            Map<String, dynamic> _choice = Map<String, dynamic>.from(choice as Map);
-            if (_choice['voted_by'] != null) {
-              // Someone has chosen this before
-              if ((_choice['voted_by'] as Map?)?.containsKey(uid) ?? false) {
-                // This user has chosen before
-                _choice['vote_count'] = isVoted
-                  ? _choice['vote_count']
-                  : (_choice['vote_count'] ?? 1) - 1;
+              Map<String, dynamic> _choice =
+                  Map<String, dynamic>.from(choice as Map);
+              if (_choice['voted_by'] != null) {
+                // Someone has chosen this before
+                if ((_choice['voted_by'] as Map?)?.containsKey(uid) ?? false) {
+                  // This user has chosen before
+                  _choice['vote_count'] = isVoted
+                      ? _choice['vote_count']
+                      : (_choice['vote_count'] ?? 1) - 1;
 
-                if (!isVoted) {
-                  (_choice['voted_by'] as Map?)?.remove(uid);
+                  if (!isVoted) {
+                    (_choice['voted_by'] as Map?)?.remove(uid);
+                  }
+                } else {
+                  // This user has never chosen before
+                  _choice['vote_count'] = isVoted
+                      ? (_choice['vote_count'] ?? 0) + 1
+                      : _choice['vote_count'];
+
+                  if (isVoted) {
+                    _choice['voted_by'][uid] = true;
+                  }
                 }
               } else {
-                // This user has never chosen before
+                // No one has chosen this before
                 _choice['vote_count'] = isVoted
-                  ? (_choice['vote_count'] ?? 0) + 1
-                  : _choice['vote_count'];
+                    ? (_choice['vote_count'] ?? 0) + 1
+                    : _choice['vote_count'];
 
                 if (isVoted) {
-                  _choice['voted_by'][uid] = true;
+                  _choice['voted_by'] = {uid: true};
                 }
               }
-            } else {
-              // No one has chosen this before
-              _choice['vote_count'] = isVoted
-                ? (_choice['vote_count'] ?? 0) + 1
-                : _choice['vote_count'];
-
-              if (isVoted) {
-                _choice['voted_by'] = {
-                  uid: true
-                };
-              }
-            }
-            return Transaction.success(_choice);
-          });
+              return Transaction.success(_choice);
+            }, applyLocally: false);
+          } while(false);
         }
       } else {
         Map<String, Object?> updates = {};
@@ -120,7 +124,7 @@ class _PollPageState extends State<PollPage> {
        */
 
       bool isConfirmDisabled = false;
-      if(appState.currentItem!.pollSettings!.multipleVote) {
+      if(appState.currentItem?.pollSettings!.multipleVote ?? false) {
         isConfirmDisabled = !_checkbox.values.contains(true);
       } else {
         isConfirmDisabled = _radioValue.isEmpty;
@@ -132,61 +136,60 @@ class _PollPageState extends State<PollPage> {
         title: 'Vote',
         onWillPop: _handlePop,
         titleContext: appState.currentTeam!.name,
-        body: Column(children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 20.0,
-                left: 42.5,
-                right: 42.5
-              ),
-              child: ListView(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${appState.currentItem?.title}',
-                        style: GoogleFonts.inter(
-                            fontSize: 18, fontWeight: FontWeight.w500),
+        body: appState.currentUser != null
+            ? Column(children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 42.5, right: 42.5),
+                    child: ListView(children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            appState.currentItem?.title ?? '',
+                            style: GoogleFonts.inter(
+                                fontSize: 18, fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            'Closing on ' + (appState.currentItem?.pollSettings?.closeDateFormatted ?? ''),
+                            style: GoogleFonts.inter(
+                                fontSize: 12, fontWeight: FontWeight.w300),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 20.0),
                       Text(
-                        'Closing on ${appState.currentItem!.pollSettings!.closeDateFormatted}',
+                        appState.currentItem?.description ?? '',
                         style: GoogleFonts.inter(
-                            fontSize: 12, fontWeight: FontWeight.w300),
+                            fontSize: 14, fontWeight: FontWeight.w400),
                       ),
-                    ],
+                      const SizedBox(height: 20.0),
+                      PollBody(
+                        isLoading: _isSubmitting,
+                        isEditable: isOwner,
+                        isAddable: isOwner ||
+                            (appState.currentItem?.pollSettings!.allowAdd ?? false),
+                        isMultipleValue:
+                            (appState.currentItem?.pollSettings!.multipleVote ?? false),
+                        onRadioChanged: _handleRadioChanged,
+                        onCheckboxChanged: _handleCheckboxChanged,
+                      ),
+                    ]),
                   ),
-                  const SizedBox(height: 20.0),
-                  Text(
-                    '${appState.currentItem!.description}',
-                    style: GoogleFonts.inter(
-                        fontSize: 14, fontWeight: FontWeight.w400),
-                  ),
-                  const SizedBox(height: 20.0),
-                  PollBody(
-                    isLoading: _isSubmitting,
-                    isEditable: isOwner,
-                    isAddable: isOwner || appState.currentItem!.pollSettings!.allowAdd,
-                    isMultipleValue: appState.currentItem!.pollSettings!.multipleVote,
-                    radioValue: _radioValue,
-                    onRadioChanged: !(appState.currentItem!.pollSettings!.multipleVote) ? _handleRadioChanged : null,
-                    onCheckboxChanged: _handleCheckboxChanged,
-                  ),
-                ]),
-            ),
-          ),
-          ConfirmButton(
-            confirmText: 'Vote',
-            onConfirm: _handleVote,
-            onCancel: () {
-              _handlePop().then((willPop) {
-                if (willPop) Navigator.of(context).pop();
-              });
-            },
-            disabled: isConfirmDisabled,
-          )
-        ]),
+                ),
+                ConfirmButton(
+                  confirmText: 'Vote',
+                  onConfirm: _handleVote,
+                  onCancel: () {
+                    _handlePop().then((willPop) {
+                      if (willPop) Navigator.of(context).pop();
+                    });
+                  },
+                  // disabled: isConfirmDisabled,
+                )
+              ])
+            : Container(),
       );
     });
   }

@@ -5,7 +5,7 @@ class PollRadio extends StatelessWidget {
   final bool? isEditing;
   final String text;
   final String value;
-  final String groupValue;
+  final String? groupValue;
   final Function(String?)? onChanged;
   final Function()? onDeleted;
     const PollRadio(
