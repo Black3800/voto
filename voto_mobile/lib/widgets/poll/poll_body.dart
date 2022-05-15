@@ -14,8 +14,8 @@ class PollBody extends StatefulWidget {
   final bool isSelectable;
   final bool isAddable;
   final bool isLoading;
-  final Function(String?, {bool isInitialValue})? onRadioChanged;
-  final Function({required String id, required bool value})? onCheckboxChanged;
+  final Function(String?, {bool isInitialValue, String? deletedId})? onRadioChanged;
+  final Function({required String id, required bool? value})? onCheckboxChanged;
   const PollBody({
     Key? key,
     this.isMultipleValue = false,

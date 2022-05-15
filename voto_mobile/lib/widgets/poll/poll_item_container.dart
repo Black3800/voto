@@ -13,8 +13,8 @@ class PollItemContainer extends StatefulWidget {
   final bool isEditable;
   final bool isSelectable;
   final bool isMultipleValue;
-  final Function(String?, {bool isInitialValue})? onRadioChanged;
-  final Function({required String id, required bool value})? onCheckboxChanged;
+  final Function(String?, {bool isInitialValue, String? deletedId})? onRadioChanged;
+  final Function({required String id, required bool? value})? onCheckboxChanged;
   final Function(String?)? onDeleted;
   const PollItemContainer({
     Key? key,
@@ -36,6 +36,18 @@ class _PollItemContainerState extends State<PollItemContainer> {
   String? _radioValue;
   String? uid;
   Map<String, bool> _checkbox = <String, bool>{};
+
+  void _handleDelete(String id) {
+    if (widget.isSelectable) {
+      if (widget.isMultipleValue) {
+        _checkbox.remove(id);
+        widget.onCheckboxChanged?.call(id: id, value: null);
+      } else {
+        widget.onRadioChanged?.call(null, deletedId: id);
+      }
+    }
+    widget.onDeleted?.call(id);
+  }
 
   @override
   void initState() {
@@ -70,6 +82,8 @@ class _PollItemContainerState extends State<PollItemContainer> {
           bool _isChecked = choice.votedBy?[uid] != null;
           _checkbox['${choice.id}'] = _isChecked;
           widget.onCheckboxChanged?.call(id: '${choice.id}', value: _isChecked);
+        } else {
+          widget.onCheckboxChanged?.call(id: '${choice.id}', value: _checkbox[choice.id] ?? false);
         }
       }
     }
@@ -120,7 +134,7 @@ class _PollItemContainerState extends State<PollItemContainer> {
       return AddOptionItem(
         text: '${choice.text}',
         isEditing: isEditing,
-        onDeleted: () => widget.onDeleted?.call(choice.id),
+        onDeleted: () => _handleDelete(choice.id!),
       );
     }
     if (widget.isMultipleValue) {
@@ -136,7 +150,7 @@ class _PollItemContainerState extends State<PollItemContainer> {
             value: value ?? false
           );
         },
-        onDeleted: () => widget.onDeleted?.call(choice.id),
+        onDeleted: () => _handleDelete(choice.id!),
       );
     } else {
       return PollRadio(
@@ -147,7 +161,7 @@ class _PollItemContainerState extends State<PollItemContainer> {
           setState(() => _radioValue = value);
           widget.onRadioChanged?.call(value);
         },
-        onDeleted: () => widget.onDeleted?.call(choice.id),
+        onDeleted: () => _handleDelete(choice.id!),
         isEditing: isEditing,
       );
     }

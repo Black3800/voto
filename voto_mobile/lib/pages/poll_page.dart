@@ -1,9 +1,11 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/items.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
+import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/confirm_button.dart';
 import 'package:voto_mobile/widgets/poll/poll_body.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
@@ -21,22 +23,39 @@ class _PollPageState extends State<PollPage> {
   String _initialRadioValue = '';
   final Map<String, bool> _checkbox = <String, bool>{};
   bool _isSubmitting = false;
+  late FToast fToast;
 
-  void _handleRadioChanged(String? value, { bool isInitialValue = false }) {
-    _radioValue = '$value';
-    if(isInitialValue) _initialRadioValue = '$value';
+  void _handleRadioChanged(String? value, { bool isInitialValue = false, String? deletedId }) {
+    if (value != null) {
+      _radioValue = value;
+      if(isInitialValue) _initialRadioValue = value;
+    } else {
+      if (deletedId == _initialRadioValue) {
+        _initialRadioValue = '';
+      }
+      _radioValue = '';
+    }
   }
 
-  void _handleCheckboxChanged({ required String id, required bool value }) {
-    _checkbox[id] = value;
+  void _handleCheckboxChanged({ required String id, required bool? value }) {
+    if (value != null) {
+      _checkbox[id] = value;
+    } else {
+      _checkbox.remove(id);
+    }
   }
 
   Future<void> _handleVote() async {
-    if (mounted) setState(() => _isSubmitting = true);
     Items? item =
         Provider.of<PersistentState>(context, listen: false).currentItem;
     String? uid =
         Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
+    final bool isValid = _radioValue.isNotEmpty || _checkbox.containsValue(true);
+    if (!isValid) {
+      _showToast();
+      return;
+    }
+    if (mounted) setState(() => _isSubmitting = true);
     if (item != null && uid != null) {
       if (item.pollSettings!.closeDate!.isBefore(DateTime.now())) {
         // Poll has already closed
@@ -118,6 +137,37 @@ class _PollPageState extends State<PollPage> {
   Future<bool> _handlePop() async {
     Provider.of<PersistentState>(context, listen: false).disposeItem();
     return Future.value(true);
+  }
+
+  void _showToast() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: VotoColors.black.shade600,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.clear, color: VotoColors.danger),
+          const SizedBox(width: 6.0,),
+          Text("At least one option is required",style: GoogleFonts.inter(color: VotoColors.white)),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: const Duration(seconds: 2),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);
   }
 
   @override
