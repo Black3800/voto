@@ -9,6 +9,7 @@ class WideButton extends StatelessWidget {
   final bool disabled;
   final bool isElevated;
   final bool isBold;
+  final bool isLoading;
   final Function()? onPressed;
   const WideButton({
     Key? key,
@@ -18,6 +19,7 @@ class WideButton extends StatelessWidget {
     this.disabled = false,
     this.isElevated = true,
     this.isBold = true,
+    this.isLoading = false,
     required this.onPressed
   }) : super(key: key);
 
@@ -35,7 +37,7 @@ class WideButton extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(20.0))
       ),
       child: ElevatedButton(
-        onPressed: !disabled ? onPressed : null,
+        onPressed: !(disabled || isLoading) ? onPressed : null,
         child: Padding(
           padding: const EdgeInsets.only(
             top: 10.0,
@@ -43,13 +45,19 @@ class WideButton extends StatelessWidget {
             left: 0.0,
             right: 0.0
           ),
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.button?.merge(GoogleFonts.inter(
-              color: foregroundColor,
-              fontWeight: isBold ? null : FontWeight.normal
-            ))
-          )
+          child: isLoading
+                ? const SizedBox(
+                    width: 12,
+                    height: 12,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 0.75,
+                    ),
+                  )
+                : Text(text,
+                    style: Theme.of(context).textTheme.button?.merge(
+                        GoogleFonts.inter(
+                            color: foregroundColor,
+                            fontWeight: isBold ? null : FontWeight.normal)))
         ),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {

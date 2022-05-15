@@ -22,6 +22,7 @@ class CreateItemPage extends StatefulWidget {
 class _CreateItemPageState extends State<CreateItemPage> {
   bool isPoll = true;
   bool isLuckyDrawer = true;
+  bool isSubmitted = false;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late TextEditingController _multipleWinnerController;
@@ -101,19 +102,20 @@ class _CreateItemPageState extends State<CreateItemPage> {
     } else {
       itemRef = FirebaseDatabase.instance.ref('items/$itemId');
     }
+    final modified = DateTime.now();
     Items item = Items(
       id: itemId ?? itemRef.key,
       title: _titleController.text,
       description: _descriptionController.text,
       type: isPoll ? 'poll' : 'random',
-      lastModified: DateTime.now(),
+      lastModified: modified,
       pollSettings: pollSettings,
       randomType: isPoll ? null : (isLuckyDrawer ? 'lucky' : 'pair')
     );
     if(itemRef.key != null) {
       await itemRef.set(item.toJson());
       await FirebaseDatabase.instance.ref('teams/$teamId/items').update({
-        '${itemRef.key}': true
+        '${itemRef.key}': modified.toIso8601String()
       });
     }
     Provider.of<PersistentState>(context, listen: false).updateItem(item);
@@ -242,8 +244,11 @@ class _CreateItemPageState extends State<CreateItemPage> {
             confirmText: 'Next',
             disabled: _titleController.text.isEmpty ||
                 _descriptionController.text.isEmpty,
+            isLoading: isSubmitted,
             onConfirm: () {
+              setState(() => isSubmitted = true);
               _createItem().then((_) {
+                setState(() => isSubmitted = false);
                 Navigator.pushNamed(context, '/add_option_page');
               });
             },

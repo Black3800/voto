@@ -118,25 +118,52 @@ class _PollResultPageState extends State<PollResultPage> {
                     if (snapshot.hasData) {
                       final _pollItems = snapshot.data as List<Choice>? ?? [];
                       if (_pollItems.isEmpty) {
-                        return Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                    color: VotoColors.gray,
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text('Empty',
-                                          style: GoogleFonts.inter(
-                                              fontSize: 18,
-                                              color:
-                                                  VotoColors.black.shade300)),
-                                      Text('No option was added',
-                                          style: GoogleFonts.inter(
-                                              color: VotoColors.black.shade300))
-                                    ]),
-                              );
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${appState.currentItem!.title}',
+                                  style: GoogleFonts.inter(
+                                      fontSize: 18, fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  'Closed on ${appState.currentItem!.pollSettings!.closeDateFormatted}',
+                                  style: GoogleFonts.inter(
+                                      fontSize: 12, fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              '${appState.currentItem!.description}',
+                              style: GoogleFonts.inter(
+                                  fontSize: 14, fontWeight: FontWeight.w400),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  color: VotoColors.gray,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Empty',
+                                        style: GoogleFonts.inter(
+                                            fontSize: 18,
+                                            color:
+                                                VotoColors.black.shade300)),
+                                    Text('No option was added',
+                                        style: GoogleFonts.inter(
+                                            color: VotoColors.black.shade300))
+                                  ]),
+                            )
+                          ]
+                        );
                       }
                       int winnerCount = appState.currentItem!.pollSettings!.winnerCount;
                       if (winnerCount > _pollItems.length) {

@@ -1,17 +1,11 @@
-import 'dart:async';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:voto_mobile/model/items.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/rich_button.dart';
-import 'package:voto_mobile/widgets/team/poll_card.dart';
-import 'package:voto_mobile/widgets/team/random_card.dart';
-import 'package:voto_mobile/widgets/team/result_card.dart';
+import 'package:voto_mobile/widgets/team/item_card.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
 
 class TeamPage extends StatefulWidget {
@@ -23,140 +17,23 @@ class TeamPage extends StatefulWidget {
 
 class _TeamPageState extends State<TeamPage> {
 
-  late Future<List<Items>?> _items;
-  Map<String, Timer> _timers = {};
+  String? teamId;
+  late DatabaseReference itemsRef;
+  final ScrollController _scrollController = ScrollController();
 
-  void _forceRebuild() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  Future<List<Items>?> _getItems() async {
-    String? teamId = Provider.of<PersistentState>(context, listen: false).currentTeam?.id;
-    if(teamId != null) {
-      DatabaseReference itemsRef = FirebaseDatabase.instance.ref('teams/$teamId/items');
-      List<Items> newItems = [];
-
-      final snapshot = await itemsRef.get();
-      if(snapshot.exists) {
-        final data = snapshot.value as Map<dynamic,dynamic>?;
-        for (String itemId in data!.keys) {
-          DatabaseReference itemRef = FirebaseDatabase.instance.ref('items/$itemId');
-          final itemSnapshot = await itemRef.get();
-          final itemData = itemSnapshot.value as Map<dynamic,dynamic>?;
-          if(itemData != null) {
-            Items item = Items.fromJson(itemData);
-            item.id = itemId;
-            item.pollSettings!.closeDateFormatted = DateFormat.yMMMd()
-                .add_Hm()
-                .format(item.pollSettings!.closeDate ?? DateTime.now());
-            newItems.add(item);
-
-            if (item.pollSettings!.closeDate!.isAfter(DateTime.now())) {
-              final timer = Timer(
-                  item.pollSettings!.closeDate!.difference(DateTime.now()),
-                  () async => await FirebaseDatabase.instance
-                      .ref('items/$itemId')
-                      .update(
-                          {'last_modified': DateTime.now().toIso8601String()}));
-              _timers[itemId] = timer;
-            }
-          }
-
-          itemRef.onValue.listen((event) async {
-            final itemSnapshot = event.snapshot;
-            final itemData = itemSnapshot.value as Map<dynamic, dynamic>?;
-            if (itemData != null) {
-              Items item = Items.fromJson(itemData);
-              item.id = event.snapshot.key;
-              item.pollSettings!.closeDateFormatted = DateFormat.yMMMd()
-                  .add_Hm()
-                  .format(item.pollSettings!.closeDate ?? DateTime.now());
-
-              _timers[item.id]?.cancel();
-              
-              final currentItems = await _items ?? [];
-              final index = currentItems.indexWhere((element) => element.id == item.id);
-              if(index >= 0) {
-                currentItems[index] = Items.fromItems(item);
-                _items = Future.value(List.from(currentItems));
-                _forceRebuild();
-              }
-
-              if(item.pollSettings!.closeDate!.isAfter(DateTime.now())) {
-                final timer = Timer(
-                    item.pollSettings!.closeDate!.difference(DateTime.now()),
-                    () async =>
-                      await FirebaseDatabase.instance.ref('items/$itemId').update({
-                        'last_modified': DateTime.now().toIso8601String()
-                      })
-                );
-                _timers[itemId] = timer;
-              }
-            }
-          });
-        }
-        newItems.sort((a, b) =>
-            b.lastModified!.compareTo(a.lastModified ?? DateTime.now()));
-      }
-      return newItems;
-    }
-    return Future.value(null);
-  }
-
-  void _addListener() {
-    String? teamId =
-        Provider.of<PersistentState>(context, listen: false).currentTeam?.id;
-    DatabaseReference itemsRef =
-        FirebaseDatabase.instance.ref('teams/$teamId/items');
-    itemsRef.onChildAdded.listen((event) async {
-      String? itemId = event.snapshot.key;
-      List<Items> _newItems = await _items ?? [];
-      if (_newItems.any((e) => e.id == itemId)) return;
-      if (itemId != null) {
-        final data = await FirebaseDatabase.instance.ref('items/$itemId').get();
-        if (data.exists) {
-          final json = data.value as Map<dynamic, dynamic>?;
-          if(json != null) {
-            final item = Items.fromJson(json);
-            item.id = itemId;
-            item.pollSettings!.closeDateFormatted = DateFormat.yMMMd()
-                .add_Hm()
-                .format(item.pollSettings!.closeDate ?? DateTime.now());
-            _newItems.add(item);
-          }
-        }
-        _newItems.sort((a, b) =>
-            b.lastModified!.compareTo(a.lastModified ?? DateTime.now()));
-
-        _items = Future.value(_newItems);
-        _forceRebuild();
-      }
-    });
-    itemsRef.onChildRemoved.listen((event) async {
-      String? itemId = event.snapshot.key;
-      List<Items> _newItems = await _items ?? [];
-      _newItems.removeWhere((item) => item.id == itemId);
-      _newItems.sort((a, b) =>
-          b.lastModified!.compareTo(a.lastModified ?? DateTime.now()));
-
-      _items = Future.value(_newItems);
-      _forceRebuild();
-    });
+  void _scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    _items = _getItems();
-    _addListener();
-  }
-
-  @override
-  void dispose() {
-    for (Timer t in  _timers.values) {
-      t.cancel();
-    }
-    super.dispose();
+    teamId = Provider.of<PersistentState>(context, listen: false).currentTeam?.id;
+    itemsRef = FirebaseDatabase.instance.ref('teams/$teamId/items');
   }
 
   @override
@@ -186,14 +63,32 @@ class _TeamPageState extends State<TeamPage> {
                 padding: EdgeInsets.only(
                   top: (appState.currentUser!.uid == appState.currentTeam!.owner) ? 0 : 20
                 ),
-                child: FutureBuilder(
-                  future: _items,
-                  builder: (context, snapshot) {
-                    if(snapshot.hasData) {
-                      final _currentItems = snapshot.data as List<Items>?;
-                      if(_currentItems!.isNotEmpty) {
+                child: StreamBuilder(
+                  stream: itemsRef.onValue,
+                  builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                                child: SizedBox(
+                                    width: 32,
+                                    height: 32,
+                                    child: CircularProgressIndicator()),
+                              );
+                    }
+                    if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
+                      Map? _currentItems = snapshot.data?.snapshot.value as Map<dynamic, dynamic>?;
+                      if(_currentItems != null) {
+                        _currentItems = _currentItems.map((key, value) => MapEntry(key, DateTime.parse(value)));
+                        final _itemsList = _currentItems.keys.toList();
+                        _itemsList.sort((a, b) => _currentItems![a].compareTo(_currentItems[b]));
                         return ListView.builder(
-                          itemBuilder: (context, index) => itemCard(_currentItems[index]),
+                          controller: _scrollController,
+                          itemBuilder: (context, index) => ItemCard(
+                                    id: _itemsList[index],
+                                    onBuildComplete:
+                                        index == _currentItems!.length - 1
+                                            ? _scrollDown
+                                            : null,
+                                  ),
                           itemCount: _currentItems.length,
                         );
                       } else {
@@ -220,14 +115,8 @@ class _TeamPageState extends State<TeamPage> {
                                       ]),
                                 );
                       }
-                    } else {
-                      return const Center(
-                                child: SizedBox(
-                                    width: 32,
-                                    height: 32,
-                                    child: CircularProgressIndicator()),
-                              );
                     }
+                    return Container();
                   }
                 ),
               ),
@@ -236,17 +125,5 @@ class _TeamPageState extends State<TeamPage> {
         ),
       )
     );
-  }
-
-  Widget itemCard(Items item) {
-    final bool isClosed = item.pollSettings!.closeDate!.isBefore(DateTime.now()) || item.closed != null;
-    if (isClosed) {
-      return ResultCard(item: item);
-    } else if (item.type == 'poll') {
-      return PollCard(item: item);
-    } else if (item.type == 'random') {
-      return RandomCard(item: item);
-    }
-    return const Text('An error occurred'); // Should be impossible
   }
 }

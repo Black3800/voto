@@ -10,6 +10,7 @@ class ConfirmButton extends StatelessWidget {
   final double height;
   final double horizontalPadding;
   final bool disabled;
+  final bool isLoading;
   const ConfirmButton({
     Key? key,
     required this.confirmText,
@@ -18,7 +19,8 @@ class ConfirmButton extends StatelessWidget {
     required this.onCancel,
     this.height = 100,
     this.horizontalPadding = 50,
-    this.disabled = false
+    this.disabled = false,
+    this.isLoading = false
   }) : super(key: key);
 
   @override
@@ -45,6 +47,7 @@ class ConfirmButton extends StatelessWidget {
               text: confirmText,
               onPressed: onConfirm,
               disabled: disabled,
+              isLoading: isLoading
             )
           ),
         ],

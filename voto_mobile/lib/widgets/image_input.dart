@@ -77,7 +77,6 @@ class _ImageInputState extends State<ImageInput> {
      */
     if (previousImage != null && previousImage.split('/')[3] != 'dummy') {
       FirebaseStorage.instance.ref(previousImage).delete();
-      print('deleting $previousImage for ${widget.image }');
     }
   }
 
@@ -114,7 +113,6 @@ class _ImageInputState extends State<ImageInput> {
       child: FutureBuilder(
         future: imageURL,
         builder: (context, snapshot) {
-          print(snapshot.data);
           final bool isLoaded = snapshot.hasData;
           final String? imageURL = snapshot.data as String?;
           return Stack(children: [
