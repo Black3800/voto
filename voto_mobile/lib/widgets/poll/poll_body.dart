@@ -75,7 +75,7 @@ class _PollBodyState extends State<PollBody> {
                 return VotoColors.indigo;
               }),
               fixedSize: MaterialStateProperty.all<Size>(const Size.fromWidth(100))
-            )
+            ),
             child: Text('Add', style: GoogleFonts.inter(
               color: VotoColors.white
             )),

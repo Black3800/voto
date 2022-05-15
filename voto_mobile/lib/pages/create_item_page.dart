@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/items.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
@@ -66,14 +67,23 @@ class _CreateItemPageState extends State<CreateItemPage> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text('Cancel',
+                style: GoogleFonts.inter(fontWeight: FontWeight.normal)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Discard'),
-            style: TextButton.styleFrom(
-              primary: VotoColors.danger
-            )
+            child: Text('Discard',
+                style: GoogleFonts.inter(color: VotoColors.danger)),
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(VotoColors.danger.shade300),
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return VotoColors.danger.shade300;
+                }
+                return VotoColors.danger.shade100;
+              }),
+              fixedSize:
+                  MaterialStateProperty.all<Size>(const Size.fromWidth(100))),
           ),
         ],
       ),
@@ -124,6 +134,13 @@ class _CreateItemPageState extends State<CreateItemPage> {
   @override
   void initState() {
     super.initState();
+    final _item = Provider.of<PersistentState>(context, listen: false).currentItem;
+    if (_item != null) {
+      _titleController.text = _item.title!;
+      _descriptionController.text = _item.description!;
+      isPoll = _item.type == 'poll';
+      pollSettings = _item.pollSettings!;
+    }
     _multipleWinnerController =
         TextEditingController(text: pollSettings.winnerCount.toString());
     pollSettings.closeDate = DateTime(

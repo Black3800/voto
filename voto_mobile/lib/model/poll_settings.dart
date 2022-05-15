@@ -1,7 +1,6 @@
 class PollSettings {
   bool multipleVote;
   bool anonymousVote;
-  bool tiebreaker;
   bool multipleWinner;
   bool allowAdd;
   bool allowVoteOwnOption;
@@ -13,7 +12,6 @@ class PollSettings {
   PollSettings(
       {this.multipleVote = false,
       this.anonymousVote = false,
-      this.tiebreaker = false,
       this.multipleWinner = false,
       this.allowAdd = false,
       this.allowVoteOwnOption = false,
@@ -25,7 +23,6 @@ class PollSettings {
   PollSettings.fromJson(Map<dynamic, dynamic> json)
     : multipleVote = json['multiple_vote'],
       anonymousVote = json['anonymous_vote'],
-      tiebreaker = json['tiebreaker'],
       multipleWinner = json['multiple_winner'],
       allowAdd = json['allow_add'],
       allowVoteOwnOption = json['allow_vote_own'],
@@ -36,7 +33,6 @@ class PollSettings {
   Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
     'multiple_vote': multipleVote,
     'anonymous_vote': anonymousVote,
-    'tiebreaker': tiebreaker,
     'multiple_winner': multipleWinner,
     'allow_add': allowAdd,
     'allow_vote_own': allowVoteOwnOption,

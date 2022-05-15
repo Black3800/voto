@@ -121,15 +121,6 @@ class PollSettingsWidgets {
             onChanged?.call();
           }
       ),
-      SimpleCheckbox(
-        text: 'Tiebreaker',
-        color: VotoColors.magenta,
-        isChecked: pollSettings.tiebreaker,
-        onChanged: () {
-            pollSettings.tiebreaker = !pollSettings.tiebreaker;
-            onChanged?.call();
-          }
-      ),
       Row(children: [
         Expanded(
           child: SimpleCheckbox(

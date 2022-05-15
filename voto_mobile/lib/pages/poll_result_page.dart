@@ -9,6 +9,7 @@ import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/create_item/heading.dart';
 import 'package:voto_mobile/widgets/pollresult/poll_result_button.dart';
 import 'package:voto_mobile/widgets/pollresult/poll_result_item.dart';
+import 'package:voto_mobile/widgets/pollresult/tiebreaker_button.dart';
 import 'package:voto_mobile/widgets/pollresult/voter_dialog.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
 import 'package:voto_mobile/widgets/winner_card.dart';
@@ -80,6 +81,17 @@ class _PollResultPageState extends State<PollResultPage> {
     );
   }
 
+  List<Choice> _getPotentialWinners(List<Choice> list, int count) {
+    List<Choice> _result = list.sublist(0, count);
+    int leastVoteCount = _result.last.voteCount!;
+    for (final choice in list.sublist(count)) {
+      if (choice.voteCount == leastVoteCount) {
+        _result.add(choice);
+      }
+    }
+    return _result;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -98,6 +110,7 @@ class _PollResultPageState extends State<PollResultPage> {
     return Consumer<PersistentState>(builder: (context, appState, child) {
       bool _showVoter = !appState.currentItem!.pollSettings!.anonymousVote;
       bool _showOwner = appState.currentItem!.pollSettings!.showOptionOwner;
+      bool _isOwner = appState.currentUser!.uid == appState.currentTeam!.owner;
       return VotoScaffold(
         useMenu: false,
         title: 'Result',
@@ -165,10 +178,14 @@ class _PollResultPageState extends State<PollResultPage> {
                           ]
                         );
                       }
-                      int winnerCount = appState.currentItem!.pollSettings!.winnerCount;
-                      if (winnerCount > _pollItems.length) {
-                        winnerCount = _pollItems.length;
+                      int _winnerCount = appState.currentItem!.pollSettings!.multipleWinner
+                                ? appState.currentItem!.pollSettings!.winnerCount
+                                : 1;
+                      if (_winnerCount > _pollItems.length) {
+                        _winnerCount = _pollItems.length;
                       }
+                      List<Choice> _winners = _getPotentialWinners(_pollItems, _winnerCount);
+                      bool _isTie = _winners.length > _winnerCount;
                       return ListView.separated(
                         itemBuilder: (context, index) => [
                             Column(
@@ -191,8 +208,10 @@ class _PollResultPageState extends State<PollResultPage> {
                               style: GoogleFonts.inter(
                                   fontSize: 14, fontWeight: FontWeight.w400),
                             ),
+                            if (_isOwner && _isTie) TiebreakerButton(winners: _winners),
                             WinnerCard(
-                              winners: _pollItems.sublist(0, appState.currentItem!.pollSettings!.multipleWinner ? winnerCount : 1),
+                              winners: _winners,
+                              winnerCount: _winnerCount
                             ),
                             const Heading('Full result'),
                             ..._pollItems.map((e) => PollResultItem(
@@ -205,7 +224,7 @@ class _PollResultPageState extends State<PollResultPage> {
                                   onTap: _showVoter ? showVoter : null)),
                           ][index],
                         separatorBuilder: (context, index) => const SizedBox(height: 20),
-                        itemCount: _pollItems.length + 4,
+                        itemCount: _pollItems.length + 4 + (_isOwner && _isTie ? 1 : 0),
                       );
                     } else {
                       return const Center(

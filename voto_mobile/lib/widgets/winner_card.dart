@@ -6,16 +6,22 @@ import 'package:google_fonts/google_fonts.dart';
 class WinnerCard extends StatelessWidget {
   const WinnerCard({
     Key? key,
-    required this.winners}) : super(key: key);
+    required this.winners,
+    required this.winnerCount
+    }) : super(key: key);
   
   final List<Choice> winners;
+  final int winnerCount;
 
   @override
   Widget build(BuildContext context) {
-    int i = 0;
+    int i = 1;
+    int leastVoteCount = winners.last.voteCount!;
     String _text = winners.map((e) {
-      i++;
-      return '$i. ${e.text}';
+      if (winners.length > winnerCount && e.voteCount == leastVoteCount) {
+        return '$i. ${e.text} (Tie)';
+      }
+      return '${i++}. ${e.text}';
     }).join('\n');
 
     return winners.isNotEmpty ? Container(
