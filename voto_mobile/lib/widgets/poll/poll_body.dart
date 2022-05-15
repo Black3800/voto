@@ -132,7 +132,7 @@ class _PollBodyState extends State<PollBody> {
     return StreamBuilder(
       stream: optionsRef.onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (widget.isLoading || snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: SizedBox(
               width: 32,

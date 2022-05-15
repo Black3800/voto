@@ -60,6 +60,20 @@ class _PollItemContainerState extends State<PollItemContainer> {
       }
     }
   }
+
+  @override
+  void didUpdateWidget(covariant PollItemContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isMultipleValue) {
+      for (final choice in widget.choices) {
+        if (!_checkbox.containsKey(choice.id)) {
+          bool _isChecked = choice.votedBy?[uid] != null;
+          _checkbox['${choice.id}'] = _isChecked;
+          widget.onCheckboxChanged?.call(id: '${choice.id}', value: _isChecked);
+        }
+      }
+    }
+  }
   
   @override
   Widget build(BuildContext context) {

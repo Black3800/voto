@@ -33,10 +33,11 @@ class _PollPageState extends State<PollPage> {
 
   Future<void> _handleVote() async {
     if (mounted) setState(() => _isSubmitting = true);
-    Items? item = Provider.of<PersistentState>(context, listen: false).currentItem;
-    String? uid = Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
-    bool isValid = _radioValue.isNotEmpty || _checkbox.containsValue(true);
-    if(isValid && item != null && uid != null) {
+    Items? item =
+        Provider.of<PersistentState>(context, listen: false).currentItem;
+    String? uid =
+        Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
+    if (item != null && uid != null) {
       if (item.pollSettings!.closeDate!.isBefore(DateTime.now())) {
         // Poll has already closed
         return Future.value();
@@ -46,67 +47,71 @@ class _PollPageState extends State<PollPage> {
         for (final choice in _choices.entries) {
           String choiceId = choice.key;
           bool isVoted = choice.value;
-          TransactionResult _result;
-          do {
-            _result = await FirebaseDatabase.instance
-                .ref('options/${item.id}/choices/$choiceId')
-                .runTransaction((Object? choice) {
-              if (choice == null) {
-                return Transaction.abort();
-              }
+          await FirebaseDatabase.instance
+              .ref('options/${item.id}/choices/$choiceId')
+              .runTransaction((Object? choice) {
+            if (choice == null) {
+              return Transaction.abort();
+            }
 
-              Map<String, dynamic> _choice =
-                  Map<String, dynamic>.from(choice as Map);
-              if (_choice['voted_by'] != null) {
-                // Someone has chosen this before
-                if ((_choice['voted_by'] as Map?)?.containsKey(uid) ?? false) {
-                  // This user has chosen before
-                  _choice['vote_count'] = isVoted
-                      ? _choice['vote_count']
-                      : (_choice['vote_count'] ?? 1) - 1;
+            Map<String, dynamic> _choice =
+                Map<String, dynamic>.from(choice as Map);
+            if (_choice['voted_by'] != null) {
+              // Someone has chosen this before
+              if ((_choice['voted_by'] as Map?)?.containsKey(uid) ?? false) {
+                // This user has chosen before
+                _choice['vote_count'] = isVoted
+                    ? _choice['vote_count']
+                    : (_choice['vote_count'] ?? 1) - 1;
 
-                  if (!isVoted) {
-                    (_choice['voted_by'] as Map?)?.remove(uid);
-                  }
-                } else {
-                  // This user has never chosen before
-                  _choice['vote_count'] = isVoted
-                      ? (_choice['vote_count'] ?? 0) + 1
-                      : _choice['vote_count'];
-
-                  if (isVoted) {
-                    _choice['voted_by'][uid] = true;
-                  }
+                if (!isVoted) {
+                  (_choice['voted_by'] as Map?)?.remove(uid);
                 }
               } else {
-                // No one has chosen this before
+                // This user has never chosen before
                 _choice['vote_count'] = isVoted
                     ? (_choice['vote_count'] ?? 0) + 1
                     : _choice['vote_count'];
 
                 if (isVoted) {
-                  _choice['voted_by'] = {uid: true};
+                  _choice['voted_by'][uid] = true;
                 }
               }
-              return Transaction.success(_choice);
-            }, applyLocally: false);
-          } while(false);
+            } else {
+              // No one has chosen this before
+              _choice['vote_count'] = isVoted
+                  ? (_choice['vote_count'] ?? 0) + 1
+                  : _choice['vote_count'];
+
+              if (isVoted) {
+                _choice['voted_by'] = {uid: true};
+              }
+            }
+            return Transaction.success(_choice);
+          });
+          /***
+           * Delay is needed to fix unknown bug
+           */
+          await Future.delayed(const Duration(milliseconds: 1));
         }
       } else {
         Map<String, Object?> updates = {};
-        if(_initialRadioValue.isNotEmpty) {
-          updates['options/${item.id}/choices/$_initialRadioValue/voted_by/$uid'] = null;
-          updates['options/${item.id}/choices/$_initialRadioValue/vote_count'] = ServerValue.increment(-1);
+        if (_initialRadioValue.isNotEmpty) {
+          updates['options/${item.id}/choices/$_initialRadioValue/voted_by/$uid'] =
+              null;
+          updates['options/${item.id}/choices/$_initialRadioValue/vote_count'] =
+              ServerValue.increment(-1);
         } else {
           updates['options/${item.id}/total_vote'] = ServerValue.increment(1);
         }
         updates['options/${item.id}/choices/$_radioValue/voted_by/$uid'] = true;
-        updates['options/${item.id}/choices/$_radioValue/vote_count'] = ServerValue.increment(1);
+        updates['options/${item.id}/choices/$_radioValue/vote_count'] =
+            ServerValue.increment(1);
         FirebaseDatabase.instance.ref().update(updates);
       }
     }
     _handlePop().then((willPop) {
-      if(willPop) Navigator.of(context).pop();
+      if (willPop) Navigator.of(context).pop();
     });
   }
 
@@ -186,7 +191,7 @@ class _PollPageState extends State<PollPage> {
                       if (willPop) Navigator.of(context).pop();
                     });
                   },
-                  // disabled: isConfirmDisabled,
+                  disabled: _isSubmitting,
                 )
               ])
             : Container(),
