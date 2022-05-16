@@ -57,14 +57,15 @@ class ResultCard extends StatelessWidget {
                         color: VotoColors.indigo
                         ),
                     ),
-                    item.pollSettings?.closeDate != null ? Text(
-                      'Closed on ${item.pollSettings?.closeDateFormatted}',
+                    Text(
+                      item.type == 'poll' && item.pollSettings?.closeDate != null
+                            ? 'Closed on ${item.pollSettings?.closeDateFormatted}'
+                            : 'Closed',
                       style: GoogleFonts.inter(
                         fontSize: 10.0,
                         fontWeight: FontWeight.w300,
-                        color: VotoColors.indigo
-                        ),
-                      ) : Container()
+                        color: VotoColors.indigo),
+                    ),
                   ],),
               ),
               IconButton(
@@ -83,7 +84,11 @@ class ResultCard extends StatelessWidget {
           const SizedBox(height: 20.0),
           CardActionButton(text: 'View full result', onPressed: () {
             Provider.of<PersistentState>(context, listen: false).updateItem(item);
-            Navigator.pushNamed(context, '/poll_result_page');
+            if (item.type == 'poll') {
+              Navigator.of(context).pushNamed('/poll_result_page');
+            } else {
+              Navigator.of(context).pushNamed('/random_page');
+            }
           },)
         ],
       )

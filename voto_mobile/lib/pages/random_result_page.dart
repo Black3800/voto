@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/random/random_detail.dart';
-import 'package:voto_mobile/widgets/random/random_task.dart';
+import 'package:voto_mobile/widgets/random/random_item.dart';
 import 'package:voto_mobile/widgets/random/start_button.dart';
 import 'package:voto_mobile/widgets/randomresult/random_result_button.dart';
 import 'package:voto_mobile/widgets/share_button.dart';

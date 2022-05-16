@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/items.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/team/card_action_button.dart';
 
@@ -74,22 +76,22 @@ class RandomCard extends StatelessWidget {
             const SizedBox(height: 20.0),
             CardActionButton(
               text: 'Add option',
-              onPressed: () {},
+              onPressed: () {
+                Provider.of<PersistentState>(context, listen: false).updateItem(item);
+                Provider.of<PersistentState>(context, listen: false).isCreatingItem = false;
+                Navigator.of(context).pushNamed('/add_option_page');
+              },
               isPrimary: false,
             ),
-            showStartRandom ? const SizedBox(height: 10.0) : Container(),
-            showStartRandom
-                ? CardActionButton(
-                    text: 'Start random',
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/random_page',
-                        arguments: item
-                      );
-                    },
-                  )
-                : Container(),
+            const SizedBox(height: 10),
+            CardActionButton(
+              text: showStartRandom ? 'Start random' : 'View random',
+              onPressed: () {
+                Provider.of<PersistentState>(context, listen: false)
+                    .updateItem(item);
+                Navigator.of(context).pushNamed('/random_page');
+              },
+            )
           ],
         ));
   }

@@ -120,8 +120,8 @@ class _PollBodyState extends State<PollBody> {
   @override
   void initState() {
     super.initState();
-    itemId = Provider.of<PersistentState>(context, listen: false).currentItem!.id;
-    uid = Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
+    itemId = Provider.of<PersistentState>(context, listen: false).currentItem?.id;
+    uid = Provider.of<PersistentState>(context, listen: false).currentUser?.uid;
     optionsRef = FirebaseDatabase.instance.ref('options/$itemId/choices');
   }
 

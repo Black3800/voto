@@ -28,16 +28,16 @@ class _TeamPageState extends State<TeamPage> {
   void _scrollDown(String id, int totalCard) {
     if (!isFirstRender) return;
     cardBuilt[id] = true;
-    print('${cardBuilt.length} == $totalCard');
     if (cardBuilt.length >= totalCard) {
       Timer(const Duration(milliseconds: 100), () {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-        print(cardBuilt);
-        isFirstRender = false;
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+          isFirstRender = false;
+        }
       });
     }
   }
@@ -47,6 +47,12 @@ class _TeamPageState extends State<TeamPage> {
     super.initState();
     teamId = Provider.of<PersistentState>(context, listen: false).currentTeam?.id;
     itemsRef = FirebaseDatabase.instance.ref('teams/$teamId/items');
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -66,6 +72,7 @@ class _TeamPageState extends State<TeamPage> {
                               icon: Icons.add,
                               accentColor: VotoColors.indigo,
                               onPressed: () {
+                                appState.isCreatingItem = true;
                                 Navigator.pushNamed(
                                     context, '/create_item_page');
                               },
@@ -94,6 +101,7 @@ class _TeamPageState extends State<TeamPage> {
                         final _itemsList = _currentItems.keys.toList();
                         _itemsList.sort((a, b) => _currentItems![a].compareTo(_currentItems[b]));
                         cardBuilt.clear();
+                        isFirstRender = true;
                         return SingleChildScrollView(
                           controller: _scrollController,
                           child: Column(

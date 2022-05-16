@@ -7,6 +7,7 @@ class Choice {
   String? owner;
   String? assignee;
   Choice({
+    this.id,
     this.text,
     this.voteCount,
     this.votedBy,

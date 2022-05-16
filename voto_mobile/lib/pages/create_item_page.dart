@@ -47,10 +47,12 @@ class _CreateItemPageState extends State<CreateItemPage> {
   }
 
   Future<bool> _handlePop() {
+    FocusScope.of(context).unfocus();
     /***
      * If user hasnt given any input, we can safely pop
      */
     if(_titleController.text.isEmpty && _descriptionController.text.isEmpty) {
+      Provider.of<PersistentState>(context, listen: false).isCreatingItem = false;
       return Future.value(true);
     }
     final willPop = showDialog<bool>(
@@ -160,6 +162,8 @@ class _CreateItemPageState extends State<CreateItemPage> {
 
   @override
   void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
     _multipleWinnerController.dispose();
     super.dispose();
   }
@@ -266,6 +270,8 @@ class _CreateItemPageState extends State<CreateItemPage> {
               setState(() => isSubmitted = true);
               _createItem().then((_) {
                 setState(() => isSubmitted = false);
+                FocusScope.of(context).unfocus();
+                Provider.of<PersistentState>(context, listen: false).isCreatingItem = true;
                 Navigator.pushNamed(context, '/add_option_page');
               });
             },

@@ -24,9 +24,18 @@ class _AddOptionPageState extends State<AddOptionPage> {
       await FirebaseDatabase.instance.ref('items/$itemId').update({
         'last_modified': DateTime.now().toIso8601String()
       });
-      Provider.of<PersistentState>(context, listen: false).disposeItem();
-      Navigator.of(context).popUntil(ModalRoute.withName('/team_page'));
     }
+    Provider.of<PersistentState>(context, listen: false).disposeItem();
+    Provider.of<PersistentState>(context, listen: false).isCreatingItem = false;
+    Navigator.of(context).popUntil(ModalRoute.withName('/team_page'));
+  }
+
+  Future<bool> _handlePop() async {
+    if (!Provider.of<PersistentState>(context, listen: false).isCreatingItem) {
+      Provider.of<PersistentState>(context, listen: false).disposeItem();
+      Provider.of<PersistentState>(context, listen: false).isCreatingItem = false;
+    }
+    return Future.value(true);
   }
 
   @override
@@ -36,6 +45,7 @@ class _AddOptionPageState extends State<AddOptionPage> {
         useMenu: false,
         title: 'Add option',
         titleContext: appState.currentTeam?.name,
+        onWillPop: _handlePop,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -54,6 +64,13 @@ class _AddOptionPageState extends State<AddOptionPage> {
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     const SizedBox(height: 20.0),
+                    if (!appState.isCreatingItem)
+                            Text(
+                              '${appState.currentItem?.description}',
+                              style: GoogleFonts.inter(
+                                  fontSize: 14, fontWeight: FontWeight.w400),
+                            ),
+                    const SizedBox(height: 20.0),
                     const Heading('Options'),
                     const SizedBox(height: 20.0),
                     const PollBody(
@@ -65,14 +82,15 @@ class _AddOptionPageState extends State<AddOptionPage> {
                 ),
               ),
             ),
-            ConfirmButton(
-              confirmText: 'Create',
-              cancelText: 'Back',
-              onConfirm: _handleCreate,
-              onCancel: () {
-                Navigator.pop(context);
-              },
-              height: 75.0)
+            if (appState.isCreatingItem)
+                    ConfirmButton(
+                        confirmText: 'Create',
+                        cancelText: 'Back',
+                        onConfirm: _handleCreate,
+                        onCancel: () {
+                          Navigator.pop(context);
+                        },
+                        height: 75.0)
           ],
         ),
       )

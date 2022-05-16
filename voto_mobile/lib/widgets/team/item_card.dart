@@ -55,54 +55,58 @@ class _ItemCardState extends State<ItemCard> {
   
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _itemRef.onValue,
-      builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-        
-        if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
-          /***
-           * Convert data
-           */
-          final json = snapshot.data?.snapshot.value as Map<dynamic, dynamic>;
-          final item = Items.fromJson(json);
-          item.id = widget.id;
-          item.pollSettings!.closeDateFormatted = DateFormat.yMMMd()
-              .add_Hm()
-              .format(item.pollSettings!.closeDate ?? DateTime.now());
-          final bool isClosed =
-              item.pollSettings!.closeDate!.isBefore(DateTime.now()) ||
-                  item.closed != null;
+    return Consumer<PersistentState>(builder: (context, appState, child) =>
+      StreamBuilder(
+        stream: _itemRef.onValue,
+        builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
           
-          /***
-           * Set timer
-           */
+          if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
+            /***
+             * Convert data
+             */
+            final json = snapshot.data?.snapshot.value as Map<dynamic, dynamic>?;
+            if (json == null) return Container();
+            final item = Items.fromJson(json);
+            item.id = widget.id;
+            item.pollSettings!.closeDateFormatted = DateFormat.yMMMd()
+                .add_Hm()
+                .format(item.pollSettings!.closeDate ?? DateTime.now());
+            final bool isClosed =
+                item.pollSettings!.closeDate!.isBefore(DateTime.now()) ||
+                    item.closed != null;
+            
+            /***
+             * Set timer
+             */
 
-          _timer?.cancel();
+            _timer?.cancel();
 
-          if (isClosed) {
-            return ResultCard(
-              item: item,
-              onBuildCompleted: widget.onBuildCompleted,
-            );
-          } else {
-            _timer = Timer(
-              item.pollSettings!.closeDate!.difference(DateTime.now()),
-              _updateLastModified);
-            if (item.type == 'poll') {
-              return PollCard(
+            if (isClosed) {
+              return ResultCard(
                 item: item,
                 onBuildCompleted: widget.onBuildCompleted,
               );
-            } else if (item.type == 'random') {
-              return RandomCard(
-                item: item,
-                onBuildCompleted: widget.onBuildCompleted,
-              );
+            } else {
+              _timer = Timer(
+                item.pollSettings!.closeDate!.difference(DateTime.now()),
+                _updateLastModified);
+              if (item.type == 'poll') {
+                return PollCard(
+                  item: item,
+                  onBuildCompleted: widget.onBuildCompleted,
+                );
+              } else if (item.type == 'random') {
+                return RandomCard(
+                  item: item,
+                  showStartRandom: appState.currentUser!.uid == appState.currentTeam!.owner,
+                  onBuildCompleted: widget.onBuildCompleted,
+                );
+              }
             }
           }
-        }
-        return Container();
-      },
+          return Container();
+        },
+      )
     );
   }
 }

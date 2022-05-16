@@ -12,12 +12,16 @@ class CardActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(boxShadow: <BoxShadow>[
-        BoxShadow(
+      decoration: const BoxDecoration(
+        boxShadow: <BoxShadow>[
+          BoxShadow(
             color: Color.fromRGBO(0, 0, 0, 0.15),
-            blurRadius: 4.0,
+            blurRadius: 8.0,
+            spreadRadius: -3,
             offset: Offset(2.0, 4.0))
-      ], borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          ],
+        borderRadius: BorderRadius.all(Radius.circular(10.0))
+      ),
       child: ElevatedButton(
         onPressed: onPressed,
         child: Padding(

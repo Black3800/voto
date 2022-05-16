@@ -50,7 +50,7 @@ class WideButton extends StatelessWidget {
                     width: 12,
                     height: 12,
                     child: CircularProgressIndicator(
-                      strokeWidth: 0.75,
+                      strokeWidth: 2.0,
                     ),
                   )
                 : Text(text,
