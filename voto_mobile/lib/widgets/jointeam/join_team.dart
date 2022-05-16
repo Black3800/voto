@@ -57,10 +57,11 @@ class _JoinTeamState extends State<JoinTeam> {
 
   Future<void> _joinTeam() async {
     final String teamId = _joinCodeController.text;
+    final String? latestTeamLeft = Provider.of<PersistentState>(context, listen: false).latestTeamLeft;
     /***
      * Check if team is already joined
      */
-    if(widget.teams.any((_team) => _team == teamId)) {
+    if(teamId != latestTeamLeft && widget.teams.any((_team) => _team == teamId)) {
       Navigator.pop(context);
       VotoSnackbar(
         text: 'You are already in that team',

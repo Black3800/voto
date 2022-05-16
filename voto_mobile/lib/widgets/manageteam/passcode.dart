@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/widgets/manageteam/passcodefiled.dart';
 
 class Pass extends StatefulWidget {
@@ -64,20 +66,23 @@ class _PassState extends State<Pass> {
         }
       }));
     }
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: _changePasscode,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-            4,
-            (index) => Passcode(passNumber: widget.value?[index] ?? '')
-        ),
-      ),
+    return Consumer<PersistentState>(builder: (context, appState, child) =>
+            InkWell(
+              onTap: appState.currentUser!.uid == appState.currentTeam?.owner
+                  ? _changePasscode
+                  : null,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                    4,
+                    (index) =>
+                        Passcode(passNumber: widget.value?[index] ?? '')),
+              ),
+            )
     );
   }
 }

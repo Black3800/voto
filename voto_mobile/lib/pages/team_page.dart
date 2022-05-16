@@ -64,7 +64,7 @@ class _TeamPageState extends State<TeamPage> {
         title: '${appState.currentTeam?.name}',
         body: Column(
           children: [
-            appState.currentUser!.uid == appState.currentTeam!.owner
+            appState.currentUser!.uid == appState.currentTeam?.owner
                       ? Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: RichButton(
@@ -81,7 +81,7 @@ class _TeamPageState extends State<TeamPage> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: (appState.currentUser!.uid == appState.currentTeam!.owner) ? 0 : 20
+                  top: (appState.currentUser!.uid == appState.currentTeam?.owner) ? 0 : 20
                 ),
                 child: StreamBuilder(
                   stream: itemsRef.onValue,
