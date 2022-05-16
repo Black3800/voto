@@ -12,8 +12,8 @@ import 'package:voto_mobile/widgets/team/result_card.dart';
 
 class ItemCard extends StatefulWidget {
   final String id;
-  final Function()? onBuildComplete;
-  const ItemCard({ Key? key, required this.id, this.onBuildComplete }) : super(key: key);
+  final Function()? onBuildCompleted;
+  const ItemCard({ Key? key, required this.id, this.onBuildCompleted }) : super(key: key);
 
   @override
   State<ItemCard> createState() => _ItemCardState();
@@ -58,7 +58,7 @@ class _ItemCardState extends State<ItemCard> {
     return StreamBuilder(
       stream: _itemRef.onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-        WidgetsBinding.instance?.addPostFrameCallback((_) => widget.onBuildComplete?.call());
+        
         if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
           /***
            * Convert data
@@ -80,15 +80,24 @@ class _ItemCardState extends State<ItemCard> {
           _timer?.cancel();
 
           if (isClosed) {
-            return ResultCard(item: item);
+            return ResultCard(
+              item: item,
+              onBuildCompleted: widget.onBuildCompleted,
+            );
           } else {
             _timer = Timer(
               item.pollSettings!.closeDate!.difference(DateTime.now()),
               _updateLastModified);
             if (item.type == 'poll') {
-              return PollCard(item: item);
+              return PollCard(
+                item: item,
+                onBuildCompleted: widget.onBuildCompleted,
+              );
             } else if (item.type == 'random') {
-              return RandomCard(item: item);
+              return RandomCard(
+                item: item,
+                onBuildCompleted: widget.onBuildCompleted,
+              );
             }
           }
         }

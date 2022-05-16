@@ -7,14 +7,18 @@ import 'package:voto_mobile/widgets/team/card_action_button.dart';
 class RandomCard extends StatelessWidget {
   final Items item;
   final bool showStartRandom;
+  final Function()? onBuildCompleted;
   const RandomCard({
     Key? key,
     required this.item,
     this.showStartRandom = true,
+    this.onBuildCompleted
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance
+        ?.addPostFrameCallback((_) => onBuildCompleted?.call());
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
         padding: const EdgeInsets.all(30.0),

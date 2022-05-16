@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,14 +23,23 @@ class _TeamPageState extends State<TeamPage> {
   late DatabaseReference itemsRef;
   final ScrollController _scrollController = ScrollController();
   bool isFirstRender = true;
+  final Map<String, bool> cardBuilt = {};
 
-  void _scrollDown() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-    isFirstRender = false;
+  void _scrollDown(String id, int totalCard) {
+    if (!isFirstRender) return;
+    cardBuilt[id] = true;
+    print('${cardBuilt.length} == $totalCard');
+    if (cardBuilt.length >= totalCard) {
+      Timer(const Duration(milliseconds: 100), () {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+        print(cardBuilt);
+        isFirstRender = false;
+      });
+    }
   }
 
   @override
@@ -82,16 +93,15 @@ class _TeamPageState extends State<TeamPage> {
                         _currentItems = _currentItems.map((key, value) => MapEntry(key, DateTime.parse(value)));
                         final _itemsList = _currentItems.keys.toList();
                         _itemsList.sort((a, b) => _currentItems![a].compareTo(_currentItems[b]));
-                        return ListView.builder(
+                        cardBuilt.clear();
+                        return SingleChildScrollView(
                           controller: _scrollController,
-                          itemBuilder: (context, index) => ItemCard(
-                                    id: _itemsList[index],
-                                    onBuildComplete:
-                                        index == _currentItems!.length - 1 && isFirstRender
-                                            ? _scrollDown
-                                            : null,
-                                  ),
-                          itemCount: _currentItems.length,
+                          child: Column(
+                            children: [..._itemsList.map((e) => ItemCard(
+                                    id: e,
+                                    onBuildCompleted: () => _scrollDown(e, _itemsList.length),
+                                  ))]
+                          ),
                         );
                       } else {
                         return Container(

@@ -69,37 +69,41 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: VotoColors.primary,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 42.5),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(
-                'logo.png',
-                width: 250,
-                height: 150,
+        child: Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/logo.png',
+                    width: 250,
+                    height: 150,
+                  ),
+                  const SizedBox(height: 50.0),
+                  CustomTextForm(
+                    controller: _emailController,
+                    hintText: 'Email',
+                  ),
+                  const SizedBox(height: 25.0),
+                  CustomTextForm(
+                    controller: _passwordController,
+                    hintText: 'Password',
+                    maxLength: 100,
+                    icon: Icons.lock_rounded,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 50.0),
+                  BigButton(
+                    text: 'Login',
+                    isLoading: isSubmitted,
+                    onPressed: handleLogin,
+                  ),
+                  const SizedBox(height: 25.0),
+                  const SignUpClick(),
+                ],
               ),
-              const SizedBox(height: 50.0),
-              CustomTextForm(
-                controller: _emailController,
-                hintText: 'Email',
-              ),
-              const SizedBox(height: 25.0),
-              CustomTextForm(
-                controller: _passwordController,
-                hintText: 'Password',
-                maxLength: 100,
-                icon: Icons.lock_rounded,
-                obscureText: true,
-              ),
-              const SizedBox(height: 50.0),
-              BigButton(
-                text: 'Login',
-                isLoading: isSubmitted,
-                onPressed: handleLogin,
-              ),
-              const SizedBox(height: 25.0),
-              const SignUpClick(),
-            ],
           ),
+        ),
       )
     );
   }

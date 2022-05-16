@@ -8,10 +8,17 @@ import 'package:voto_mobile/widgets/team/card_action_button.dart';
 
 class ResultCard extends StatelessWidget {
   final Items item;
-  const ResultCard({ Key? key, required this.item }) : super(key: key);
+  final Function()? onBuildCompleted;
+  const ResultCard({
+    Key? key,
+    required this.item,
+    this.onBuildCompleted
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance
+        ?.addPostFrameCallback((_) => onBuildCompleted?.call());
     return Container(
       margin: const EdgeInsets.symmetric(
         vertical: 8.0,
