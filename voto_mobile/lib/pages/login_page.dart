@@ -49,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
       snackBar.icon = Icons.check_circle;
       snackBar.accentColor = VotoColors.success;
 
+      FocusScope.of(context).unfocus();
       Navigator.pushNamed(context, '/home_page');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -61,6 +62,13 @@ class _LoginPageState extends State<LoginPage> {
       setState(() => isSubmitted = false);
       snackBar.show(context);
     }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
