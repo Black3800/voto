@@ -180,6 +180,28 @@ class _RandomPageState extends State<RandomPage> {
                   if (!isClosed && appState.currentUser!.uid == appState.currentTeam!.owner)
                     StartButton(
                       onPressed: () => _stopRandom(appState.currentItem!.id!, appState.currentItem!.randomType!),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 32.5,
+                        horizontal: 42.5
+                      ),
+                      child: Row(
+                          children: [
+                            const Icon(Icons.info, color: Color(0xffaaaaaa)),
+                            const SizedBox(width: 10.0),
+                            Expanded(
+                              child: Text(
+                                  'Wait for the team owner to stop the random',
+                                  textAlign: TextAlign.left,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      ?.apply(color: const Color(0xffaaaaaa))),
+                            )
+                          ],
+                        ),
                     ),
                 ],
               );
