@@ -20,19 +20,19 @@ class ProfileCustomEmailTextfield extends StatelessWidget {
           fontWeight: FontWeight.w400,
           color: const Color(0xff999999),
         ),
-        decoration: const InputDecoration(
-          prefixIcon: Icon(
+        decoration: InputDecoration(
+          prefixIcon: const Icon(
             Icons.email,
             color: Color(0xff999999),
           ),
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.all(
               Radius.circular(18),
             ),
           ),
           hintText: 'Email',
-          fillColor: VotoColors.gray,
+          fillColor: VotoColors.black.shade50,
           filled: true,
         ),
         readOnly: true,

@@ -1,7 +1,7 @@
 class Users {
-  final String? displayName;
+  String? displayName;
   final String? email;
-  final String? img;
+  String? img;
   final Map<dynamic, dynamic>? joinedTeams;
   String? uid;
   Users({

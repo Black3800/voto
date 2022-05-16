@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
               stream: teamsRef.onValue,
               builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  const Center(
+                  return const Center(
                       child: SizedBox(
                           width: 32,
                           height: 32,

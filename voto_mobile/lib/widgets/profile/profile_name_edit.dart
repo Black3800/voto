@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/profile/profile_custom_email_textfield.dart';
 import 'package:voto_mobile/widgets/profile/profile_custom_textfield.dart';
+import 'package:voto_mobile/widgets/simple_text_input.dart';
 
 class ProfileDisplayNameEditing extends StatelessWidget {
   final TextEditingController nameController;
@@ -12,22 +14,29 @@ class ProfileDisplayNameEditing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _deviceHeight = MediaQuery.of(context).size.height;
-
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.only(
         left: 40,
         right: 40,
       ),
-      height: _deviceHeight * 0.27,
-      width: MediaQuery.of(context).size.width,
       child: Column(
         children: [
           displayName(),
-          ProfileCustomTextfield(controller: nameController),
+          SimpleTextInput(
+            controller: nameController,
+            max: 30,
+            icon: Icons.people_rounded,
+            accentColor: VotoColors.indigo,
+          ),
           displayEmail(),
-          ProfileCustomEmailTextfield(controller: emailController),
+          SimpleTextInput(
+            controller: emailController,
+            max: 100,
+            icon: Icons.mail_rounded,
+            accentColor: VotoColors.black,
+            readOnly: true
+          ),
         ],
       ),
     );

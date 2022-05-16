@@ -10,6 +10,7 @@ import 'package:voto_mobile/utils/color.dart';
 
 class ImageInput extends StatefulWidget {
   final String image;
+  final String? notDeleteable;
   final double radius;
   final Function(String)? onChanged;
   final bool readOnly;
@@ -18,6 +19,7 @@ class ImageInput extends StatefulWidget {
   const ImageInput({
     Key? key,
     required this.image,
+    this.notDeleteable,
     this.onChanged,
     this.radius = 120.0,
     this.readOnly = false,
@@ -75,6 +77,7 @@ class _ImageInputState extends State<ImageInput> {
     /***
      * Delete previousImage if not in /dummy folder
      */
+    if (previousImage == widget.notDeleteable) return;
     if (previousImage != null && previousImage.split('/')[3] != 'dummy') {
       FirebaseStorage.instance.ref(previousImage).delete();
     }
@@ -90,6 +93,7 @@ class _ImageInputState extends State<ImageInput> {
   void didUpdateWidget(covariant ImageInput oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.image.isNotEmpty && widget.image != oldWidget.image) {
+      print('delete ${oldWidget.image} for ${widget.image}');
       _deletePreviousImage(oldWidget.image);
     }
     imageURL = _getImageURL();

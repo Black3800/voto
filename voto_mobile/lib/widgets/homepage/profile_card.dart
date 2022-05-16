@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/widgets/image_input.dart';
 
 class ProfileCard extends StatelessWidget {
   final String imagePath;
@@ -39,9 +40,11 @@ class ProfileCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(imagePath),
-                  radius: 30.0,
+                ImageInput(
+                  image: imagePath,
+                  radius: 60.0,
+                  readOnly: true,
+                  showLoadingStatus: false,
                 ),
                 const SizedBox(width: 15.0),
                 Expanded(

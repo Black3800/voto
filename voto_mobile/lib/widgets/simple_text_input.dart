@@ -12,6 +12,7 @@ class SimpleTextInput extends StatefulWidget {
   final bool multiline;
   final bool clearable;
   final bool autofocus;
+  final bool readOnly;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
@@ -30,6 +31,7 @@ class SimpleTextInput extends StatefulWidget {
       this.multiline = false,
       this.clearable = true,
       this.autofocus = false,
+      this.readOnly = false,
       this.keyboardType,
       this.inputFormatters,
       this.controller,
@@ -73,10 +75,17 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
       inputFormatters: widget.inputFormatters,
       minLines: widget.multiline ? 4 : 1,
       maxLines: widget.multiline ? null : 1,
+      buildCounter: widget.readOnly
+          ? (context,
+                  {required int currentLength,
+                  required bool isFocused,
+                  required int? maxLength}) =>
+              null
+          : null,
       style: GoogleFonts.inter(
         fontSize: 14,
         fontWeight: FontWeight.normal,
-        color: widget.accentColor,
+        color: widget.readOnly ? widget.accentColor.shade300 : widget.accentColor,
       ),
       onChanged: (value) {
         widget.onChanged?.call(value);
@@ -86,13 +95,16 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
       onEditingComplete: widget.onEditingComplete,
       onFieldSubmitted: widget.onFieldSubmitted,
       onSaved: widget.onSaved,
+      readOnly: widget.readOnly,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: const EdgeInsets.all(16.0),
         prefixIcon: widget.icon != null
             ? Icon(
                 widget.icon,
-                color: widget.accentColor,
+                color: widget.readOnly
+                    ? widget.accentColor.shade300
+                    : widget.accentColor,
               )
             : null,
         border: const OutlineInputBorder(
@@ -104,9 +116,9 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
         hintText: widget.hintText,
         hintStyle: GoogleFonts.inter(color: const Color(0xffc4c4c4)),
         errorText: widget.errorText,
-        fillColor: VotoColors.gray,
+        fillColor: widget.readOnly ? VotoColors.black.shade50 : VotoColors.gray,
         filled: true,
-        suffixIcon: widget.clearable &&
+        suffixIcon: !widget.readOnly && widget.clearable &&
                 (widget.controller ?? _controller).text.isNotEmpty
             ? InkWell(
                 child: Icon(

@@ -38,7 +38,7 @@ class DrawerMenu extends StatelessWidget {
               title: user.displayName ?? 'Anonymous',
               // title: 'Anakin',
               onTap: () {
-                Navigator.pushNamed(context, "/profile_page");
+                Navigator.of(context).popAndPushNamed('/profile_page');
               }),
           const LogoutCard(),
         ],

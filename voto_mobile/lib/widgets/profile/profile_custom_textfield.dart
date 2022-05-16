@@ -33,7 +33,7 @@ class ProfileCustomTextfield extends StatelessWidget {
             ),
           ),
           hintText: 'User display name',
-          fillColor: Color(0xFFE5E5E5),
+          fillColor: VotoColors.gray,
           filled: true,
           suffixIcon: Icon(
             Icons.edit,
