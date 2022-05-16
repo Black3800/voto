@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:voto_mobile/model/persistent_state.dart';
+import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/big_button.dart';
 import 'package:voto_mobile/widgets/login/custom_textform.dart';
@@ -94,8 +97,13 @@ class _SignupPageState extends State<SignupPage> {
         /***
          * Navigate to homepage
          */
-        Navigator.pop(context);
-        Navigator.pushNamed(context, '/home_page');
+        Provider.of<PersistentState>(context, listen: false).updateUser(Users(
+          uid: user!.uid,
+          displayName: _name,
+          email: _email,
+          img: "gs://cs21-voto.appspot.com/dummy/blank.webp"
+        ));
+        Navigator.of(context).popAndPushNamed('/home_page');
       } on FirebaseAuthException catch(e) {
         /***
          * Prepare error message to show in snackbar
@@ -177,7 +185,7 @@ class _SignupPageState extends State<SignupPage> {
                           Padding(
                             padding: const EdgeInsets.only(top: 36.0),
                             child:  BigButton(
-                                      text: 'Login',
+                                      text: 'Sign up',
                                       isLoading: isSubmitted,
                                       onPressed: () {
                                         setState(() => isSubmitted = true);
