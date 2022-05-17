@@ -68,12 +68,6 @@ class PollCard extends StatelessWidget {
                       )
                   ],),
               ),
-              IconButton(
-                padding: const EdgeInsets.only(left: 10.0),
-                icon: const Icon(Icons.share, color: VotoColors.white,),
-                iconSize: 24.0,
-                onPressed: () {},
-              ),
             ],
           ),
           const SizedBox(height: 20.0),

@@ -73,10 +73,10 @@ class _AddOptionPageState extends State<AddOptionPage> {
                     const SizedBox(height: 20.0),
                     const Heading('Options'),
                     const SizedBox(height: 20.0),
-                    const PollBody(
+                    PollBody(
                       isSelectable: false,
                       isAddable: true,
-                      isEditable: true,
+                      isEditable: appState.currentUser!.uid == appState.currentTeam!.owner,
                     )
                   ],
                 ),

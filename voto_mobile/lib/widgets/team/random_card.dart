@@ -57,15 +57,6 @@ class RandomCard extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: VotoColors.white),
                 )),
-                IconButton(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  icon: const Icon(
-                    Icons.share,
-                    color: VotoColors.white,
-                  ),
-                  iconSize: 24.0,
-                  onPressed: () {},
-                ),
               ],
             ),
             const SizedBox(height: 10.0),

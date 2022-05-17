@@ -238,7 +238,7 @@ class _PollResultPageState extends State<PollResultPage> {
                 ),
               ),
             ),
-            const PollResultButton(),
+            // const PollResultButton(),
           ],
         ),
       );
