@@ -113,7 +113,7 @@ class _PollPageState extends State<PollPage> {
            */
           await Future.delayed(const Duration(milliseconds: 1));
         }
-      } else {
+      } else if (_initialRadioValue != _radioValue) {
         Map<String, Object?> updates = {};
         if (_initialRadioValue.isNotEmpty) {
           updates['options/${item.id}/choices/$_initialRadioValue/voted_by/$uid'] =
