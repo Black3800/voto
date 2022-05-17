@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       create: (BuildContext context) => PersistentState(),
       child: MaterialApp(
         title: 'Vo-To',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
             brightness: Brightness.light,
             primarySwatch: VotoColors.primary,

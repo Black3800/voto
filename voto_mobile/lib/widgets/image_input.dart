@@ -77,7 +77,7 @@ class _ImageInputState extends State<ImageInput> {
     /***
      * Delete previousImage if not in /dummy folder
      */
-    if (previousImage == widget.notDeleteable) return;
+    if (widget.readOnly || previousImage == widget.notDeleteable) return;
     if (previousImage != null && previousImage.split('/')[3] != 'dummy') {
       FirebaseStorage.instance.ref(previousImage).delete();
     }
