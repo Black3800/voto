@@ -27,10 +27,10 @@ class _EnterPasscodeDialogState extends State<EnterPasscodeDialog> {
   final TextEditingController _passcodeController = TextEditingController();
   String? _error;
 
-  void _verifyPasscode() {
+  void _verifyPasscode() async {
     if(_passcodeController.text == widget.team.passcode) {
       setState(() => _error = null);
-      widget.onSuccess();
+      await widget.onSuccess(context);
       Navigator.pop(context);
     } else {
       setState(() => _error = 'Incorrect passcode');

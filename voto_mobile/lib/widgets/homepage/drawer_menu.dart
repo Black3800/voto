@@ -15,12 +15,7 @@ class DrawerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String randomImage = RandomImage.get();
-    final user =
-        Provider.of<PersistentState>(context, listen: false).currentUser!;
-    // String? uid =
-    //     Provider.of<PersistentState>(context, listen: false).currentUser?.uid;
-    // DatabaseReference userRef = FirebaseDatabase.instance.ref('users/$uid');
+    final user = Provider.of<PersistentState>(context, listen: false).currentUser!;
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
@@ -34,9 +29,8 @@ class DrawerMenu extends StatelessWidget {
             ),
           ),
           ProfileCard(
-              imagePath: user.img ?? randomImage,
-              title: user.displayName ?? 'Anonymous',
-              // title: 'Anakin',
+              imagePath: user.img!,
+              title: user.displayName!,
               onTap: () {
                 Navigator.of(context).popAndPushNamed('/profile_page');
               }),

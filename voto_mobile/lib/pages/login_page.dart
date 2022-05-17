@@ -37,12 +37,12 @@ class _LoginPageState extends State<LoginPage> {
               password: _passwordController.text
           );
 
-      final profileImg = await FirebaseDatabase.instance.ref('users/${credential.user?.uid}/img').once();
+      final profileImg = await FirebaseDatabase.instance.ref('users/${credential.user?.uid}/img').get();
       Provider.of<PersistentState>(context, listen: false).updateUser(Users(
         uid: credential.user?.uid,
         displayName: credential.user?.displayName,
         email: credential.user?.email,
-        img: profileImg.snapshot.value as String
+        img: profileImg.value as String
       ));
 
       snackBar.text = "Welcome, ${credential.user?.displayName}";

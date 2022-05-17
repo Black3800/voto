@@ -42,7 +42,7 @@ class _JoinTeamState extends State<JoinTeam> {
     );
   }
 
-  Future<void> _pushTeamUpdate(Team team) async {
+  Future<void> _pushTeamUpdate(Team team, BuildContext context) async {
     String? uid = Provider.of<PersistentState>(context, listen: false).currentUser?.uid;
     if (uid != null) {
       DatabaseReference userRef =
@@ -77,17 +77,16 @@ class _JoinTeamState extends State<JoinTeam> {
       final team = Team.fromJson(snapshot.value as Map<dynamic, dynamic>);
       team.id = teamId;
       if(team.passcode != null) {
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
         _showEnterPasscodeDialog(
           team: team,
-          onSuccess: () {
-            _pushTeamUpdate(team);
+          onSuccess: (_context) async {
+            await _pushTeamUpdate(team, _context);
           }
         );
       } else {
-        _pushTeamUpdate(team).then((_) {
-          Navigator.pop(context);
-        });
+        await _pushTeamUpdate(team, context);
+        Navigator.of(context, rootNavigator: true).pop();
       }
     } else {
       setState(() => _error = 'Team does not exist');
