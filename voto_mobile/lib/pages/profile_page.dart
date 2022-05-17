@@ -76,9 +76,9 @@ class _ProfilePageState extends State<ProfilePage> {
     /***
      * Delete initial image if a new image is set
      */
-    if (userImage != initialImage) {
-      await FirebaseStorage.instance.ref(initialImage).delete();
-    }
+    // if (userImage != initialImage) {
+    //   await FirebaseStorage.instance.ref(initialImage).delete();
+    // }
     isSaved = true;
   }
 
