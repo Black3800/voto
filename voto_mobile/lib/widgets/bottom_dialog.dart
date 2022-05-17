@@ -25,7 +25,7 @@ class _BottomDialogState extends State<BottomDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * widget.height,
+      height: MediaQuery.of(context).size.height * widget.height + MediaQuery.of(context).viewInsets.bottom,
       child: Column(children: [
         Padding(
           padding: const EdgeInsets.all(10.0),

@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
 
   void _showJoinTeamDialog() {
     showModalBottomSheet(
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
       context: context,

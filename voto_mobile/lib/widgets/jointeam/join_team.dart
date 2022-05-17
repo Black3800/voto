@@ -103,6 +103,7 @@ class _JoinTeamState extends State<JoinTeam> {
   Widget build(BuildContext context) {
     return BottomDialog(
       title: 'Join team',
+      height: 0.5,
       child: ListView(
         children: [
           Text("Enter team's join code or the link you received",
