@@ -166,6 +166,18 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
     });
   }
 
+  Future<void> _handleKick(String memberId) async {
+    _confirmAction(
+      title: 'Kick member?',
+      detail: 'This member could still join again if you do not change passcode',
+      actionText: 'Kick'
+    ).then((willKick) async {
+      if (!willKick) return;
+      await FirebaseDatabase.instance.ref('users/$memberId/joined_teams/$teamId').remove();
+      await FirebaseDatabase.instance.ref('teams/$teamId/members/$memberId').remove();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -270,6 +282,7 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
                                           kickable:
                                               members[index] != ownerId && (appState.currentUser!.uid ==
                                                   appState.currentTeam?.owner),
+                                          onKick: () => _handleKick(members[index])
                                         ),
                                     separatorBuilder: (context, index) => const Divider(
                                           height: 15.0,

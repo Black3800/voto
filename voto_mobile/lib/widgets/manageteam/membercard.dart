@@ -11,6 +11,7 @@ class Membercard extends StatefulWidget {
   final String? image;
   final bool isOwner;
   final bool kickable;
+  final Function()? onKick;
   /// If the [id] is not supplied, both [name] and [image] must be
   const Membercard(
       {Key? key,
@@ -18,7 +19,8 @@ class Membercard extends StatefulWidget {
       this.name,
       this.image,
       this.isOwner = false,
-      this.kickable = false})
+      this.kickable = false,
+      this.onKick})
       : super(key: key);
 
   @override
@@ -87,7 +89,7 @@ class _MembercardState extends State<Membercard> {
                   ),
                 ),
               ),
-              widget.kickable ? const KickButton() : Container()
+              if (widget.kickable) KickButton(onPressed: widget.onKick)
             ],
           );
         } else {
