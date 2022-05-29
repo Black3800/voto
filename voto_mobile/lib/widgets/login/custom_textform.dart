@@ -9,6 +9,9 @@ class CustomTextForm extends StatefulWidget {
   final IconData icon;
   final bool obscureText;
   final MaterialColor fillColor;
+  final TextInputAction textInputAction;
+  final Function(String)? onSubmitted;
+  final FocusNode? focusNode;
   final String? Function(String?)? validator;
   const CustomTextForm({
     Key? key,
@@ -18,6 +21,9 @@ class CustomTextForm extends StatefulWidget {
     this.icon = Icons.email_rounded,
     this.obscureText = false,
     this.fillColor = VotoColors.white,
+    this.textInputAction = TextInputAction.done,
+    this.onSubmitted,
+    this.focusNode,
     this.validator
   }) : super(key: key);
 
@@ -37,13 +43,16 @@ class _CustomTextFormState extends State<CustomTextForm> {
   Widget build(BuildContext context) {
     return TextFormField(
       maxLength: widget.maxLength,
-      buildCounter: (context, {required int currentLength, required int? maxLength, required bool isFocused}) => Container(),
+      buildCounter: (context, {required int currentLength, required int? maxLength, required bool isFocused}) => null,
       onChanged: ((value) {
         setState(() {});
       }),
+      onFieldSubmitted: widget.onSubmitted,
       controller: widget.controller,
+      focusNode: widget.focusNode,
       validator: widget.validator,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.zero,
         prefixIcon: Icon(
           widget.icon,
           color: VotoColors.primary,
@@ -78,6 +87,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
       ),
       cursorColor: VotoColors.primary,
       obscureText: widget.obscureText,
+      textInputAction: widget.textInputAction,
     );
   }
 }

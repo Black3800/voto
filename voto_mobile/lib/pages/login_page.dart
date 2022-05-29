@@ -20,6 +20,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _emailNode = FocusNode();
+  final FocusNode _passwordNode = FocusNode();
   bool isSubmitted = false;
 
   Future<void> handleLogin() async {
@@ -68,6 +70,8 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _emailNode.dispose();
+    _passwordNode.dispose();
     super.dispose();
   }
 
@@ -76,42 +80,45 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: VotoColors.primary,
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 42.5),
-          child: Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      'assets/logo.png',
-                      width: 250,
-                      height: 150,
-                    ),
-                    const SizedBox(height: 50.0),
-                    CustomTextForm(
-                      controller: _emailController,
-                      hintText: 'Email',
-                    ),
-                    const SizedBox(height: 25.0),
-                    CustomTextForm(
-                      controller: _passwordController,
-                      hintText: 'Password',
-                      maxLength: 100,
-                      icon: Icons.lock_rounded,
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 50.0),
-                    BigButton(
-                      text: 'Login',
-                      isLoading: isSubmitted,
-                      onPressed: handleLogin,
-                    ),
-                    const SizedBox(height: 25.0),
-                    const SignUpClick(),
-                  ],
-                ),
-            ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 42.5),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/logo.png',
+                    width: 250,
+                    height: 150,
+                  ),
+                  const SizedBox(height: 50.0),
+                  CustomTextForm(
+                    controller: _emailController,
+                    focusNode: _emailNode,
+                    hintText: 'Email',
+                    maxLength: 320,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (_) => FocusScope.of(context).requestFocus(_passwordNode)
+                  ),
+                  const SizedBox(height: 25.0),
+                  CustomTextForm(
+                    controller: _passwordController,
+                    focusNode: _passwordNode,
+                    hintText: 'Password',
+                    maxLength: 100,
+                    icon: Icons.lock_rounded,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 50.0),
+                  BigButton(
+                    text: 'Login',
+                    isLoading: isSubmitted,
+                    onPressed: handleLogin,
+                  ),
+                  const SizedBox(height: 25.0),
+                  const SignUpClick(),
+                ],
+              ),
           ),
         ),
       )

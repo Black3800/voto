@@ -7,8 +7,7 @@ import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/big_button.dart';
-import 'package:voto_mobile/widgets/login/custom_textform.dart';
-import 'package:voto_mobile/widgets/signup/header.dart';
+import 'package:voto_mobile/widgets/simple_text_input.dart';
 import 'package:voto_mobile/widgets/voto_snackbar.dart';
 
 class SignupPage extends StatefulWidget {
@@ -19,11 +18,15 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
+  final FocusNode _emailNode = FocusNode();
+  final FocusNode _nameNode = FocusNode();
+  final FocusNode _passwordNode = FocusNode();
+  final FocusNode _confirmNode = FocusNode();
 
   bool isSubmitted = false;
 
@@ -48,7 +51,7 @@ class _SignupPageState extends State<SignupPage> {
     if (value == null || value.isEmpty) {
       return 'Required';
     } else if (value.length < 6) {
-      return 'Password must be longer than 6 characters';
+      return 'At least 6 characters';
     }
     return null;
   }
@@ -118,20 +121,57 @@ class _SignupPageState extends State<SignupPage> {
         snackBar.icon = Icons.clear;
         snackBar.accentColor = VotoColors.danger;
       } finally {
-        isSubmitted = false;
-        setState(() {});
         snackBar.show(context);
       }
     }
+    isSubmitted = false;
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _nameController.dispose();
+    _passwordController.dispose();
+    _confirmController.dispose();
+    _emailNode.dispose();
+    _nameNode.dispose();
+    _passwordNode.dispose();
+    _confirmNode.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: VotoColors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        foregroundColor: VotoColors.indigo,
+        leading: IconButton(
+          iconSize: 24,
+          icon: const Icon(
+            Icons.chevron_left,
+            color: VotoColors.primary,
+            size: 24,
+          ),
+          splashRadius: 24,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text(
+            'Sign up',
+            style: GoogleFonts.inter(
+                fontSize: 20,
+                color: VotoColors.primary,
+                fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          )
+      ),
       body: Column(
         children: [
-          const Header(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 42.5),
@@ -150,37 +190,62 @@ class _SignupPageState extends State<SignupPage> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          CustomTextForm(
+                          SimpleTextInput(
                             controller: _emailController,
                             validator: _validateEmail,
+                            focusNode: _emailNode,
+                            max: 320,
+                            icon: Icons.email_rounded,
+                            accentColor: VotoColors.indigo,
                             hintText: 'Email',
-                            fillColor: VotoColors.gray,
+                            hintColor: VotoColors.black.shade500,
+                            hideCounter: true,
+                            borderRadius: 18,
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_nameNode)
                           ),
-                          CustomTextForm(
+                          SimpleTextInput(
                             controller: _nameController,
                             validator: _validateName,
-                            maxLength: 30,
-                            hintText: 'Display name',
+                            focusNode: _nameNode,
+                            max: 30,
                             icon: Icons.account_circle_rounded,
-                            fillColor: VotoColors.gray,
+                            accentColor: VotoColors.indigo,
+                            hintText: 'Display name',
+                            hintColor: VotoColors.black.shade500,
+                            hideCounter: true,
+                            borderRadius: 18,
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_passwordNode)
                           ),
-                          CustomTextForm(
+                          SimpleTextInput(
                             controller: _passwordController,
                             validator: _validatePassword,
-                            maxLength: 100,
-                            hintText: 'Password',
+                            focusNode: _passwordNode,
+                            max: 100,
                             icon: Icons.lock_rounded,
-                            fillColor: VotoColors.gray,
+                            accentColor: VotoColors.indigo,
+                            hintText: 'Password',
+                            hintColor: VotoColors.black.shade500,
+                            hideCounter: true,
                             obscureText: true,
+                            borderRadius: 18,
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_confirmNode)
                           ),
-                          CustomTextForm(
+                          SimpleTextInput(
                             controller: _confirmController,
                             validator: _validateConfirm,
-                            maxLength: 100,
-                            hintText: 'Confirm password',
+                            focusNode: _confirmNode,
+                            max: 100,
                             icon: Icons.lock_rounded,
-                            fillColor: VotoColors.gray,
+                            accentColor: VotoColors.indigo,
+                            hintText: 'Confirm password',
+                            hintColor: VotoColors.black.shade500,
+                            hideCounter: true,
                             obscureText: true,
+                            borderRadius: 18,
+                            textInputAction: TextInputAction.done
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 36.0),

@@ -23,7 +23,7 @@ class BigButton extends StatelessWidget {
         primary: VotoColors.magenta,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-        minimumSize: const Size.fromHeight(55.0),
+        minimumSize: const Size.fromHeight(45.0),
       ),
       child: isLoading
           ? const SizedBox(

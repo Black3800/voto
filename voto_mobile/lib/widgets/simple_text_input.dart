@@ -6,6 +6,8 @@ import 'package:voto_mobile/utils/color.dart';
 class SimpleTextInput extends StatefulWidget {
   final String? initialValue;
   final MaterialColor accentColor;
+  final Color hintColor;
+  final double borderRadius;
   final IconData? icon;
   final String hintText;
   final String? errorText;
@@ -13,9 +15,14 @@ class SimpleTextInput extends StatefulWidget {
   final bool clearable;
   final bool autofocus;
   final bool readOnly;
+  final bool obscureText;
+  final bool hideCounter;
+  final TextInputAction? textInputAction;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final void Function()? onTap;
   final void Function()? onEditingComplete;
@@ -27,14 +34,21 @@ class SimpleTextInput extends StatefulWidget {
       this.initialValue,
       this.accentColor = VotoColors.black,
       this.icon,
+      this.borderRadius = 12,
       this.hintText = 'Aa',
+      this.hintColor = const Color(0xffc4c4c4),
       this.multiline = false,
       this.clearable = true,
       this.autofocus = false,
       this.readOnly = false,
+      this.obscureText  = false,
+      this.hideCounter = false,
+      this.textInputAction,
       this.keyboardType,
       this.inputFormatters,
       this.controller,
+      this.focusNode,
+      this.validator,
       this.errorText,
       this.onChanged,
       this.onTap,
@@ -68,14 +82,17 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller ?? _controller,
+      validator: widget.validator,
+      focusNode: widget.focusNode,
       maxLength: widget.max,
       autofocus: widget.autofocus,
       initialValue: widget.initialValue,
+      textInputAction: widget.textInputAction,
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,
       minLines: widget.multiline ? 4 : 1,
       maxLines: widget.multiline ? null : 1,
-      buildCounter: widget.readOnly
+      buildCounter: widget.readOnly || widget.hideCounter
           ? (context,
                   {required int currentLength,
                   required bool isFocused,
@@ -96,6 +113,7 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
       onFieldSubmitted: widget.onFieldSubmitted,
       onSaved: widget.onSaved,
       readOnly: widget.readOnly,
+      obscureText: widget.obscureText,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: const EdgeInsets.all(16.0),
@@ -107,14 +125,14 @@ class _SimpleTextInputState extends State<SimpleTextInput> {
                     : widget.accentColor,
               )
             : null,
-        border: const OutlineInputBorder(
+        border: OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.all(
-            Radius.circular(12),
+            Radius.circular(widget.borderRadius),
           ),
         ),
         hintText: widget.hintText,
-        hintStyle: GoogleFonts.inter(color: const Color(0xffc4c4c4)),
+        hintStyle: GoogleFonts.inter(color: widget.readOnly ? widget.hintColor.withOpacity(0.33) : widget.hintColor),
         errorText: widget.errorText,
         fillColor: widget.readOnly ? VotoColors.black.shade50 : VotoColors.gray,
         filled: true,
