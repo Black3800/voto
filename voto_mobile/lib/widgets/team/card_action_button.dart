@@ -12,6 +12,7 @@ class CardActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 30,
       decoration: const BoxDecoration(
         boxShadow: <BoxShadow>[
           BoxShadow(

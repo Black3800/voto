@@ -26,8 +26,9 @@ class WideButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 35,
       decoration: BoxDecoration(
-        boxShadow: isElevated ? const <BoxShadow>[
+        boxShadow: isElevated && !isLoading && !disabled ? const <BoxShadow>[
           BoxShadow(
             color: Color.fromRGBO(0, 0, 0, 0.1),
             blurRadius: 4.0,
