@@ -185,7 +185,9 @@ class _RandomPageState extends State<RandomPage> {
           final result = await _buildResultWidget();
           screenshotController.captureFromWidget(
             result,
-            delay: Duration(milliseconds: 1000 + _choices.length * 10),
+            delay: Provider.of<PersistentState>(context, listen: false).currentItem!.randomType == 'lucky'
+                    ? Duration(milliseconds: 1000 + _choices.length * 10)
+                    : Duration(milliseconds: 3000 + _choices.length * 100),
             context: context
           ).then((Uint8List? image) async {
             if (image == null) return;
@@ -197,7 +199,9 @@ class _RandomPageState extends State<RandomPage> {
           final result = await _buildResultWidget();
           screenshotController.captureFromWidget(
             result,
-            delay: Duration(milliseconds: 3000 + _choices.length * 100),
+            delay: Provider.of<PersistentState>(context, listen: false).currentItem!.randomType == 'lucky'
+                    ? Duration(milliseconds: 1000 + _choices.length * 10)
+                    : Duration(milliseconds: 3000 + _choices.length * 100),
             context: context
           ).then((Uint8List? image) async {
             if (image == null) return;
