@@ -274,22 +274,29 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
                                   if (data == null) return Container();
                                   final members = data.keys.toList();
                                   members.insert(0, members.removeAt(members.indexOf(ownerId)));
-                                  return ListView.separated(
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) => Membercard(
-                                          id: members[index],
-                                          isOwner: members[index] == ownerId,
-                                          kickable:
-                                              members[index] != ownerId && (appState.currentUser!.uid ==
-                                                  appState.currentTeam?.owner),
-                                          onKick: () => _handleKick(members[index])
-                                        ),
-                                    separatorBuilder: (context, index) => const Divider(
-                                          height: 15.0,
-                                          color: VotoColors.gray,
-                                          thickness: 1.0,
-                                        ),
-                                    itemCount: members.length);
+                                  return Column(
+                                    children: members
+                                            .map((m) => [
+                                                  Membercard(
+                                                      id: m,
+                                                      isOwner: m == ownerId,
+                                                      kickable: m != ownerId &&
+                                                          (appState.currentUser!
+                                                                  .uid ==
+                                                              appState
+                                                                  .currentTeam
+                                                                  ?.owner),
+                                                      onKick: () =>
+                                                          _handleKick(m)),
+                                                  const Divider(
+                                                    height: 15.0,
+                                                    color: VotoColors.gray,
+                                                    thickness: 1.0,
+                                                  )
+                                                ])
+                                            .expand((i) => i)
+                                            .toList()
+                                  );
                                 }
                                 return Container();
                               }
