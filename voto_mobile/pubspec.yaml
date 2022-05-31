@@ -51,6 +51,7 @@ dependencies:
   image_gallery_saver: ^1.7.1
   path_provider: ^2.0.10
   share_plus: ^4.0.4
+  flutter_launcher_icons: ^0.9.2
 
 dev_dependencies:
   flutter_test:
@@ -112,3 +113,8 @@ flutter_native_splash:
 
   color: "#440381"
   image: "assets/logo.png"
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
