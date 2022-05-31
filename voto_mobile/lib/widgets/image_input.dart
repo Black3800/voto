@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
@@ -46,7 +47,8 @@ class _ImageInputState extends State<ImageInput> {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      Uint8List fileBytes = result.files.first.bytes ?? Uint8List(0);
+      File file = File(result.files.single.path!);
+      Uint8List fileBytes = await file.readAsBytes();
       if (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.android) {
         fileBytes = await FlutterImageCompress.compressWithList(
@@ -60,11 +62,11 @@ class _ImageInputState extends State<ImageInput> {
         String fileName = uuid.v1();
         String path = 'gs://cs21-voto.appspot.com/uploads/$fileName';
         try {
-          await FirebaseStorage.instance.ref(path).getDownloadURL();
+          await FirebaseStorage.instance.refFromURL(path).getDownloadURL();
           debugPrint('duplicate filename exists, getting a new name...');
         } on FirebaseException catch (e) {
           if (e.code == 'object-not-found') {
-            await FirebaseStorage.instance.ref(path).putData(fileBytes);
+            await FirebaseStorage.instance.refFromURL(path).putData(fileBytes);
             widget.onChanged?.call(path);
             break;
           }
@@ -79,7 +81,7 @@ class _ImageInputState extends State<ImageInput> {
      */
     if (widget.readOnly || previousImage == widget.notDeleteable) return;
     if (previousImage != null && previousImage.split('/')[3] != 'dummy') {
-      FirebaseStorage.instance.ref(previousImage).delete();
+      FirebaseStorage.instance.refFromURL(previousImage).delete();
     }
   }
 
