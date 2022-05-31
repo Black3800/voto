@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Future<bool> _updateProfile() async {
+  Future<void> _updateProfile() async {
     FocusScope.of(context).unfocus();
     final String userDisplayName = _nameController.text;
     if (userDisplayName.isEmpty) {
@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
         icon: Icons.clear,
         accentColor: VotoColors.danger
       ).show(context);
-      return false;
+      return;
     }
     /***
      * Update in Realtime DB
@@ -80,7 +80,6 @@ class _ProfilePageState extends State<ProfilePage> {
     //   await FirebaseStorage.instance.ref(initialImage).delete();
     // }
     isSaved = true;
-    return true;
   }
 
   Future<bool> _handlePop() async {
@@ -173,11 +172,9 @@ class _ProfilePageState extends State<ProfilePage> {
           ConfirmButton(
               confirmText: 'Save',
               onConfirm: () async {
-                final success = await _updateProfile();
-                if (success) {
-                  await _handlePop();
-                  Navigator.of(context).pop();
-                }
+                await _updateProfile();
+                await _handlePop();
+                Navigator.of(context).pop();
               },
               onCancel: () async {
                 await _handlePop();
