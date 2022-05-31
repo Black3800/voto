@@ -40,6 +40,10 @@ class _RandomPageState extends State<RandomPage> {
       final data = snapshot.value as Map;
       final choices = data.keys.toList();
       if (type == 'lucky') {
+        if (choices.length < 2) {
+          _showWarningToast('Need at least 2 options');
+          return;
+        }
         choices.shuffle();
         await _optionsRef.child('choices/${choices.first}').update({'win': true});
         await _optionsRef.child('winner').update({choices.first: true});
@@ -127,6 +131,35 @@ class _RandomPageState extends State<RandomPage> {
     );
   }
 
+  void _showWarningToast(String text) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: VotoColors.black.shade600,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.warning_rounded, color: VotoColors.warning),
+          const SizedBox(width: 6.0),
+          Flexible(
+              child: Text(
+            text,
+            style: GoogleFonts.inter(color: VotoColors.white),
+            textAlign: TextAlign.center,
+          )),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: const Duration(seconds: 2),
+    );
+  }
+
   Future<bool> _handlePop() async {
     Provider.of<PersistentState>(context, listen: false).disposeItem();
     return Future.value(true);
@@ -176,6 +209,46 @@ class _RandomPageState extends State<RandomPage> {
 
     return Consumer<PersistentState>(builder: (context, appState, child) {
       _isClosed = appState.currentItem!.closed ?? false;
+      final _item = appState.currentItem!;
+
+      Widget grayBanner(title, subtitle) => Expanded(
+        child: Padding(
+            padding: const EdgeInsets.only(top: 20.0, left: 42.5, right: 42.5),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                '${_item.title}',
+                style:
+                    GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 15.0),
+              Text(
+                '${_item.description}',
+                style: GoogleFonts.inter(
+                    fontSize: 14, fontWeight: FontWeight.normal),
+                textAlign: TextAlign.start,
+              ),
+              const SizedBox(height: 15.0),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    color: VotoColors.gray,
+                    borderRadius: BorderRadius.circular(15)),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('$title',
+                          style: GoogleFonts.inter(
+                              fontSize: 18, color: VotoColors.black.shade300)),
+                      Text('$subtitle',
+                          style:
+                              GoogleFonts.inter(color: VotoColors.black.shade300))
+                    ]),
+              )
+            ])),
+      );
+
       return VotoScaffold(
         title: "Random",
         titleContext: appState.currentTeam?.name,
@@ -194,52 +267,7 @@ class _RandomPageState extends State<RandomPage> {
                 } else if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
                   final data = snapshot.data!.snapshot.value as Map?;
                   if (data == null) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        left: 42.5,
-                        right: 42.5
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${appState.currentItem!.title}',
-                            style: GoogleFonts.inter(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 15.0),
-                          Text(
-                            '${appState.currentItem!.description}',
-                            style: GoogleFonts.inter(
-                                fontSize: 14, fontWeight: FontWeight.normal),
-                            textAlign: TextAlign.start,
-                          ),
-                          const SizedBox(height: 15.0),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                                color: VotoColors.gray,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                children: [
-                                  Text('Empty',
-                                      style: GoogleFonts.inter(
-                                          fontSize: 18,
-                                          color:
-                                              VotoColors.black.shade300)),
-                                  Text('Add some options',
-                                      style: GoogleFonts.inter(
-                                          color:
-                                              VotoColors.black.shade300))
-                                ]),
-                          )
-                        ]
-                      )
-                    );
+                    return grayBanner('Empty', 'Add some options');
                   }
                   List<Choice> choices = [];
                   for (final choice in data['choices'].entries) {
@@ -248,6 +276,11 @@ class _RandomPageState extends State<RandomPage> {
                     choices.add(_choice);
                   }
                   _choices = choices;
+                  if (_item.randomType == 'lucky' && _choices.length < 2) {
+                    return grayBanner('Waiting', 'Add at least 2 options');
+                  } else if (_item.randomType == 'pair' && appState.currentTeam!.members.length < 2) {
+                    return grayBanner('Waiting', 'Need at least 2 members in team');
+                  }
                   return Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -289,6 +322,7 @@ class _RandomPageState extends State<RandomPage> {
                 StartButton(
                   onPressed: () => _stopRandom(appState.currentItem!.id!,
                       appState.currentItem!.randomType!),
+                  disabled: _item.randomType == 'pair' && appState.currentTeam!.members.length < 2,
                 )
               else
                 Padding(

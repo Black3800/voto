@@ -3,7 +3,12 @@ import 'package:voto_mobile/widgets/wide_button.dart';
 
 class StartButton extends StatelessWidget {
   final Function()? onPressed;
-  const StartButton({Key? key, required this.onPressed}) : super(key: key);
+  final bool disabled;
+  const StartButton({
+    Key? key,
+    required this.onPressed,
+    this.disabled = false
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +20,7 @@ class StartButton extends StatelessWidget {
       child: WideButton(
         text: 'Stop',
         onPressed: onPressed,
+        disabled: disabled
       ),
     );
   }
