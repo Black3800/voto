@@ -47,7 +47,6 @@ class _RandomItemState extends State<RandomItem> {
           )
         );
       }
-      print(_members.map((e) => e.text));
       return _members;
     }
     return [];
@@ -68,6 +67,8 @@ class _RandomItemState extends State<RandomItem> {
     super.didUpdateWidget(oldWidget);
     if (widget.singleChoice == null) {
       _choices = Future.value(widget.choices);
+    } else if (widget.singleChoice != oldWidget.singleChoice) {
+      _choices = _getMemberNames();
     }
   }
   
