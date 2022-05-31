@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
 class Passcode extends StatefulWidget {
-  String passNumber;
-  bool isEditing;
-  Passcode({Key? key, required this.passNumber, this.isEditing = false})
+  final String passNumber;
+  final bool isEditing;
+  const Passcode({Key? key, required this.passNumber, this.isEditing = false})
       : super(key: key);
 
   @override

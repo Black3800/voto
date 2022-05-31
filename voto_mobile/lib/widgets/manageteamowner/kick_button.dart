@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:voto_mobile/utils/color.dart';
+import 'package:flutter/material.dart' hide OutlineButton;
 
-import '../manageteam/outlinebutton.dart';
+import '../manageteam/outline_button.dart';
 
 class KickButton extends StatelessWidget {
   final Function()? onPressed;
@@ -9,7 +8,7 @@ class KickButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Outline_button(
+    return OutlineButton(
         text: "Kick",
         width: 40.0,
         height: 25.0,

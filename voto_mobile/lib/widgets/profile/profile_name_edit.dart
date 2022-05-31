@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
-import 'package:voto_mobile/widgets/profile/profile_custom_email_textfield.dart';
-import 'package:voto_mobile/widgets/profile/profile_custom_textfield.dart';
 import 'package:voto_mobile/widgets/simple_text_input.dart';
 
 class ProfileDisplayNameEditing extends StatelessWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:voto_mobile/model/choice.dart';
 import 'package:voto_mobile/model/items.dart';
 import 'package:voto_mobile/model/team.dart';
 import 'package:voto_mobile/model/users.dart';

@@ -5,10 +5,10 @@ import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/widgets/manageteam/passcodefiled.dart';
 
 class Pass extends StatefulWidget {
-  bool isEditing;
-  Function(String)? onChanged;
-  String? value;
-  Pass({
+  final bool isEditing;
+  final Function(String)? onChanged;
+  final String? value;
+  const Pass({
     required this.isEditing,
     this.onChanged,
     this.value = '    ',

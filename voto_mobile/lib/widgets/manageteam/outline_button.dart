@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voto_mobile/utils/color.dart';
 
-class Outline_button extends StatelessWidget {
+class OutlineButton extends StatelessWidget {
   final String text;
   final double? width;
   final double? height;
   final double fontSize;
   final double padding;
   final Function()? onPressed;
-  const Outline_button(
+  const OutlineButton(
       {Key? key,
       required this.text,
       this.width,

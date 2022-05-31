@@ -95,7 +95,6 @@ class _ImageInputState extends State<ImageInput> {
   void didUpdateWidget(covariant ImageInput oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.image.isNotEmpty && widget.image != oldWidget.image) {
-      print('delete ${oldWidget.image} for ${widget.image}');
       _deletePreviousImage(oldWidget.image);
     }
     imageURL = _getImageURL();

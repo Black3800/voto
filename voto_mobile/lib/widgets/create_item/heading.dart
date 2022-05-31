@@ -7,10 +7,9 @@ class Heading extends StatelessWidget {
   const Heading(this.text, {Key? key, this.context}) : super(key: key);
 
   @override
-  Widget build(BuildContext _context) {
-    print('${Theme.of(context ?? _context).textTheme.headline3?.fontSize}');
+  Widget build(BuildContext context) {
     return Text(text,
-        style: Theme.of(context ?? _context)
+        style: Theme.of(this.context ?? context)
             .textTheme
             .headline3
             ?.merge(const TextStyle(color: VotoColors.black)));

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +8,6 @@ import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/confirm_button.dart';
 import 'package:voto_mobile/widgets/image_input.dart';
-import 'package:voto_mobile/widgets/profile/profile_display_name.dart';
 import 'package:voto_mobile/widgets/profile/profile_name_edit.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
 import 'package:voto_mobile/widgets/voto_snackbar.dart';
@@ -139,7 +137,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   } else if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
                     final data = snapshot.data?.snapshot.value as Map;
                     final user = Users.fromJson(data);
-                    print(user.img);
                     return Column(
                       children: [
                         Padding(

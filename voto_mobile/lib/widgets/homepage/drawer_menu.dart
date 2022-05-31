@@ -1,12 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
-import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
-import 'package:voto_mobile/utils/random_image.dart';
 import 'package:voto_mobile/widgets/homepage/logout_card.dart';
 import 'package:voto_mobile/widgets/homepage/profile_card.dart';
 

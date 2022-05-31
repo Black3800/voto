@@ -7,16 +7,16 @@ import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
 
-class Purple_button extends StatefulWidget {
-  const Purple_button({
+class PurpleButton extends StatefulWidget {
+  const PurpleButton({
     Key? key
   }) : super(key: key);
 
   @override
-  State<Purple_button> createState() => _Purple_buttonState();
+  State<PurpleButton> createState() => _PurpleButtonState();
 }
 
-class _Purple_buttonState extends State<Purple_button> {
+class _PurpleButtonState extends State<PurpleButton> {
 
   Timer? _copyTimer;
   String _copyText = 'Copy to clipboard';

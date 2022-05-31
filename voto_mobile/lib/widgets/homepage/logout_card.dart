@@ -41,12 +41,12 @@ class LogoutCard extends StatelessWidget {
                   children: [
                     Row(
                       children:  [
-                        Icon(
+                        const Icon(
                           Icons.logout,
                           color: VotoColors.indigo,
                           size: 32.0,
                         ),
-                        SizedBox(width: 15.0),
+                        const SizedBox(width: 15.0),
                         Text(
                           'Logout',
                           style: GoogleFonts.inter(

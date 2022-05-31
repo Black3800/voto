@@ -187,12 +187,6 @@ class _PollPageState extends State<PollPage> {
        * Compute required booleans
        */
 
-      bool isConfirmDisabled = false;
-      if(appState.currentItem?.pollSettings!.multipleVote ?? false) {
-        isConfirmDisabled = !_checkbox.values.contains(true);
-      } else {
-        isConfirmDisabled = _radioValue.isEmpty;
-      }
       bool isOwner = appState.currentUser!.uid == appState.currentTeam!.owner;
 
       return VotoScaffold(

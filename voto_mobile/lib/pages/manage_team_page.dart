@@ -1,18 +1,17 @@
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart' hide OutlineButton;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/model/team.dart';
 import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/widgets/create_item/heading.dart';
 import 'package:voto_mobile/widgets/manageteam/filed.dart';
 import 'package:voto_mobile/widgets/manageteam/membercard.dart';
-import 'package:voto_mobile/widgets/manageteam/outlinebutton.dart';
+import 'package:voto_mobile/widgets/manageteam/outline_button.dart';
 import 'package:voto_mobile/widgets/manageteam/passcode.dart';
-import 'package:voto_mobile/widgets/manageteam/topic.dart';
 import 'package:voto_mobile/widgets/purple_button.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
 
@@ -219,7 +218,7 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            Topic("Team name"),
+                            const Heading("Team name"),
                             const SizedBox(height: 15.0),
                             Row(
                               children: [
@@ -231,7 +230,7 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
                               ],
                             ),
                             const SizedBox(height: 15.0),
-                            Topic("Join Code"),
+                            const Heading("Join Code"),
                             const SizedBox(height: 15.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -245,11 +244,11 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
                                   ),
                                   child: Center(child: Text('${appState.currentTeam?.id}'))
                                 ),
-                                const Purple_button()
+                                const PurpleButton()
                               ],
                             ),
                             const SizedBox(height: 15.0),
-                            Topic("Passcode"),
+                            const Heading("Passcode"),
                             const SizedBox(height: 15.0),
                             Pass(
                               isEditing: !(appState.currentUser!.uid == appState.currentTeam?.owner),
@@ -257,7 +256,7 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
                               onChanged: _handleChangePasscode,
                             ),
                             const SizedBox(height: 15.0),
-                            Topic("Member"),
+                            const Heading("Member"),
                             const SizedBox(height: 15.0),
                             StreamBuilder(
                               stream: _membersRef.onValue,
@@ -307,7 +306,7 @@ class _ManageTeamPageState extends State<ManageTeamPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: Outline_button(
+                      child: OutlineButton(
                           text: (appState.currentUser!.uid ==
                                   appState.currentTeam?.owner)
                               ? "Delete team"

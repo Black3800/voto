@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:voto_mobile/model/choice.dart';
 import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
 import 'package:voto_mobile/widgets/bottom_dialog.dart';
