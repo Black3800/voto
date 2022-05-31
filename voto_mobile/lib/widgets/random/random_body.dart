@@ -8,11 +8,15 @@ class RandomBody extends StatefulWidget {
   final String type;
   final List<Choice> choices;
   final bool isClosed;
+  final bool renderAsResult;
+  final BuildContext? context;
   const RandomBody({
     Key? key,
     required this.type,
     required this.choices,
-    this.isClosed = false
+    this.isClosed = false,
+    this.renderAsResult = false,
+    this.context
   }) : super(key: key);
 
   @override
@@ -25,7 +29,7 @@ class _RandomBodyState extends State<RandomBody> {
 
   @override
   Widget build(BuildContext context) {
-    final bool showButton = widget.isClosed && !_skipAnimation && !_animationEnded;
+    final bool showButton = widget.isClosed && !widget.renderAsResult && !_skipAnimation && !_animationEnded;
     if (widget.type == 'lucky') {
       return Column(
         children: [
@@ -36,7 +40,9 @@ class _RandomBodyState extends State<RandomBody> {
               WidgetsBinding.instance?.addPostFrameCallback((_) {
                  setState(() => _animationEnded = true);
               });
-            }
+            },
+            renderAsResult: widget.renderAsResult,
+            context: widget.context
           ),
           const SizedBox(height: 15),
           if (showButton)
@@ -52,9 +58,9 @@ class _RandomBodyState extends State<RandomBody> {
       );
     } else {
       return Expanded(
-          child: ListView.separated(
-            itemBuilder: (context, index) => index == 0
-            ? showButton
+        child: ListView.separated(
+          itemBuilder: (context, index) => index == 0
+              ? showButton
                 ? RichButton(
                     text: 'Skip animation',
                     icon: Icons.skip_next,
@@ -64,19 +70,21 @@ class _RandomBodyState extends State<RandomBody> {
                     },
                     width: 200)
                 : Container()
-            : RandomItem(
-                singleChoice: widget.choices[index - 1],
-                choices: widget.choices,
-                skipAnimation: _skipAnimation,
-                onAnimationEnded: () {
-                  WidgetsBinding.instance?.addPostFrameCallback((_) {
-                    setState(() => _animationEnded = true);
-                  });
-                }
-              ),
-            separatorBuilder: (context, index) => const SizedBox(height: 15),
-            itemCount: widget.choices.length + 1,
-          ));
+              : RandomItem(
+                  singleChoice: widget.choices[index - 1],
+                  choices: widget.choices,
+                  skipAnimation: _skipAnimation,
+                  onAnimationEnded: () {
+                    WidgetsBinding.instance?.addPostFrameCallback((_) {
+                      setState(() => _animationEnded = true);
+                    });
+                  },
+                  renderAsResult: widget.renderAsResult,
+                  context: widget.context),
+          separatorBuilder: (context, index) => const SizedBox(height: 15),
+          itemCount: widget.choices.length + 1,
+        )
+      );
     }
   }
 }

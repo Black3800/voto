@@ -1,12 +1,18 @@
+import 'dart:typed_data';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:voto_mobile/model/choice.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/utils/image_share.dart';
 import 'package:voto_mobile/widgets/random/random_body.dart';
 import 'package:voto_mobile/widgets/random/start_button.dart';
+import 'package:voto_mobile/widgets/share_button.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
 
 class RandomPage extends StatefulWidget {
@@ -20,7 +26,13 @@ class _RandomPageState extends State<RandomPage> {
 
   String? itemId;
   String? teamId;
+  bool isSharing = false;
+  bool isSaving = false;
+  late FToast fToast;
   late DatabaseReference _optionsRef;
+  late List<Choice> _choices;
+  late bool _isClosed;
+  final ScreenshotController screenshotController = ScreenshotController();
 
   Future<void> _stopRandom(String itemId, String type) async {
     final snapshot = await _optionsRef.child('choices').get();
@@ -56,6 +68,65 @@ class _RandomPageState extends State<RandomPage> {
     }
   }
 
+  Future<Widget> _buildResultWidget() async {
+    final _item = Provider.of<PersistentState>(context, listen: false).currentItem!;
+    return Material(
+            color: VotoColors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '${_item.title}',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: VotoColors.black
+                    ),
+                  ),
+                  RandomBody(
+                    type: _item.randomType!,
+                    choices: _choices,
+                    renderAsResult: true,
+                    context: context
+                  ),
+                ]
+              ),
+            ),
+          );
+  }
+
+  void _showSuccessToast(String text) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: VotoColors.black.shade600,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.check, color: VotoColors.success),
+          const SizedBox(width: 6.0),
+          Flexible(
+              child: Text(
+            text,
+            style: GoogleFonts.inter(color: VotoColors.white),
+            textAlign: TextAlign.center,
+          )),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: const Duration(seconds: 2),
+    );
+  }
+
   Future<bool> _handlePop() async {
     Provider.of<PersistentState>(context, listen: false).disposeItem();
     return Future.value(true);
@@ -67,85 +138,117 @@ class _RandomPageState extends State<RandomPage> {
     itemId = Provider.of<PersistentState>(context, listen: false).currentItem!.id;
     teamId = Provider.of<PersistentState>(context, listen: false).currentTeam!.id;
     _optionsRef = FirebaseDatabase.instance.ref('options/$itemId');
+    fToast = FToast();
+    fToast.init(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PersistentState>(builder: (context, appState, child) => 
-      VotoScaffold(
+    final _shareButton = ShareButton(
+        shareText: 'Share',
+        saveText: 'Save as image',
+        useToggle: true,
+        onShare: () async {
+          final result = await _buildResultWidget();
+          screenshotController.captureFromWidget(
+            result,
+            delay: Duration(milliseconds: 1000 + _choices.length * 10),
+            context: context
+          ).then((Uint8List? image) async {
+            if (image == null) return;
+            await ImageShare.shareImage(image);
+            Navigator.of(context).pop();
+          });
+        },
+        onSave: () async {
+          final result = await _buildResultWidget();
+          screenshotController.captureFromWidget(
+            result,
+            delay: Duration(milliseconds: 3000 + _choices.length * 100),
+            context: context
+          ).then((Uint8List? image) async {
+            if (image == null) return;
+            await ImageShare.saveImage(image);
+            _showSuccessToast('Result saved to gallery');
+            Navigator.of(context).pop();
+          });
+        });
+
+    return Consumer<PersistentState>(builder: (context, appState, child) {
+      _isClosed = appState.currentItem!.closed ?? false;
+      return VotoScaffold(
         title: "Random",
         titleContext: appState.currentTeam?.name,
         useMenu: false,
         onWillPop: _handlePop,
-        body: StreamBuilder(
-          stream: _optionsRef.onValue,
-          builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: SizedBox(
-                    width: 32, height: 32, child: CircularProgressIndicator()),
-              );
-            } else if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
-              final data = snapshot.data!.snapshot.value as Map?;
-              if (data == null) {
-                return Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 42.5,
-                    right: 42.5
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${appState.currentItem!.title}',
-                        style: GoogleFonts.inter(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+        body: Column(
+          children: [
+            StreamBuilder(
+              stream: _optionsRef.onValue,
+              builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: SizedBox(
+                        width: 32, height: 32, child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
+                  final data = snapshot.data!.snapshot.value as Map?;
+                  if (data == null) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20.0,
+                        left: 42.5,
+                        right: 42.5
                       ),
-                      const SizedBox(height: 15.0),
-                      Text(
-                        '${appState.currentItem!.description}',
-                        style: GoogleFonts.inter(
-                            fontSize: 14, fontWeight: FontWeight.normal),
-                        textAlign: TextAlign.start,
-                      ),
-                      const SizedBox(height: 15.0),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            color: VotoColors.gray,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Column(
-                            mainAxisAlignment:
-                                MainAxisAlignment.center,
-                            children: [
-                              Text('Empty',
-                                  style: GoogleFonts.inter(
-                                      fontSize: 18,
-                                      color:
-                                          VotoColors.black.shade300)),
-                              Text('Add some options',
-                                  style: GoogleFonts.inter(
-                                      color:
-                                          VotoColors.black.shade300))
-                            ]),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${appState.currentItem!.title}',
+                            style: GoogleFonts.inter(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 15.0),
+                          Text(
+                            '${appState.currentItem!.description}',
+                            style: GoogleFonts.inter(
+                                fontSize: 14, fontWeight: FontWeight.normal),
+                            textAlign: TextAlign.start,
+                          ),
+                          const SizedBox(height: 15.0),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                                color: VotoColors.gray,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                children: [
+                                  Text('Empty',
+                                      style: GoogleFonts.inter(
+                                          fontSize: 18,
+                                          color:
+                                              VotoColors.black.shade300)),
+                                  Text('Add some options',
+                                      style: GoogleFonts.inter(
+                                          color:
+                                              VotoColors.black.shade300))
+                                ]),
+                          )
+                        ]
                       )
-                    ]
-                  )
-                );
-              }
-              bool isClosed = data['winner'] != null;
-              List<Choice> choices = [];
-              for (final choice in data['choices'].entries) {
-                final _choice = Choice.fromJson(choice.value);
-                _choice.id = choice.key;
-                choices.add(_choice);
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
+                    );
+                  }
+                  List<Choice> choices = [];
+                  for (final choice in data['choices'].entries) {
+                    final _choice = Choice.fromJson(choice.value);
+                    _choice.id = choice.key;
+                    choices.add(_choice);
+                  }
+                  _choices = choices;
+                  return Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(
                         top: 20.0,
@@ -171,45 +274,47 @@ class _RandomPageState extends State<RandomPage> {
                           RandomBody(
                             type: appState.currentItem!.randomType!,
                             choices: choices,
-                            isClosed: isClosed
+                            isClosed: _isClosed
                           ),
                         ]
                       ),
-                    )
-                  ),
-                  if (!isClosed && appState.currentUser!.uid == appState.currentTeam!.owner)
-                    StartButton(
-                      onPressed: () => _stopRandom(appState.currentItem!.id!, appState.currentItem!.randomType!),
-                    )
-                  else
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 32.5,
-                        horizontal: 42.5
-                      ),
-                      child: Row(
-                          children: [
-                            const Icon(Icons.info, color: Color(0xffaaaaaa)),
-                            const SizedBox(width: 10.0),
-                            Expanded(
-                              child: Text(
-                                  'Wait for the team owner to stop the random',
-                                  textAlign: TextAlign.left,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      ?.apply(color: const Color(0xffaaaaaa))),
-                            )
-                          ],
-                        ),
                     ),
-                ],
-              );
-            }
-            return Container();
-          }
+                  );
+                }
+                return Container();
+              }
+            ),
+            if (!_isClosed)
+              if (appState.currentUser!.uid == appState.currentTeam!.owner)
+                StartButton(
+                  onPressed: () => _stopRandom(appState.currentItem!.id!,
+                      appState.currentItem!.randomType!),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 32.5, horizontal: 42.5),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.info, color: Color(0xffaaaaaa)),
+                      const SizedBox(width: 10.0),
+                      Expanded(
+                        child: Text(
+                            'Wait for the team owner to stop the random',
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                ?.apply(color: const Color(0xffaaaaaa))),
+                      )
+                    ],
+                  ),
+                )
+            else
+              _shareButton
+          ],
         ),
-      ),
-    );
+      );
+    });
   }
 }

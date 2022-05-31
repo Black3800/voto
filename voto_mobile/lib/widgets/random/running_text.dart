@@ -10,13 +10,17 @@ class RunningText extends StatefulWidget {
   final List<Choice> choices;
   final Choice? result;
   final bool? skipAnimation;
+  final bool renderAsResult;
   final Function()? onAnimationEnded;
+  final BuildContext? context;
   const RunningText({
     Key? key,
     required this.choices,
     this.result,
     this.skipAnimation = false,
-    this.onAnimationEnded
+    this.renderAsResult = false,
+    this.onAnimationEnded,
+    this.context
   }) : super(key: key);
 
   @override
@@ -83,13 +87,18 @@ class _RunningTextState extends State<RunningText> {
   @override
   void initState() {
     super.initState();
-    _currentChoice = widget.choices.first;
-    _setTimer();
+    if (widget.renderAsResult) {
+      _currentChoice = widget.result!;
+    } else {
+      _currentChoice = widget.choices.first;
+      _setTimer();
+    }
   }
 
   @override
   void didUpdateWidget(covariant RunningText oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.renderAsResult) return;
     if (oldWidget.choices != widget.choices) {
       /***
        * Choices have changed

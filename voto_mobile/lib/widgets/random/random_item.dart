@@ -13,13 +13,17 @@ class RandomItem extends StatefulWidget {
   final Choice? singleChoice;
   final List<Choice>? choices;
   final bool? skipAnimation;
+  final bool renderAsResult;
   final Function()? onAnimationEnded;
+  final BuildContext? context;
   const RandomItem({
     Key? key,
     this.singleChoice,
     this.choices,
     this.skipAnimation,
-    this.onAnimationEnded
+    this.renderAsResult = false,
+    this.onAnimationEnded,
+    this.context
   }) : super(key: key);
 
   @override
@@ -30,7 +34,7 @@ class _RandomItemState extends State<RandomItem> {
   late Future<List<Choice>> _choices;
 
   Future<List<Choice>> _getMemberNames() async {
-    Team? currentTeam = Provider.of<PersistentState>(context, listen: false).currentTeam;
+    Team? currentTeam = Provider.of<PersistentState>(widget.context ?? context, listen: false).currentTeam;
     if(currentTeam != null) {
       List<Choice> _members = [];
       for (String uid in currentTeam.members.keys) {
@@ -43,6 +47,7 @@ class _RandomItemState extends State<RandomItem> {
           )
         );
       }
+      print(_members.map((e) => e.text));
       return _members;
     }
     return [];
@@ -71,7 +76,7 @@ class _RandomItemState extends State<RandomItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.singleChoice != null) Heading(widget.singleChoice!.text!),
+        if (widget.singleChoice != null) Heading(widget.singleChoice!.text!, context: widget.context),
         const SizedBox(height: 15.0),
         Row(
           children: [
@@ -85,7 +90,8 @@ class _RandomItemState extends State<RandomItem> {
                       choices: data,
                       result: data.firstWhereOrNull((element) => element.win == true),
                       skipAnimation: widget.skipAnimation,
-                      onAnimationEnded: widget.onAnimationEnded
+                      onAnimationEnded: widget.onAnimationEnded,
+                      renderAsResult: widget.renderAsResult
                     );
                   } else {
                     return Container(

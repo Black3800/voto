@@ -1,16 +1,21 @@
+import 'dart:typed_data';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:voto_mobile/model/choice.dart';
 import 'package:voto_mobile/model/persistent_state.dart';
 import 'package:voto_mobile/model/users.dart';
 import 'package:voto_mobile/utils/color.dart';
+import 'package:voto_mobile/utils/image_share.dart';
 import 'package:voto_mobile/widgets/create_item/heading.dart';
-import 'package:voto_mobile/widgets/pollresult/poll_result_button.dart';
 import 'package:voto_mobile/widgets/pollresult/poll_result_item.dart';
 import 'package:voto_mobile/widgets/pollresult/tiebreaker_button.dart';
 import 'package:voto_mobile/widgets/pollresult/voter_dialog.dart';
+import 'package:voto_mobile/widgets/share_button.dart';
 import 'package:voto_mobile/widgets/voto_scaffold.dart';
 import 'package:voto_mobile/widgets/winner_card.dart';
 
@@ -25,7 +30,13 @@ class _PollResultPageState extends State<PollResultPage> {
   int totalVote = 0;
   String? itemId;
   String? uid;
+  bool isSaving = false;
+  bool isSharing = false;
   late Future<List<Choice>> _choices;
+  late List<Choice> _winners;
+  late int _winnerCount;
+  late FToast fToast;
+  final ScreenshotController screenshotController = ScreenshotController();
 
   void _forceRebuild() {
     WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {}));
@@ -92,17 +103,100 @@ class _PollResultPageState extends State<PollResultPage> {
     return _result;
   }
 
+  void _toggleShareButton() {
+    setState(() => isSharing = !isSharing);
+  }
+
+  void _toggleSaveButton() {
+    setState(() => isSaving = !isSaving);
+  }
+
+  Future<Widget> _buildResultWidget() async {
+    final _pollItems = await _choices;
+    final _appContext = context;
+    final _item = Provider.of<PersistentState>(context, listen: false).currentItem!;
+    return MediaQuery(
+            data: const MediaQueryData(),
+            child: Material(
+              color: VotoColors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ListView.separated(
+                    itemBuilder: (context, index) => [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${_item.title}',
+                            style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            'Closed on ${_item.pollSettings!.closeDateFormatted}',
+                            style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w300),
+                          ),
+                        ],
+                      ),
+                      WinnerCard(winners: _winners, winnerCount: _winnerCount),
+                      Heading('Full result', context: _appContext),
+                      ..._pollItems.map((e) => 
+                        PollResultItem(
+                            text: '${e.text}',
+                            voteCount: e.voteCount ?? 0,
+                            totalVote: totalVote,
+                            showVoter: false,
+                            onTap: null)
+                      )
+                    ][index],
+                    separatorBuilder: (_, __) => const SizedBox(height: 20),
+                    itemCount: _pollItems.length + 3,
+                ),
+              ),
+            )
+          );
+  }
+
+  void _showSuccessToast(String text) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: VotoColors.black.shade600,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.check, color: VotoColors.success),
+          const SizedBox(width: 6.0),
+          Flexible(
+              child: Text(
+            text,
+            style: GoogleFonts.inter(color: VotoColors.white),
+            textAlign: TextAlign.center,
+          )),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: const Duration(seconds: 2),
+    );
+  }
+
+  Future<bool> _handlePop() async {
+    Provider.of<PersistentState>(context, listen: false).disposeItem();
+    return Future.value(true);
+  }
+
   @override
   void initState() {
     super.initState();
     itemId = Provider.of<PersistentState>(context, listen: false).currentItem!.id;
     uid = Provider.of<PersistentState>(context, listen: false).currentUser!.uid;
     _choices = _getChoices();
-  }
-
-  Future<bool> _handlePop() async {
-    Provider.of<PersistentState>(context, listen: false).disposeItem();
-    return Future.value(true);
+    fToast = FToast();
+    fToast.init(context);
   }
 
   @override
@@ -130,6 +224,7 @@ class _PollResultPageState extends State<PollResultPage> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final _pollItems = snapshot.data as List<Choice>? ?? [];
+                      _choices = Future.value(_pollItems);
                       if (_pollItems.isEmpty) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,13 +273,13 @@ class _PollResultPageState extends State<PollResultPage> {
                           ]
                         );
                       }
-                      int _winnerCount = appState.currentItem!.pollSettings!.multipleWinner
+                      _winnerCount = appState.currentItem!.pollSettings!.multipleWinner
                                 ? appState.currentItem!.pollSettings!.winnerCount
                                 : 1;
                       if (_winnerCount > _pollItems.length) {
                         _winnerCount = _pollItems.length;
                       }
-                      List<Choice> _winners = _getPotentialWinners(_pollItems, _winnerCount);
+                      _winners = _getPotentialWinners(_pollItems, _winnerCount);
                       bool _isTie = _winners.length > _winnerCount;
                       return ListView.separated(
                         itemBuilder: (context, index) => [
@@ -238,7 +333,38 @@ class _PollResultPageState extends State<PollResultPage> {
                 ),
               ),
             ),
-            // const PollResultButton(),
+            ShareButton(
+              shareText: 'Share',
+              saveText: 'Save as image',
+              isSharing: isSharing,
+              isSaving: isSaving,
+              onShare: () async {
+                _toggleShareButton();
+                final result = await _buildResultWidget();
+                final count = (await _choices).length;
+                screenshotController.captureFromWidget(
+                  result,
+                  delay: Duration(milliseconds: 1000 + count * 10)
+                ).then((Uint8List? image) async {
+                  if (image == null) return;
+                  await ImageShare.shareImage(image);
+                  _toggleShareButton();
+                });
+              },
+              onSave: () async {
+                _toggleSaveButton();
+                final result = await _buildResultWidget();
+                final count = (await _choices).length;
+                screenshotController.captureFromWidget(
+                  result,
+                  delay: Duration(milliseconds: 1000 + count * 10)
+                ).then((Uint8List? image) async {
+                  if (image == null) return;
+                  await ImageShare.saveImage(image);
+                  _showSuccessToast('Result saved to gallery');
+                  _toggleSaveButton();
+                });
+              })
           ],
         ),
       );

@@ -1,5 +1,5 @@
 name: voto_mobile
-description: A new Flutter project.
+description: A decision maker application.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -47,6 +47,10 @@ dependencies:
   flutter_image_compress: ^1.1.0
   provider: ^6.0.2
   fluttertoast: ^8.0.9
+  screenshot: ^1.2.3
+  image_gallery_saver: ^1.7.1
+  path_provider: ^2.0.10
+  share_plus: ^4.0.4
 
 dev_dependencies:
   flutter_test:
