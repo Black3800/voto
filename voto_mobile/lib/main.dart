@@ -25,61 +25,56 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: user != null ? FirebaseDatabase.instance.ref('users/${user!.uid}/img').get() : null,
+      future: user != null ? FirebaseDatabase.instance.ref('users/${user?.uid}/img').get() : null,
       builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
-          final _persistent = PersistentState();
-          _persistent.updateUser(
-              Users(
-                  uid: user?.uid,
-                  displayName: user?.displayName,
-                  email: user?.email,
-                  img: snapshot.data?.value as String
-              )
-          );
-
-          return ChangeNotifierProvider<PersistentState>(
-            create: (_) => _persistent,
-            child: MaterialApp(
-              title: 'Vo-To',
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                  brightness: Brightness.light,
-                  primarySwatch: VotoColors.primary,
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  textTheme: TextTheme(
-                      headline1: GoogleFonts.inter(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w700,
-                          color: VotoColors.white),
-                      headline2: GoogleFonts.inter(
-                          fontSize: 18.0, fontWeight: FontWeight.w500),
-                      headline3: GoogleFonts.inter(
-                          fontSize: 14.0, fontWeight: FontWeight.w500),
-                      bodyText1: GoogleFonts.inter(fontSize: 14.0),
-                      caption: GoogleFonts.inter(
-                          fontSize: 12.0, fontWeight: FontWeight.w300),
-                      button: GoogleFonts.inter(
-                          fontSize: 12.0, fontWeight: FontWeight.w700))),
-              initialRoute: user == null ? '/login_page' : '/home_page',
-              routes: {
-                '/login_page': (context) => const LoginPage(),
-                '/signup_page': (context) => const SignupPage(),
-                '/home_page': (context) => const HomePage(),
-                '/profile_page': (context) => const ProfilePage(),
-                '/team_page': (context) => const TeamPage(),
-                '/manage_team_page': (context) => const ManageTeamPage(),
-                '/create_item_page': (context) => const CreateItemPage(),
-                '/add_option_page': (context) => const AddOptionPage(),
-                '/poll_page': (context) => const PollPage(),
-                '/random_page': (context) => const RandomPage(),
-                '/poll_result_page': (context) => const PollResultPage()
-              },
-            ),
-          );
-        } else {
-          return Container();
+        final _persistent = PersistentState();
+        if (snapshot.hasData) {
+          _persistent.updateUser(Users(
+                uid: user?.uid,
+                displayName: user?.displayName,
+                email: user?.email,
+                img: snapshot.data?.value as String));
         }
+
+        return ChangeNotifierProvider<PersistentState>(
+          create: (_) => _persistent,
+          child: MaterialApp(
+            title: 'Vo-To',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+                brightness: Brightness.light,
+                primarySwatch: VotoColors.primary,
+                fontFamily: GoogleFonts.inter().fontFamily,
+                textTheme: TextTheme(
+                    headline1: GoogleFonts.inter(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w700,
+                        color: VotoColors.white),
+                    headline2: GoogleFonts.inter(
+                        fontSize: 18.0, fontWeight: FontWeight.w500),
+                    headline3: GoogleFonts.inter(
+                        fontSize: 14.0, fontWeight: FontWeight.w500),
+                    bodyText1: GoogleFonts.inter(fontSize: 14.0),
+                    caption: GoogleFonts.inter(
+                        fontSize: 12.0, fontWeight: FontWeight.w300),
+                    button: GoogleFonts.inter(
+                        fontSize: 12.0, fontWeight: FontWeight.w700))),
+            initialRoute: user == null ? '/login_page' : '/home_page',
+            routes: {
+              '/login_page': (context) => const LoginPage(),
+              '/signup_page': (context) => const SignupPage(),
+              '/home_page': (context) => const HomePage(),
+              '/profile_page': (context) => const ProfilePage(),
+              '/team_page': (context) => const TeamPage(),
+              '/manage_team_page': (context) => const ManageTeamPage(),
+              '/create_item_page': (context) => const CreateItemPage(),
+              '/add_option_page': (context) => const AddOptionPage(),
+              '/poll_page': (context) => const PollPage(),
+              '/random_page': (context) => const RandomPage(),
+              '/poll_result_page': (context) => const PollResultPage()
+            },
+          ),
+        );
       }
     );
   }
