@@ -59,14 +59,14 @@ class _AddOptionPageState extends State<AddOptionPage> {
                 child: ListView(
                   children: [
                     Text(
-                        '${appState.currentItem?.title}',
+                        appState.currentItem?.title ?? '',
                         style: GoogleFonts.inter(
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     const SizedBox(height: 20.0),
                     if (!appState.isCreatingItem)
                             Text(
-                              '${appState.currentItem?.description}',
+                              appState.currentItem?.description ?? '',
                               style: GoogleFonts.inter(
                                   fontSize: 14, fontWeight: FontWeight.w400),
                             ),
