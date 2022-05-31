@@ -32,7 +32,7 @@ class LogoutCard extends StatelessWidget {
             onTap: () {
               FirebaseAuth.instance.signOut();
               Provider.of<PersistentState>(context, listen: false).disposeUser();
-              Navigator.popUntil(context, ModalRoute.withName('/login_page'));
+              Navigator.of(context).pushNamedAndRemoveUntil('/login_page', (route) => false);
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
